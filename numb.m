@@ -11,11 +11,11 @@ ALPHA = 1; % to make unitless
 BETA = 630; % from Thors paper (pg 510, above eqn 16)
 
 % uniaxial compression stres tensor
-SIGMA = [ 0 0 2
+SIGMA = [ 0 0 0
           0 0 0
-          2 0 0];
+          0 0 1];
 
-def = 500; % integration steps 
+def = 50; % integration steps 
 Aodeg = 0; % girdle angle in degrees
 Ao = Aodeg *pi/180; % girdle angle in radians
 % Commented to make fig 3 in thor paper
@@ -116,10 +116,118 @@ end
     
 close(h)
 
-plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3)/(AllEdot(3*(graphdef+1)-2,3)),'r-');
-xlabel('Cone Angle (rad)');
-ylabel('Normalized Strain Rate');
-title('Simple Shear');
+if AllEdot(3*(graphdef+1)-2,1) < .0001
+    subplot(3,3,1), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,1)');
+else
+    subplot(3,3,1), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3)/AllEdot(3*(graphdef+1)-2,1));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,1)');
+end
+
+if AllEdot(3*(graphdef+1)-2,2) < .0001
+    subplot(3,3,2), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,2)');
+else
+    subplot(3,3,2), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3)/AllEdot(3*(graphdef+1)-2,2));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,2)');    
+end
+
+if AllEdot(3*(graphdef+1)-2,3) < .0001
+    subplot(3,3,3), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,3)');
+else
+    subplot(3,3,3), plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3)/AllEdot(3*(graphdef+1)-2,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(1,3)');    
+end
+
+if AllEdot(3*(graphdef+1)-1,1) < .0001
+    subplot(3,3,4), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,1)');
+else
+    subplot(3,3,4), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3)/AllEdot(3*(graphdef+1)-1,1));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,1)');    
+end
+
+if AllEdot(3*(graphdef+1)-1,2) < .0001
+    subplot(3,3,5), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,2)');
+else
+    subplot(3,3,5), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3)/AllEdot(3*(graphdef+1)-1,2));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,2)');  
+end
+
+if AllEdot(3*(graphdef+1)-1,3) < .0001
+    subplot(3,3,6), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,3)');
+else
+    subplot(3,3,6), plot(0:pi/(2*graphdef):pi/2,AllEdot(2:3:3*(graphdef+1)-1,3)/AllEdot(3*(graphdef+1)-1,3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(2,3)');    
+end
+
+if AllEdot(3*(graphdef+1),1) < .0001
+    subplot(3,3,7), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,1)');
+else
+    subplot(3,3,7), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3)/AllEdot(3*(graphdef+1),1));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,1)');    
+end
+
+if AllEdot(3*(graphdef+1),2) < .0001
+    subplot(3,3,8), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,2)');
+else
+    subplot(3,3,8), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3)/AllEdot(3*(graphdef+1),2));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,2)');    
+end
+
+if AllEdot(3*(graphdef+1),3) < .0001
+    subplot(3,3,9), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,3)');
+else
+    subplot(3,3,9), plot(0:pi/(2*graphdef):pi/2,AllEdot(3:3:3*(graphdef+1),3)/AllEdot(3*(graphdef+1),3));
+    xlabel('Cone Angle (rad)');
+    ylabel('Normalized Strain Rate');
+    title('Edot(3,3)');    
+end
+
+% plot(0:pi/(2*graphdef):pi/2,AllEdot(1:3:3*(graphdef+1)-2,3)/(AllEdot(3*(graphdef+1)-2,3)),'r-');
+% xlabel('Cone Angle (rad)');
+% ylabel('Normalized Strain Rate');
+% title('Simple Shear');
 
 
 
