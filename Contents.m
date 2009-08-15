@@ -1,18 +1,22 @@
-% Code to recreate the anisotrpy model in Throstur Thorsteinsson's paper
+%% Test code to recreate the anisotrpy model in Throstur Thorsteinsson's paper
 %   An analytic approach to deformation of anisotropic ice-crystal
 %       aggregates
 %   Journal of Glaciology, Vol.47, No. 158, 2001 pg 507-516
 %
-% To run the model type 'THOR'
+%% Directory Contents:
 %
-% Directory Contents:
+%% Files:
 %
-% thor.m -- main program
+% setup.m -- sets up the paths and variables necassary for program to run.
+% For more info, try HELP SETUP.
 %
-% numb.m -- numeric method for recreating the figures in Thorsteinsson's
-% paper. This one is underestimating the integration. It maintains the
-% shape of the integral, however, it's 'amplitude' is too small when
-% comparing to the paper. 
+% thor.m -- main program file, 
 %
-% symb.m -- symolic method for recreating the figures in Thorsteinsson's
-% paper. This one is 'correct'.
+%% Folders:
+%
+% private/ -- contains code and files used for development and notes. This
+% folder remains outside the workings of the program. See internal
+% Contents.m file.
+%
+% Utilities/ -- contains utility functions called upon by main program. See
+% internal Contents.m file.
