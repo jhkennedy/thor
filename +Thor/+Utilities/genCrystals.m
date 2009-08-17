@@ -7,14 +7,14 @@ function Crystals = genCrystals(number, angles, method)
 %   'method'.
 %   
 %   'number' should be a scalar value and defines how many values to assign 
-%       to each THETA and PHI resulting in a 'number'by'number amount of 
+%       to each THETA and PHI resulting in a 'number'by'number' amount of 
 %       crystals.
 %   'angles' should be a 1x2 vector with colatitudinal angles [ Ao A ]
 %       where 'Ao' is the girdle angle and 'A' is the cone angle.
 %   'method' should be a character array with values of either:
 %       'even' or 'iso'. 
 %
-%   genCrystals returns an array of size 'number'x2 with values:
+%   genCrystals returns an array of size 'number'*'number'x2 with values:
 %       [ theta1 phi1
 %           :     :   ]
 
