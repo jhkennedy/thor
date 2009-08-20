@@ -7,10 +7,8 @@
 %
 %% Files:
 %
-% setup.m -- sets up the paths and variables necassary for program to run.
-% For more info, try HELP SETUP.
-%
-% thor.m -- main program file, 
+% efac.m -- main program file -- calculates the anisortropic enhancement factor 
+% for each element of the bulk strain rate. 
 %
 %% Folders:
 %
