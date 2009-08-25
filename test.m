@@ -1,5 +1,4 @@
-close all
-clear all
+
 
 %% Plot crystals
 
@@ -54,31 +53,36 @@ clear all
 
 %% Test thor
 
-SIGMA = [ 0 0 0
-          0 0 0
-          0 0 1];
-tic
-Efac = Thor.efac(SIGMA, [0 pi/4],'iso', 3);
-toc
-display(Efac);
+% SIGMA = [ 0 0 0
+%           0 0 0
+%           0 0 1];
+% tic
+% Efac = Thor.efac(SIGMA, [0 pi/4],'iso', 3);
+% toc
+% display(Efac);
 
 %% sum to Make figures in thor paper. 
 
-% tic
-% SIGMA = [ 0 0 1
-%           0 0 0
-%           1 0 2];
-% 
-% T = 1000;
-% A = linspace(pi/(2*T), pi/2, T);
-% Efac = zeros(T*3,3);
-%       
-% for ii = 1:T
-%     Efac(ii*3-2:ii*3,:) = Thor.efac(SIGMA, [0 A(ii)],'iso', 3);
-% end
-% 
-% 
-% 
-% figure, plot(A,Efac(3:3:end,3));
-% title('efac33');
-% toc
+h = waitbar(0, 'Calculating...');
+matlabpool
+
+tic
+SIGMA = [ 0 0 1
+          0 0 0
+          1 0 2];
+
+T = 100;
+A = linspace(pi/(2*T), pi/2, T);
+Efac = zeros(T*3,3);
+      
+for ii = 1:T
+    Efac(ii*3-2:ii*3,:) = Thor.efac(SIGMA, [0 A(ii)],'iso', 3);
+    waitbar(ii/T,h);
+end
+
+
+close(h);
+figure, plot(A,Efac(3:3:end,3));
+title('efac33');
+matlabpool close
+toc

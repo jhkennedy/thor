@@ -1,4 +1,4 @@
-function edot = ecdot( stress, crysang, n)
+function edot = ecdot( stress, crysang, angles, n)
 % ECDOT(STRESS, CRYSANG, ANGLES, N) returns the strain rate on a single 
 % crystal with orientation CRYSANG, under a stress of STRESS. 
 %   
@@ -6,6 +6,9 @@ function edot = ecdot( stress, crysang, n)
 %
 %   CRYSANG is a 1x2 vector containing [theta phi] where theta and phi 
 %   orientation angle of a crystal.
+%
+%   ANGLES is a 1x2 vector containing [Ao A] where Ao is the girdle angle
+%   of the fabric and A is the cone angle of the fabric.
 %
 %   N is the exponent to be used in the flow law.
 %
@@ -40,9 +43,12 @@ function edot = ecdot( stress, crysang, n)
     S1 = (S1+S1')/2;
     S2 = (S2+S2')/2;
     S3 = (S3+S3')/2;
+    
+    % calculate the ODF component
+    F = sin(crysang(1));
 
     % calculate the single crystal strain rate
-    edot = ALPHA*BETA*(S1*TAU1*abs(TAU1)^(n-1) + S2*TAU2*abs(TAU2)^(n-1)...
+    edot = F*ALPHA*BETA*(S1*TAU1*abs(TAU1)^(n-1) + S2*TAU2*abs(TAU2)^(n-1)...
         + S3*TAU3*abs(TAU3)^(n-1));
 
 end

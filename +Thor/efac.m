@@ -28,11 +28,16 @@ function ef = efac(stress,angles, crysdist, n)
         crysdist = 'iso';
     end
 
-    number = 50; % sqare root of the number of crystals to use 
+    number = 100; % sqare root of the number of crystals to use 
                  % ( sqare root because of case even in genCrystals)
     tol = 0.025; % tolerance for removing near zero components
     edot = zeros(3,3); % initialize bulk strain rate
     isoedot = zeros(3,3); % initialize ideal isotropic bulk strain rate
+    
+    % initilize the ODF, orientation distribution funcion, normalizing
+    % constant for both crystal distributions
+    F = 0;  
+    isoF = 0;
     
     isoangles = [0 pi/2]; % isotropic cone angles
     
@@ -40,11 +45,18 @@ function ef = efac(stress,angles, crysdist, n)
     crystals = Thor.Utilities.genCrystals(number, angles, crysdist);
     isocrystals = Thor.Utilities.genCrystals(number, isoangles, 'iso');
     
-    % sum single crystal strain rates over all crystals 
-    for ii = 1:number*number
-       edot = edot + Thor.Utilities.ecdot(stress, crystals(ii,:), n);
-       isoedot = isoedot + Thor.Utilities.ecdot(stress, isocrystals(ii,:), n);
+    % sum single crystal strain rates over all crystals and find
+    % normalizing constant for the ODF
+    parfor ii = 1:number*number
+       F = F + Thor.Utilities.odf(crystals(ii,:));
+       isoF = isoF + Thor.Utilities.odf(isocrystals(ii,:));
+       edot = edot + Thor.Utilities.ecdot(stress, crystals(ii,:), angles, n);
+       isoedot = isoedot + Thor.Utilities.ecdot(stress, isocrystals(ii,:), isoangles, n);
     end
+    
+    % apply ODF normalizing constant
+    edot = edot/F;
+    isoedot=isoedot/isoF;
     
     % test edot and isoedot against tolerance
     edot(abs(edot/edot(3,3))<=tol)=0;

@@ -5,16 +5,12 @@
 %
 %% Directory Contents:
 %
-%% Files:
+%%  Files:
 %
-% efac.m -- main program file -- calculates the anisortropic enhancement factor 
-% for each element of the bulk strain rate. 
+%   efac.m -- main program file -- calculates the anisortropic enhancement factor 
+%   for each element of the bulk strain rate. 
 %
-%% Folders:
+%%  Folders:
 %
-% private/ -- contains code and files used for development and notes. This
-% folder remains outside the workings of the program. See internal
-% Contents.m file.
-%
-% Utilities/ -- contains utility functions called upon by main program. See
-% internal Contents.m file.
+%   Utilities/ -- contains utility functions called upon by main program. See
+%   internal Contents.m file.

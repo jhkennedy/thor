@@ -12,7 +12,7 @@ function Crystals = genCrystals(number, angles, method)
 %   'angles' should be a 1x2 vector with colatitudinal angles [ Ao A ]
 %       where 'Ao' is the girdle angle and 'A' is the cone angle.
 %   'method' should be a character array with values of either:
-%       'even' or 'iso'. 
+%       'even', 'iso', or 'saved'. 
 %
 %   genCrystals returns an array of size 'number'*'number'x2 with values:
 %       [ theta1 phi1
@@ -43,5 +43,7 @@ function Crystals = genCrystals(number, angles, method)
             PHI = rand(1,number*number)*2*pi;
             Crystals = [THETA', PHI'];
             return;
+        case 'saved'
+            % use a distribution saved to the hard disk. 
 
     end

@@ -18,19 +18,19 @@ plotdef = 100;
 %           S31 S32 S33];
 
 % uniaxial Compression
-% SIGMA = [ 0 0 0
-%           0 0 0
-%           0 0 S33]; 
+SIGMA = [ 0 0 0
+          0 0 0
+          0 0 S33]; 
       
 % % Pure Shear
 % SIGMA = [ -S33 0 0
 %           0    0 0
 %           0    0 S33];
 
-% simple shear
-SIGMA = [ 0 0 S33
-          0 0 0
-          S33 0 0]; 
+% % simple shear
+% SIGMA = [ 0 0 S33
+%           0 0 0
+%           S33 0 0]; 
 
 % basal plane vectors
 b1  = 1/3*[cos(THETA)*cos(PHI) cos(THETA)*sin(PHI) -sin(THETA)];  
@@ -67,7 +67,7 @@ F = sin(THETA)/(2*pi*(1-cos(A))); % Cone Fabric ODF
 
 %%
 % Bulk Strain Rate
-Edottemp = int(F*ecdot(1,3),PHI,0,2*pi);
+Edottemp = int(F*ecdot(3,3),PHI,0,2*pi);
 Edot = int(Edottemp,THETA,0,A);
 
 PLT33 = Edot;
