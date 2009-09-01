@@ -1,35 +1,30 @@
-function ef = efac(stress,angles, crysdist, n)
+function ef = efac(thetas, phis, isothetas, isophis, stress, n)
 %% Test code to recreate the anisotrpy model in Throstur Thorsteinsson's paper
 %   An analytic approach to deformation of anisotropic ice-crystal
 %       aggregates
 %   Journal of Glaciology, Vol.47, No. 158, 2001 pg 507-516
 %
-% EFAC(STRESS,ANGLES, CRYSDIST, N) returns the ehancement factor of the bulk strain
-% rate for anisotropic ice. 
+% EFAC(THETAS, PHIS, ISOTHETAS, ISOPHIS, STRESS, N) returns the ehancement 
+% factor of the bulk strain rate for anisotropic ice. 
+%
+%   THETAS, PHIS are the theta and phi values for all the crystals within a 
+%   crystal distribution
+%
+%   ISOTHETAS, ISOPHIS are the theta and phi values for all the crystals within 
+%   an isotropic crystal distribution
 %
 %   STRESS is a 3x3 matrix containing the stress tensor elements.
 %
-%   ANGLES is a 1x2 vector containing [Ao A] where Ao is the girdle angle
-%   of the fabric and A is the cone angle of the fabric.
-%
-%   CRYSDIST is a string containing the type of crystal distrobution to use
-%   for calculating the bulk strain rate. Type 'help
-%   Thor.Utilities.genCrystals' for possible values. 
-%
 %   N is the exponent to be used in the flow law.
 %
-%   EFAC returns a 3x3 matrix containing the enhancement factors for each
-%   element of the bulk strain rate. 
+% EFAC returns a 3x3 matrix containing the enhancement factors for each
+% element of the bulk strain rate. 
 
     %% Begin Program
     % check to see if crystal distrobution type was passed, in not set defualt
     % value to 'iso' for isotropic
-    if ~exist(crysdist, 'var')
-        crysdist = 'iso';
-    end
-
-    number = 100; % sqare root of the number of crystals to use 
-                 % ( sqare root because of case even in genCrystals)
+    
+    number = 20*20*20; % number of crystals 
     tol = 0.025; % tolerance for removing near zero components
     edot = zeros(3,3); % initialize bulk strain rate
     isoedot = zeros(3,3); % initialize ideal isotropic bulk strain rate
@@ -39,25 +34,20 @@ function ef = efac(stress,angles, crysdist, n)
     F = 0;  
     isoF = 0;
     
-    isoangles = [0 pi/2]; % isotropic cone angles
-    
-    % generate underlying crystal distrobution for fabric
-    crystals = Thor.Utilities.genCrystals(number, angles, crysdist);
-    isocrystals = Thor.Utilities.genCrystals(number, isoangles, 'iso');
-    
     % sum single crystal strain rates over all crystals and find
-    % normalizing constant for the ODF
-    parfor ii = 1:number*number
-       F = F + Thor.Utilities.odf(crystals(ii,:));
-       isoF = isoF + Thor.Utilities.odf(isocrystals(ii,:));
-       edot = edot + Thor.Utilities.ecdot(stress, crystals(ii,:), angles, n);
-       isoedot = isoedot + Thor.Utilities.ecdot(stress, isocrystals(ii,:), isoangles, n);
+    % normalizing constant for the ODF 
+    parfor ii = 1:number
+       F = F + Thor.Utilities.odf(thetas(ii));
+       isoF = isoF + Thor.Utilities.odf(isothetas(ii));
+       edot = edot + Thor.Utilities.ecdot(stress, [thetas(ii) phis(ii)], n);
+       isoedot = isoedot + Thor.Utilities.ecdot(stress, [isothetas(ii) isophis(ii)], n);
     end
-    
+
+
     % apply ODF normalizing constant
     edot = edot/F;
     isoedot=isoedot/isoF;
-    
+
     % test edot and isoedot against tolerance
     edot(abs(edot/edot(3,3))<=tol)=0;
     isoedot(abs(isoedot/isoedot(3,3))<=tol)=0;
@@ -66,4 +56,5 @@ function ef = efac(stress,angles, crysdist, n)
     ef = edot./isoedot;
     ef(abs(ef)<=(tol/100)) = 0;
     ef(isnan(ef)) = 0;
+
 end

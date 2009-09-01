@@ -1,6 +1,6 @@
 
 
-%% Plot crystals
+%% Plot crystals (obsolete)
 
 % % Get crystal orientations
 % crystals = Thor.Utilities.genCrystals(20,[pi/4 pi/2],'iso');
@@ -12,7 +12,7 @@
 % figure, polar(crystwos(:,2),crystwos(:,1),'.');
 % title('even');
 
-%% Get single crystal strain rate
+%% Get single crystal strain rate (obsolete)
 
 % % uniaxial compression stres tensor
 % SIGMA = [ 0 0 0
@@ -24,7 +24,7 @@
 %     display(edot);
 % end
 
-%% Integrate over single crystal strain rate
+%% Integrate over single crystal strain rate (obsolete)
 
 % SIGMA = [ 0 0 0
 %           0 0 0
@@ -35,7 +35,7 @@
 % 
 % display(Efac/Efac90);
 
-%% integrate to make fig 3 in thor's paper
+%% integrate to make fig 3 in thor's paper(obsolete)
 % 
 % SIGMA = [ 0 0 0
 %           0 0 0
@@ -51,7 +51,7 @@
 % end 
 % plot(Range,fig);
 
-%% Test thor
+%% Test thor (obsolete)
 
 % SIGMA = [ 0 0 0
 %           0 0 0
@@ -61,28 +61,61 @@
 % toc
 % display(Efac);
 
-%% sum to Make figures in thor paper. 
+%% sum to Make figures in thor paper. (obsolete) 
 
-h = waitbar(0, 'Calculating...');
-matlabpool
+% h = waitbar(0, 'Calculating...');
+% matlabpool
+% 
+% tic
+% SIGMA = [ 0 0 1
+%           0 0 0
+%           1 0 2];
+% 
+% T = 1000;
+% A = linspace(pi/(2*T), pi/2, T);
+% Efac = zeros(T*3,3);
+%       
+% for ii = 1:T
+%     Efac(ii*3-2:ii*3,:) = Thor.efac(SIGMA, [0 A(ii)],'iso', 3);
+%     waitbar(ii/T,h);
+% end
+% 
+% 
+% close(h);
+% figure, plot(A,Efac(3:3:end,3));
+% title('efac33');
+% matlabpool close
+% toc
+
+%% Test fem2thor
+
+h = waitbar(0, 'Setting up pool...');
+% matlabpool
+
+waitbar(0,h,'initializing variables...');
 
 tic
 SIGMA = [ 0 0 1
           0 0 0
           1 0 2];
 
-T = 100;
+T = 1000;
 A = linspace(pi/(2*T), pi/2, T);
-Efac = zeros(T*3,3);
-      
+Efac = zeros(3,3,T);
+
+waitbar(0,h,'calculating...');
+
 for ii = 1:T
-    Efac(ii*3-2:ii*3,:) = Thor.efac(SIGMA, [0 A(ii)],'iso', 3);
-    waitbar(ii/T,h);
+[crystals isocrystals] = Thor.fem2thor(1, [0 A(ii)], 'iso');
+
+Efac(:,:,ii) = Thor.efac(crystals.theta, crystals.phi,... 
+                                isocrystals.theta, isocrystals.phi, SIGMA, 3);
+
+waitbar(ii/T,h);
+
 end
 
-
 close(h);
-figure, plot(A,Efac(3:3:end,3));
+figure, plot(A,Efac(9:9:end));
 title('efac33');
-matlabpool close
-toc
+% matlabpool close

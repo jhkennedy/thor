@@ -1,14 +1,11 @@
-function edot = ecdot( stress, crysang, angles, n)
-% ECDOT(STRESS, CRYSANG, ANGLES, N) returns the strain rate on a single 
+function edot = ecdot( stress, crysang, n)
+% ECDOT(STRESS, CRYSANG, N) returns the strain rate on a single 
 % crystal with orientation CRYSANG, under a stress of STRESS. 
 %   
 %   STRESS is a 3x3 matrix containing the elements of the stress tensor.
 %
 %   CRYSANG is a 1x2 vector containing [theta phi] where theta and phi 
 %   orientation angle of a crystal.
-%
-%   ANGLES is a 1x2 vector containing [Ao A] where Ao is the girdle angle
-%   of the fabric and A is the cone angle of the fabric.
 %
 %   N is the exponent to be used in the flow law.
 %
