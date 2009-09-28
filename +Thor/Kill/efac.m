@@ -34,8 +34,8 @@ function ef = efac(thetas, phis, isothetas, isophis, stress, n)
     F = 0;  
     isoF = 0;
     
-    % sum single crystal strain rates over all crystals and find
-    % normalizing constant for the ODF 
+    % find the bulk strain rate by summing single crystal strain rates over
+    % all crystals and find normalizing constant for the ODF 
     parfor ii = 1:number
        F = F + Thor.Utilities.odf(thetas(ii));
        isoF = isoF + Thor.Utilities.odf(isothetas(ii));

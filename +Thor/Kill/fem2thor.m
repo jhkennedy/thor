@@ -12,9 +12,11 @@ function [ crystals isocrystals ] = fem2thor( nelem, angles, crysdist )
 
     % initialize crystal distrobution structure
     crystals = struct('theta', zeros(20,20,20,nelem),...
-                        'phi', zeros(20,20,20,nelem));
+                        'phi', zeros(20,20,20,nelem),...
+                        'rss', ones(20,20,20,nelem));
     isocrystals = struct('theta', zeros(20,20,20,nelem),...
-                           'phi', zeros(20,20,20,nelem));
+                           'phi', zeros(20,20,20,nelem),...
+                           'rss', ones(20,20,20,nelem));
                        
    % generate crystal distrobutions for each element
     for ii = 1:nelem
