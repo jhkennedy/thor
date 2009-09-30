@@ -1,8 +1,16 @@
 function [ S123 ] = shmidt( THETA, PHI )
-% SHMIDT( CRYSANG ) returns the 
-%   Detailed explanation goes here
+% SHMIDT( THETA, PHI ) returns the shmidt tensors of the three slip systems for a crystal
+% with orientation angles THETA and PHI.
+%   THETA is the colatitudinal orientation angle for the crystal
+%
+%   PHI is the longitudinal orientation angle for the crystal
+%
+% SHMIDT returns S123 which is a 3x3x3 array holding the shmidt tensors for each slip
+% system where the tensor for slip system 's' is obtained by S123(:,:,s)
 
-   S123 = zeros(3,3,3);
+%% Calculate the shmidt tensors
+    % initialize the shmidt tensors
+    S123 = zeros(3,3,3);
 
     % basal plane vectors
     B1  =  1/3*[cos(THETA).*cos(PHI) cos(THETA).*sin(PHI) -sin(THETA)];  
