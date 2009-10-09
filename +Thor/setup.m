@@ -1,4 +1,4 @@
-function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynsoft  )
+function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, stress, n, ynsoft  )
 % [ELDATA] = SETUP(NELEM, CONTYPE, DISTYPE, DISANGLES, stress, n) sets up the cell
 % array that holds crystal distrobution variables for each element
 % specified by NELEM using the packing structure specified by CONTYPE. Each
@@ -35,7 +35,7 @@ function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynso
 % SETUP returns ELDATA, an 1xnelem cell array with each cell containing a
 % crystal distrobution. 
 % The distrobution is aranged in an 8000x5 cell array
-% which is best indexed using the global varaiable NAMES created. 
+% which is best indexed using the varaiable NAMES created. 
 %   NAMES is a structure holding th cell locations of the information
 %   specified by each field of NAMES. The information cells are:
 %      1) THETA holds the colatitudinal orientation angle for the crystal
@@ -56,10 +56,6 @@ function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynso
 
     %% Initialize variables
     
-    % set up global cell axcess array, NAMES (more explination when
-    % assigned) and the conectivity matrix, CONN
-    global NAMES CONN
-    
     % number of crystals
     numbcrys = 20*20*20;
 
@@ -70,15 +66,12 @@ function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynso
         % PHI holds the longitudinal orientation angle for the crystal
         % VEL holds he velocity gradient tensor for the crystal
         % ECDOT holds the single crystal strain rate
-        % ODF hold the crystals controbution to the orientation distrobution function, ODF
-        % RSS holds the resolved shear stress for the crystal
-    NAMES = struct('theta', 1, 'phi', 2, ...
-                   'vel', 3, 'ecdot', 4, 'odf', 5);
-     % CONN is a 1x12 vector holding the crystal number for each nearest
+    NAMES = struct('theta', 1, 'phi', 2, 'vel', 3, 'ecdot', 4, 'odf', 5);
+     % CONN is a NUMBCRYSx12 vector holding the crystal number for each nearest
      % neighbor (first 6 used for  cubic and all twelve used for hexognal
      % or fcc type packing)  
-    CONN = NaN(1,12,numbcrys);
-    crysStruct = {0, 0, zeros(3,3), zeros(3,3), 0, zeros(1,3)};
+    CONN = NaN(numbcrys,12);
+    crysStruct = {0, 0, zeros(3,3), zeros(3,3), 0};
     % CrysDist is a cell array containing all the individual crystal
     % structured for a crystal distrobution
     crysDist = repmat(crysStruct, numbcrys,1);
@@ -99,7 +92,7 @@ function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynso
                 % try to get linear indecies
                 for jj = 1:6
                     try
-                        CONN(1,jj,ii) = sub2ind([20 20 20],...
+                        CONN(ii,jj) = sub2ind([20 20 20],...
                                         cons(jj,1),cons(jj,2),cons(jj,3));
                     catch ME %#ok<NASGU>
                         % subscrypt was outside of array. This will hapen at all
@@ -135,7 +128,7 @@ function [ eldata ] = setup( nelem, contype, distype, disangles, stress, n, ynso
     %% calculate initial velocity gradiant and single crystal strain rate
     
     parfor ii = 1:nelem % loop through the elements
-        eldata{ii} = Thor.Utilities.vec( eldata{ii}, stress{ii}, n{ii}, ynsoft);
+        eldata{ii} = Thor.Utilities.vec( eldata{ii}, CONN, stress(:,:,ii), n(ii), ynsoft);
     end
     
 end

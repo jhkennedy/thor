@@ -1,4 +1,4 @@
-function [ cdist] = vec( cdist, stress, n, ynsoft )
+function [ cdist] = vec( cdist, CONN, stress, n, ynsoft )
 % VEC( THETA, PHI, stress, n ) returns [ vel ecdot odf] for a crystal specifies by THETA,
 % PHI, stress and n.
 %   cdist is a 1x8000 cell aray holding a crystal distrobution
@@ -33,7 +33,7 @@ function [ cdist] = vec( cdist, stress, n, ynsoft )
         % clalculate the softness parameter
         switch ynsoft
             case 'yes'
-               [cdist esoft] = Thor.Utilities.soft(cdist, cnumb, TAU);
+               [cdist esoft] = Thor.Utilities.soft(cdist, CONN(ii,:), stress, TAU, ii);
             case 'no'
                 esoft = 1;
         end
