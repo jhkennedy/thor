@@ -1,7 +1,7 @@
 function [ cdist] = vec( cdist, CONN, stress, n, ynsoft )
 % VEC( THETA, PHI, stress, n ) returns [ vel ecdot odf] for a crystal specifies by THETA,
 % PHI, stress and n.
-%   cdist is a 1x8000 cell aray holding a crystal distrobution
+%   cdist is a 8000x5 cell aray holding a crystal distrobution
 %
 %   stess is a 3x3 array holding the stress tensor that the crystal distrobution experiences
 %

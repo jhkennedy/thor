@@ -66,6 +66,7 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
         % PHI holds the longitudinal orientation angle for the crystal
         % VEL holds he velocity gradient tensor for the crystal
         % ECDOT holds the single crystal strain rate
+        % ODF hold the crystals controbution to the orientation distrobution function, ODF
     NAMES = struct('theta', 1, 'phi', 2, 'vel', 3, 'ecdot', 4, 'odf', 5);
      % CONN is a NUMBCRYSx12 vector holding the crystal number for each nearest
      % neighbor (first 6 used for  cubic and all twelve used for hexognal
@@ -117,11 +118,9 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
             for ii = 1:nelem
                 THETA = disangles(ii,1) + (disangles(ii,2)-disangles(ii,1))...
                         *rand(20*20*20,1);
-                THETA = num2cell(THETA);
                 PHI = 2*pi*rand(20*20*20,1);
-                PHI = num2cell(PHI);
-                eldata{ii}(:,1) = THETA;
-                eldata{ii}(:,2) = PHI;
+                eldata{ii}(:,1) = num2cell(THETA);
+                eldata{ii}(:,2) = num2cell(PHI);
             end
     end
     

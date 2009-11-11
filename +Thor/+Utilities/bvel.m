@@ -1,6 +1,9 @@
 function [ vel ] = bvel( cdist )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+% BVEL(CDIST) claculates the modeled bulk velocity gradient for the crystal distrobution
+% specified by CDIST
+%   CDIST is a 8000x5 cell aray holding the modeled crystal distrobution
+%
+%   BVEl returns a 3x3 array holding the modeled bulk velocity gradient.
 
     vel = zeros(3,3);
 
