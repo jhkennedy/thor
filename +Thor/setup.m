@@ -1,4 +1,4 @@
-function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, stress, n, ynsoft  )
+function [ CONN, NAMES] = setup( nelem, contype, distype, disangles, stress, n, ynsoft  )
 % [ELDATA] = SETUP(NELEM, CONTYPE, DISTYPE, DISANGLES, stress, n) sets up the cell
 % array that holds crystal distrobution variables for each element
 % specified by NELEM using the packing structure specified by CONTYPE. Each
@@ -32,10 +32,9 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
 %   YNSOFT is a character array of either 'yes' or 'no' that turns on or off the softness
 %   parameter due to nearest neighbor interaction
 %
-% SETUP returns ELDATA, an 1xnelem cell array with each cell containing a
-% crystal distrobution. 
+% SETUP saves a set of variables in the form of  EL********, where  ********* is the
+% element number, into directory called 'CrysDists'. nelem files are created with each containing a crystal distrobution. 
 % The distrobution is aranged in an 8000x5 cell array
-% which is best indexed using the varaiable NAMES created. 
 %   NAMES is a structure holding th cell locations of the information
 %   specified by each field of NAMES. The information cells are:
 %      1) THETA holds the colatitudinal orientation angle for the crystal
@@ -43,12 +42,17 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
 %      3) VEL holds he velocity gradient tensor for the crystal
 %      4) ECDOT holds the single crystal strain rate
 %      5) ODF hold the crystals controbution to the orientation distrobution function, ODF
+%      6) FILES holes a column vector of all the files names where the row corrosponds to
+%      the crystal number
 %
-% therefor, a single crystal is accessed as such:
-% ELDATA{element_number}{crystal_number,NAMES.field_name}
+% therefor, a crystal distrobution can be accessed as such:
+%    eval(['load ./CrysDists/' NAMES.files{*********}]);
+% and the contents of a loaded crystal distrobution as such:
+%    EL*********{crystal_number, NAMES.field_name}
+% However, for parallel applications, this will not work. It is therefore best to use
+% NAMES as a reference to remember the cell locations and not use it as a programing
+% convention. 
 %
-%   ELDATA{1}{1,NAMES.THETA} returns the colatitudinal orientation angle of
-%   the first crystal in the first element. 
 %
 % setup also sets up the global variable CONN, a 1x12 vector holding the crystal number
 % for each nearest neighbor (first 6 used for  cubic and all twelve used for hexognal or
@@ -60,6 +64,7 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
     numbcrys = 20*20*20;
 
     % initialize structure that holds crystal info
+    NAMES = struct('theta', 1, 'phi', 2, 'vel', 3, 'ecdot', 4, 'odf', 5);
     % names is a structure holding cell location of the information for a
     % crystal specified by the cell crysStruct
         % THETA holds the colatitudinal orientation angle for the crystal
@@ -67,18 +72,14 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
         % VEL holds he velocity gradient tensor for the crystal
         % ECDOT holds the single crystal strain rate
         % ODF hold the crystals controbution to the orientation distrobution function, ODF
-    NAMES = struct('theta', 1, 'phi', 2, 'vel', 3, 'ecdot', 4, 'odf', 5);
+    CONN = NaN(numbcrys,12);
      % CONN is a NUMBCRYSx12 vector holding the crystal number for each nearest
      % neighbor (first 6 used for  cubic and all twelve used for hexognal
      % or fcc type packing)  
-    CONN = NaN(numbcrys,12);
     crysStruct = {0, 0, zeros(3,3), zeros(3,3), 0};
     % CrysDist is a cell array containing all the individual crystal
     % structured for a crystal distrobution
     crysDist = repmat(crysStruct, numbcrys,1);
-    % eldata is a cell array containing all the crystal distrobutions for
-    % each element
-    eldata = cell(1, nelem);
     
     %% initialize each crystal and its connectivity structure
     switch contype
@@ -102,33 +103,41 @@ function [ eldata , CONN, NAMES] = setup( nelem, contype, distype, disangles, st
                 end
              end
         case 'hex'
-            
+          % hexagonal connectivity, 12 nearest neigbors  
     end
     
-    % initialize each element
-    parfor ii = 1:nelem
-        eldata{ii} = crysDist;
-    end
-
-    
-    %% initialize crystal distrobutions
+    %% initialize crystal distributions
     switch distype
         case 'iso'
-            % generate angles and place then in crystal distrobutions
+            % create and crystal distrobution for each element and save then to disk
             for ii = 1:nelem
+                NAMES.files{ii} = sprintf('EL%09.0f', ii);
                 THETA = disangles(ii,1) + (disangles(ii,2)-disangles(ii,1))...
                         *rand(20*20*20,1);
                 PHI = 2*pi*rand(20*20*20,1);
-                eldata{ii}(:,1) = num2cell(THETA);
-                eldata{ii}(:,2) = num2cell(PHI);
+                crysDist(:,1) = num2cell(THETA);
+                crysDist(:,2) = num2cell(PHI);
+                eval([NAMES.files{ii} '= crysDist;']);
+                eval(['save ./+Thor/CrysDists/' NAMES.files{ii} ' ' NAMES.files{ii}]);
+                eval(['clear ' NAMES.files{ii}])
             end
+        case 'saved'
+            % check that a saved distribution is of the right size and structure, if not,
+            % build appropriate structure
     end
     
     %% calculate initial velocity gradiant and single crystal strain rate
     
     parfor ii = 1:nelem % loop through the elements
-        eldata{ii} = Thor.Utilities.vec( eldata{ii}, CONN, stress(:,:,ii), n(ii), ynsoft);
+        tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]);
+        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), CONN, stress(:,:,ii), n(ii), ynsoft);
+        isave(['./+Thor/CrysDists/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
     end
     
 end
 
+%% extra functions
+function isave(file, fin, var)
+    eval([var '=fin;']);
+    save(file, var);
+end

@@ -35,12 +35,13 @@ stress = repmat(stress, [1 1 nelem]);
 n = ones(nelem,1)*3;
     
 try
-    tic; [eldata, CONN, NAMES] = Thor.setup(nelem, contype, distype, disangles, stress, n, 'no'); toc
+    tic; [CONN, NAMES] = Thor.setup(nelem, contype, distype, disangles, stress, n, 'no'); toc
     
     
     edot = zeros(3,3,nelem);
     for ii = 1:nelem
-        edot(:,:,ii) = Thor.Utilities.bedot(eldata{ii});
+        tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]);
+        edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}));
     end
     
     edot = edot./(edot(3,3,nelem));
