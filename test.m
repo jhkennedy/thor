@@ -24,27 +24,29 @@
 % figure 3
 matlabpool
 
-nelem = 100;
-contype = 'cube';
-distype = 'iso';
+try
+
+load +Thor/+Build/initial.mat
+
+
 A = linspace(pi/200, pi/2);
 Ao = zeros(1,100);
-disangles = [Ao', A'];
+in.disangles = [Ao', A'];
 stress = [0, 0, 0; 0, 0, 0; 0, 0, 1];
-stress = repmat(stress, [1 1 nelem]);
-n = ones(nelem,1)*3;
+in.stress = repmat(stress, [1 1 in.nelem]);
+in.glenexp = ones(in.nelem,1)*3;
     
-try
-    tic; [CONN, NAMES] = Thor.setup(nelem, contype, distype, disangles, stress, n, 'no'); toc
+
+    tic; [CONN, NAMES, SETTINGS] = Thor.setup(in); toc
     
     
-    edot = zeros(3,3,nelem);
-    for ii = 1:nelem
+    edot = zeros(3,3,in.nelem);
+    for ii = 1:in.nelem
         tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]);
         edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}));
     end
     
-    edot = edot./(edot(3,3,nelem));
+    edot = edot./(edot(3,3,in.nelem));
     edot(isnan(edot)) = 0;
 %     edot(abs(edot)<=.000025) = 0;
     

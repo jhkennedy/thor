@@ -8,7 +8,7 @@ function [ vel ] = bvel( cdist )
     vel = zeros(3,3);
 
     for ii = 1:8000
-        vel = vel + cdist{ii,3};
+        vel = vel + cdist{ii,4};
     end
     
     vel = vel/8000;

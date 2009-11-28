@@ -1,4 +1,4 @@
-function [ cdist] = vec( cdist, CONN, stress, n, ynsoft )
+function [ cdist] = vec( cdist, SET, elem, CONN)
 % VEC( THETA, PHI, stress, n ) returns [ vel ecdot odf] for a crystal specifies by THETA,
 % PHI, stress and n.
 %   cdist is a 8000x5 cell aray holding a crystal distrobution
@@ -15,45 +15,52 @@ function [ cdist] = vec( cdist, CONN, stress, n, ynsoft )
 %% Initialize variables
     ALPHA = 1; % to make unitless
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
-
+    
     % initialize rate of shearing
     GAMMA = zeros(1,3);
-  
-%% loop through each crystal in the distrobution and calc its velocity gradient and 
-    for ii = 1:20*20*20
+
+    % glen exponent
+    n = SET.glenexp(elem);
+    
+    for ii = 1:SET.numbcrys
         % calculate the orientation distrobution function component for crystal ii
-        cdist{ii,5} = sin(cdist{ii,1});
+        cdist{ii,6} = sin(cdist{ii,1});
 
         % get shmidt tensors for the slip system
-        S123 = Thor.Utilities.shmidt(cdist{ii,1}, cdist{ii,2});
+        cdist{ii, 10} = Thor.Utilities.shmidt(cdist{ii,1}, cdist{ii,2});
 
         % calculate the RSS on each slip system
-        TAU = Thor.Utilities.rss(S123, stress);
+        cdist{ii,3} = Thor.Utilities.rss(cdist{ii,10}, SET.stress(:,:,elem)); 
+        
+    end
+    
+%% loop through each crystal in the distrobution and calc its velocity gradient and 
+    for ii = 1:SET.numbcrys
 
         % clalculate the softness parameter
-        switch ynsoft
+        switch SET.ynsoft
             case 'yes'
-               [cdist esoft] = Thor.Utilities.soft(cdist, CONN(ii,:), stress, TAU, ii);
+               [cdist esoft] = Thor.Utilities.soft(cdist, CONN(ii,:), ii, SET.soft);
             case 'no'
                 esoft = 1;
         end
 
         % calculate the rate of shearing on each slip system
-        GAMMA(1,1) = ALPHA*BETA*esoft*TAU(1,1)*abs(esoft*TAU(1,1))^(n-1);
-        GAMMA(1,2) = ALPHA*BETA*esoft*TAU(1,2)*abs(esoft*TAU(1,2))^(n-1);
-        GAMMA(1,3) = ALPHA*BETA*esoft*TAU(1,3)*abs(esoft*TAU(1,3))^(n-1);
+        GAMMA(1,1) = ALPHA*BETA*esoft*cdist{ii,3}(1,1)*abs(esoft*cdist{ii,3}(1,1))^(n-1);
+        GAMMA(1,2) = ALPHA*BETA*esoft*cdist{ii,3}(1,2)*abs(esoft*cdist{ii,3}(1,2))^(n-1);
+        GAMMA(1,3) = ALPHA*BETA*esoft*cdist{ii,3}(1,3)*abs(esoft*cdist{ii,3}(1,3))^(n-1);
 
         % calculate the velocity gradient of crystal ii
-        cdist{ii,3} = S123(:,:,1).*GAMMA(1,1) + S123(:,:,2).*GAMMA(1,2) +...
-                      S123(:,:,3).*GAMMA(1,3);
+        cdist{ii,4} = cdist{ii,10}(:,:,1).*GAMMA(1,1) + cdist{ii,10}(:,:,2).*GAMMA(1,2) +...
+                      cdist{ii,10}(:,:,3).*GAMMA(1,3);
 
         % add the shmidt tensor to its transpose and divide by 2 (thor 2001 papar, eqn 7)
-        S123(:,:,1) = (S123(:,:,1) + S123(:,:,1)')/2;
-        S123(:,:,2) = (S123(:,:,2) + S123(:,:,2)')/2;
-        S123(:,:,3) = (S123(:,:,3) + S123(:,:,3)')/2;
+        S123(:,:,1) = (cdist{ii,10}(:,:,1) + cdist{ii,10}(:,:,1)')/2;
+        S123(:,:,2) = (cdist{ii,10}(:,:,2) + cdist{ii,10}(:,:,2)')/2;
+        S123(:,:,3) = (cdist{ii,10}(:,:,3) + cdist{ii,10}(:,:,3)')/2;
 
         % calculate the strain rate for crystal ii
-        cdist{ii,4} = cdist{ii,5}*(S123(:,:,1).*GAMMA(1,1) + S123(:,:,2).*GAMMA(1,2) +...
+        cdist{ii,5} = cdist{ii,6}*(S123(:,:,1).*GAMMA(1,1) + S123(:,:,2).*GAMMA(1,2) +...
                       S123(:,:,3).*GAMMA(1,3));
     end
 

@@ -6,10 +6,10 @@ function [ edot ] = bedot( cdist )
 %   BEDOT returns a 3x3 array holding the bulk strain rate of the crystal distrobution.
     edot = zeros(3,3);
 
-    ODF = sum([cdist{1:8000,5}]);
+    ODF = sum([cdist{1:8000,6}]);
 
     for ii = 1:8000
-        edot = edot + cdist{ii,4};
+        edot = edot + cdist{ii,5};
     end
 
     edot = edot/ODF;

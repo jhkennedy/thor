@@ -1,4 +1,4 @@
-function [ cdist, esoft ] = soft( cdist, CONN, stress, TAUo, cnumb )
+function [ cdist, esoft ] = soft( cdist, CONN, cnumb, soft )
 % SOFT(cdist, CONN, stress, cnumb, TAUo) calculates the softness parameter from the
 % interaction between a crystal and its nearest neighbors. 
 %   cdist is a crystal distrobution is aranged in an 8000x5 cell array. The information
@@ -12,18 +12,13 @@ function [ cdist, esoft ] = soft( cdist, CONN, stress, TAUo, cnumb )
 %   CONN is a 1x12 arry containing the crystal number for the nearest neighboors in the
 %   distrobution.  
 %
-%   stress is a 3x3 array holding the stress tensor that the crystal experiences
-%
-%   TAUo is a 1x3 array holding the RSS on each of the slip systems where the RSS on a
-%   slip system 's' is obtained by TAU(1,s)
-%
 %   Soft retruns the crystal distrobution and the softness parameter, a scalar, for the
 %   crysal
 
 
 
-    xc = 1;
-    ec = 1;
+    xc = soft(1);
+    ec = soft(2);
 
     % get number of neighbors
     N = sum(~isnan(CONN(1,:)));
@@ -40,12 +35,6 @@ function [ cdist, esoft ] = soft( cdist, CONN, stress, TAUo, cnumb )
             THETA = cdist{CONN(1,ii),1};
             PHI = cdist{CONN(1,ii),2};
 
-            % get shmidt tensors for the slip systems on neigbor crystal
-            S123 = Thor.Utilities.shmidt(THETA, PHI );
-
-            %RSSs on each slip system
-            TAUi = Thor.Utilities.rss(S123, stress);
-
             % basal plane vectors for neighbor crystal
             B(1,:)  =  1/3*[cos(THETA).*cos(PHI) cos(THETA).*sin(PHI) -sin(THETA)];  
             B(2,:)  = -1/6*[(cos(THETA).*cos(PHI) + 3^(.5)*sin(PHI))...
@@ -53,7 +42,8 @@ function [ cdist, esoft ] = soft( cdist, CONN, stress, TAUo, cnumb )
             B(3,:)  = -1/6*[(cos(THETA).*cos(PHI) - 3^(.5)*sin(PHI))...
              (cos(THETA).*sin(PHI) + 3^(.5)*cos(PHI)) -sin(THETA)]; 
 
-            Ti = Ti+ norm(B(1,:)*TAUi(1,1)+B(2,:)*TAUi(1,2)+B(3,:)*TAUi(1,3));
+            Ti = Ti+ norm(B(1,:)*cdist{CONN(1,ii),3}(1,1)+B(2,:)*cdist{CONN(1,ii),3}(1,2)+...
+                  B(3,:)*cdist{CONN(1,ii),3}(1,3));
         end
     end
 
@@ -69,7 +59,7 @@ function [ cdist, esoft ] = soft( cdist, CONN, stress, TAUo, cnumb )
      (cos(THETA).*sin(PHI) + 3^(.5)*cos(PHI)) -sin(THETA)];
 
     % calculate the magnitude of the RSS on the crystal
-    To = norm(B(1,:)*TAUo(1,1)+B(2,:)*TAUo(1,2)+B(3,:)*TAUo(1,3));
+    To = norm(B(1,:)*cdist{cnumb,3}(1,1)+B(2,:)*cdist{cnumb,3}(1,2)+B(3,:)*cdist{cnumb,3}(1,3));
 
     % calculate the softness parameter
     esoft = 1/(xc + N*ec)*(xc + ec*Ti/To);
