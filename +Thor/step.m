@@ -19,7 +19,7 @@ function [ CONN, NAMES, SET ] = step(CONN, NAMES, SET )
         % check for polyiginization
         tmp.(NAMES.files{ii}) = Thor.Utilities.poly(tmp.(NAMES.files{ii}), SET, ii);
         % check for migration recrystallization
-        
+        tmp.(NAMES.files{ii}) = Thor.Utilities.migre(tmp.(NAMES.files{ii}), SET, ii);
         % save element ii
         isave(['./+Thor/CrysDists/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
     end
