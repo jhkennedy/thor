@@ -1,13 +1,13 @@
 function [ TAU ] = rss( S123, stress )
-% RSS(S123, stress) returns the RSS, resolved shear stress, on a crystal that has the
+% [TAU]=RSS(S123, stress) returns the RSS, resolved shear stress, on a crystal that has the
 % shmidt tensors S123 experiencing a stress.
 %    S123 is a 3x3x3 array holding the shmidt tensors for each slip system where the
 %    tensor for slip system 's' is obtained by S123(:,:,s)
 %
 %    stress is a 3x3 array holding the stress tensor that the crystal experiences
 %
-% RSS returns a 1x3 array holding the RSS on each of the slip systems where the RSS on a
-% slip system 's' is obtained by TAU(1,s)
+% RSS returns TAU, a 1x3 array holding the RSS on each of the slip systems where the RSS
+% on a slip system 's' is obtained by TAU(1,s)
 
 
     %% calculate the RSS on each slip system

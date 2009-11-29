@@ -1,6 +1,16 @@
 function [ cdist ] = migre( cdist, SET, elem )
-%MIGRE Summary of this function goes here
-%   Detailed explanation goes here
+% [cdist]=migre(cdist,SET,elem) recrystalizes crystals that are favorable to do so. 
+%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
+%   
+%   SET is a structure holding the model setting as outlined in Thor.setup.
+%
+%   elem is the element number of the crystal distrobution, cdist.
+%
+% migre returns a crystal distrobution, cdist, with recrystalized crystals that were
+% favorable to do so. 
+%
+%   See also Thor.setup
 
     % new crystal dislocation density
     rhoo = 1e10; % m^{-2} 

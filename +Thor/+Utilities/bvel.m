@@ -1,9 +1,12 @@
 function [ vel ] = bvel( cdist )
-% BVEL(CDIST) claculates the modeled bulk velocity gradient for the crystal distrobution
-% specified by CDIST
-%   CDIST is a 8000x5 cell aray holding the modeled crystal distrobution
+% [vel]=bvel(cdist) claculates the modeled bulk velocity gradient for the crystal
+% distrobution specified by cdist
+%   cdist is a crystal distrobution is aranged in an 8000x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
 %
-%   BVEl returns a 3x3 array holding the modeled bulk velocity gradient.
+% bvel returns vel, a 3x3 array holding the modeled bulk velocity gradient.
+%
+%   See also Thor.setup
 
     vel = zeros(3,3);
 

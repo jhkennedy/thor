@@ -1,9 +1,13 @@
 function [ edot ] = bedot( cdist )
-% BEDOT(CDIST) claculates the bulk strain rate for the crystal distrobution
-% specified by CDIST
-%   CDIST is a 8000x5 cell aray holding the modeled crystal distrobution
+% edot=BEDOT(cdist) claculates the bulk strain rate for the crystal distrobution
+% specified by cdist
+%   cdist is a crystal distrobution is aranged in an 8000x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
 %
-%   BEDOT returns a 3x3 array holding the bulk strain rate of the crystal distrobution.
+% BEDOT returns a 3x3 array holding the bulk strain rate of the crystal distrobution.
+%
+%   See also Thor.setup
+
     edot = zeros(3,3);
 
     ODF = sum([cdist{1:8000,6}]);

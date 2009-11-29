@@ -1,6 +1,15 @@
 function [ cdist ] = rotate( cdist, SET )
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+% [cdist]=rotate(cdist, SET) rotates the crystals based on the information in the crystal
+% distrobution cdist based on the setting in SET.
+%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
+%   
+%   SET is a structure holding the model setting as outlined in Thor.setup.
+%
+% rotate returns a crystal distrobution, cdist, with rotated orientation angles.
+%
+%   See also Thor.setup
+
 
     Od = 0; % bulk rotation rate boundry condition
 

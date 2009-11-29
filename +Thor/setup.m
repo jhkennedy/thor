@@ -1,78 +1,111 @@
 function [ CONN, NAMES, SETTINGS] = setup( in  )
-% [ELDATA] = SETUP(NELEM, CONTYPE, DISTYPE, DISANGLES, stress, n) sets up the cell
-% array that holds crystal distrobution variables for each element
-% specified by NELEM using the packing structure specified by CONTYPE. Each
-% crystal distrobution is made acording to DISTYPE and DISANGLES.
+% [ CONN, NAMES, SETTINGS ] = SETUP( in ) sets up the the model. Initial settings set in
+% 'in' are used to build the connectivity structure, CONN, the list of crystal
+% distrobution names, NAMES, and the model settings, SETTINGS. If no crystal distrobution
+% files are specified, setup will build crystal distrobution based on the parameters set
+% in 'in'.
 %
-%   NELEM is a scalar value specifying how many elements to build a crystal
-%   distrobution for. 
-%
-%   CONTYPE is a character array specifying the packing structure of the
-%   crystals. 8000 crystals are used in each distrobution. Possible values
-%   are 'cubic' or 'hex'. 
-%       cubic results in a 20x20x20 cubic distrobution of crystals, each 
-%       having 6 nearest neighbors. 
+%   'in' is a structure holding the initial model parameters. 
+%       in.nelem is a scalar value, [NELEM], giving the number of elements or crystal
+%       distrobutions.    
 %       
-%       hex results in a 20x20x20 hexagonal closed pack structure, with
-%       each crystal having 12 nearest neighboors. 
+%       in.contype is a character array specifying the packing structure of the
+%       crystals. 8000 crystals are used in each distrobution. Possible values
+%       are 'cubic' or 'hex'. 
+%           cubic results in a 20x20x20 cubic distrobution of crystals, each 
+%           having 6 nearest neighbors. 
+%       
+%           hex results in a 20x20x20 hexagonal closed pack structure, with
+%           each crystal having 12 nearest neighboors. 
 %
-%   DISTYPE is a character array specifying the type of crystal
-%   distrobution to make. Possible values are 'iso'.
-%       iso results in a isotropic randomly generated crystal pattern.
 %
-%   DISANGLES is an 2xNELEM array holding [Ao1, A1; ...; Ao_NELEM, A_NELEM]
-%   where the 'Ao's are the girdle angle of the crystal distrobution and
-%   the 'A's are the cone angles of the distrobution
+%       in.distype is a character array specifying the type of crystal
+%       distrobution to make. Possible values are 'iso'.
+%           iso results in a isotropic randomly generated crystal pattern.
 %
-%   STRESS is a 3x3xNELEM array holding the stress tensor for each element
+%       in.disangles is an NELEMx2 array holding [Ao1, A1; ...; Ao_NELEM, A_NELEM]
+%       where the 'Ao's are the girdle angle of the crystal distrobution and
+%       the 'A's are the cone angles of the distrobution
 %
-%   N is a NELEMx1 array holding the flow law power for each element, 3 is generally used
-%   (glens flow)
+%       in.ynsoft is a character array of either 'yes' or 'no' that turns on or off the
+%       softness parameter due to nearest neighbor interaction
 %
-%   YNSOFT is a character array of either 'yes' or 'no' that turns on or off the softness
-%   parameter due to nearest neighbor interaction
+%       in.soft is a 1x2 array holding the numeric softness parameters, [xc, ec].
+%           xc is the contribution of the center crystal and ec is the controbution of
+%           each neighbor crystal
+%
+%       in.glenexp is a NELEMx1 array holding the exponent from glens flow law for each
+%       element. 3 is the defalut value for all elements.
+%
+%       in.stress is a 3x3xNELEM array holding the stress tensor for each element.
+%
+%       in.grain is a 1x2 array holding, [MIN, MAX], the minimum, MIN, and maximum, MAX,
+%       crystal diameters for building a crystal distrobution. Grain sizes are piccked
+%       randomly from within this open interval. 
+%
+%       in.Do is a scaler value holding the initial average grain size. 
+%
+%       in.numbcrys is a scaler value holding the number of crystals in the elements. 
+%
+%       in.tsize is the time interval between sucessive steps.
+%
+%       in.tunit is a character array that specifies the units of tsize. Possible units
+%       are 'year','day', and 'seconds', where 'year' is the default.
+%
+%       in.T is a NELEMx1 array holding the temperature of each element.
+%       
+%       in.Tunit is a character array that specifies the units of T. Possible units are
+%       'kelvin' and 'celsius' where 'kelvin' is the default. 
 %
 % SETUP saves a set of variables in the form of  EL********, where  ********* is the
-% element number, into directory called 'CrysDists'. nelem files are created with each containing a crystal distrobution. 
-% The distrobution is aranged in an 8000x5 cell array
+% element number, into directory called 'CrysDists'. nelem files are created with each
+% containing a crystal distrobution. The distrobutions are aranged in an 8000x10 cell
+% array.
 %   NAMES is a structure holding th cell locations of the information
 %   specified by each field of NAMES. The information cells are:
-%      1) THETA holds the colatitudinal orientation angle for the crystal
-%      2) PHI holds the longitudinal orientation angle for the crystal
-%      3) VEL holds he velocity gradient tensor for the crystal
-%      4) ECDOT holds the single crystal strain rate
-%      5) ODF hold the crystals controbution to the orientation distrobution function, ODF
-%      6) FILES holes a column vector of all the files names where the row corrosponds to
-%      the crystal number
+%      1) theta holds the colatitudinal orientation angle for the crystal
+%      2) phi holds the longitudinal orientation angle for the crystal
+%      3) rss holds the resolved shear stress on the crystal
+%      4) vel holds he velocity gradient tensor for the crystal
+%      5) ecdot holds the single crystal strain rate
+%      6) odf hold the crystals controbution to the orientation distrobution function, ODF
+%      7) crysSize holds the crystal diameter for the crystal
+%      8) disdens holds the dislocation density for the crystal
+%      9) dislEn holds the dislocation energy for the crystal
+%      10)shmidt holds the shmidt tensor for the three slip systems of the crystal
+%   NAMES.files holes a column vector of all the files names where the row number
+%   corrosponds to the crystal number.
+%       therefor, a crystal distrobution can be accessed as such:
+%           eval(['load ./CrysDists/' NAMES.files{*********}]);
+%       and the contents of a loaded crystal distrobution as such:
+%           EL*********{crystal_number, NAMES.field_name}
+%   However, for parallel applications in matlab, this functionality is resticted. It is
+%   therefore best to use NAMES as a reference to remember the cell locations and not use
+%   it as a programing convention. The file can still be accesed the through the NAMES
+%   structure when the proxy save function isave is used. (Matlab restricts the use of
+%   eval in parallel for loops). 
 %
-% therefor, a crystal distrobution can be accessed as such:
-%    eval(['load ./CrysDists/' NAMES.files{*********}]);
-% and the contents of a loaded crystal distrobution as such:
-%    EL*********{crystal_number, NAMES.field_name}
-% However, for parallel applications, this will not work. It is therefore best to use
-% NAMES as a reference to remember the cell locations and not use it as a programing
-% convention. 
+% setup returns variables CONN, NAMES, and SETTINGS. 
+%   CONN is a NUMBCRYSx12 array holding the crystal number for each nearest neighbor in
+%   the columns (first 6 used for  cubic and all twelve used for hexognal or fcc type
+%   packing) of the crystal specified by the row number. 
 %
+%   NAMES is outlined above.
 %
-% setup also sets up the global variable CONN, a 1x12 vector holding the crystal number
-% for each nearest neighbor (first 6 used for  cubic and all twelve used for hexognal or
-% fcc type packing) 
+%   SETTINGS is an equivelent structure to 'in' outlined above. SETTINGS will be used to
+%   change the model settings over time while keeping the initial settings in 'in' intact
+%   throughout the model.
+%
+%   see also Thor
 
     %% Initialize variables
     
     % number of crystals
     numbcrys = 20*20*20;
     
-    % initialize structure that holds crystal info
+    % initialize structure that holds crystal info. Outlined above.
     NAMES = struct('theta', 1, 'phi', 2, 'rss', 3, 'vel', 4, 'ecdot', 5, 'odf', 6,... 
-        'crysize', 7, 'disdens', 8, 'dislEn', 9, 'shmidt', 10);
-    % names is a structure holding cell location of the information for a
-    % crystal specified by the cell crysStruct
-        % THETA holds the colatitudinal orientation angle for the crystal
-        % PHI holds the longitudinal orientation angle for the crystal
-        % VEL holds he velocity gradient tensor for the crystal
-        % ECDOT holds the single crystal strain rate
-        % ODF hold the crystals controbution to the orientation distrobution function, ODF
+        'crysSize', 7, 'disdens', 8, 'dislEn', 9, 'shmidt', 10);
     
     % initialize connectivity structure
     CONN = nan(numbcrys,12);
@@ -154,10 +187,13 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
     parfor ii = 1:in.nelem % loop through the elements
         % load element ii
         tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]); %#ok<PFBNS>
+        
         % initialize velocity gradiant and single crystal strain rate
         tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), CONN, ii, in);        
+        
         % initial dislocation energy
         tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));
+        
         % save element ii
         isave(['./+Thor/CrysDists/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
     end

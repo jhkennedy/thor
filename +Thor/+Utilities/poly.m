@@ -1,6 +1,17 @@
 function [ cdist ] = poly( cdist, SET, elem )
-%POLY Summary of this function goes here
-%   Detailed explanation goes here
+% [cdist]=poly(cdist, SET, elem) polygonizes crystals favorable do so.
+%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
+%   
+%   SET is a structure holding the model setting as outlined in Thor.setup.
+%
+%   elem is the element number of the crystal distrobution, cdist.
+%
+% poly retruns a crystal distrobution, cdist, withpolygonized crystals that were favorable
+% to do so. 
+%
+%   See also Thor.setup
+
 
     del = 0.065; % ratio threshold -- Thor 2002 [26]
     rhop = 5.4e10; % dislocation density needed to form a wall -- Thor 2002 [26]

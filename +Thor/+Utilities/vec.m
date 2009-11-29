@@ -1,15 +1,21 @@
 function [ cdist] = vec( cdist, SET, elem, CONN)
-% VEC( THETA, PHI, stress, n ) returns [ vel ecdot odf] for a crystal specifies by THETA,
-% PHI, stress and n.
-%   cdist is a 8000x5 cell aray holding a crystal distrobution
+% [cdist]=vec(cdist, SET, elem, CONN) calculates the velocity gradient and single crystal
+% strain rate for every crystal in cdist. cdist is the crystal disrobution for element
+% elem. Vec uses the settings in SET and the connectivity structure specified by CONN.
+%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
 %
-%   stess is a 3x3 array holding the stress tensor that the crystal distrobution experiences
+%   SET is the setting structure outlined in Thor.setup.
 %
-%   n is the flow law power that the crystal distrubution experiences
+%   elem is the element number that cdist is a part of.
 %
-%   ynsoft turns on and of the softness parameter
+%   CONN is the conectivity structure as outlined in Thor.setup.
 %
-%   Vec returns returns the modified cdist
+% vec returns cdist with new values for the rss, vel, ecdot, odf and shmidt for each
+% crystal within the distrobution calculated from the current theta and phi values
+% specified for each crystal.
+%
+%   See also Thor.setup
 
 
 %% Initialize variables

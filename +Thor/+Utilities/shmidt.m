@@ -1,5 +1,5 @@
 function [ S123 ] = shmidt( THETA, PHI )
-% SHMIDT( THETA, PHI ) returns the shmidt tensors of the three slip systems for a crystal
+% [S123]=SHMIDT( THETA, PHI ) returns the shmidt tensors of the three slip systems for a crystal
 % with orientation angles THETA and PHI.
 %   THETA is the colatitudinal orientation angle for the crystal
 %

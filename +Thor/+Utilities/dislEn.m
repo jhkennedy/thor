@@ -1,7 +1,13 @@
 function [ cdist ] = dislEn( cdist )
-%DISLEN Summary of this function goes here
-%   Detailed explanation goes here
-% dislocation energy calculation
+% [cdist]=dislEn(cdist) calculates the dislocation energy for each crystal in the crystal
+% distrobution specifided by cdist.
+%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
+%   distrubution structure is outlined in Thor.setup.
+%
+% dislEn retruns the crystal distrobution with new values for the dislocation energy. 
+%   
+%   See also Thor.setup
+
 
 rho = cell2mat(cdist(:,8));
 

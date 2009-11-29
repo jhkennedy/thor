@@ -1,7 +1,8 @@
 function [ Egb ] = gbEn( D )
-%EGB Summary of this function goes here
-%   Detailed explanation goes here
-% calculate grain boundry energy
+% [Egb]=gbEn(D) calculates the grain boundry energy of a crystal of size D.
+%   D is the crystal diameter. 
+% 
+% gbEn return the grain boundy energy of a crystal.
 
 
 GAMMAgb = 0.0065; % J m^{-2}
