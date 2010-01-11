@@ -19,6 +19,8 @@ function [ rhodot ] = disldot( T, D, edot, rho )
 %
 %   See also Thor.setup
 
+    Medot = ( edot(1,1)*edot(2,2)+edot(2,2)*edot(3,3)+edot(3,3)*edot(1,1)...
+                   -(edot(1,2)^2+edot(2,3)^2+edot(3,1)^2) )^(1/2); % s^{-1}
 
     Ko = 9.2e-9; % m^2 s^{-1}
     Q = 40; % kJ mol^{-1}
@@ -27,10 +29,10 @@ function [ rhodot ] = disldot( T, D, edot, rho )
     alpha = 2; % constant greater than 1, thor 2002
     
     % calculate grain growth factor
-    K = Ko*exp(-Q/(R*T));
+    K = Ko*exp(-Q/(R*(273.13+T))); % m^2 s^{-1}
     
     % claclulate the change in the dislocation density
-    rhodot = (edot/(b*D))-alpha*rho*K/(D^2);
+    rhodot = (Medot/(b*D))-alpha*rho*K/(D^2); % m^{-2} s^{-1}
     
 end
 

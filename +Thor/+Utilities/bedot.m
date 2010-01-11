@@ -8,15 +8,15 @@ function [ edot ] = bedot( cdist )
 %
 %   See also Thor.setup
 
-    edot = zeros(3,3);
+    edot = zeros(3,3); % s^{-1}
 
-    ODF = sum([cdist{1:8000,6}]);
+    ODF = sum([cdist{1:8000,6}]); % -
 
     for ii = 1:8000
-        edot = edot + cdist{ii,5};
+        edot = edot + cdist{ii,5}; % s^{-1}
     end
 
-    edot = edot/ODF;
+    edot = edot/ODF; % s^{-1}
 
 end
 

@@ -10,7 +10,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %       distrobutions.    
 %       
 %       in.contype is a character array specifying the packing structure of the
-%       crystals. 8000 crystals are used in each distrobution. Possible values
+%       crystals. NUMBCRYS crystals are used in each distrobution. Possible values
 %       are 'cubic' or 'hex'. 
 %           cubic results in a 20x20x20 cubic distrobution of crystals, each 
 %           having 6 nearest neighbors. 
@@ -100,19 +100,16 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 
     %% Initialize variables
     
-    % number of crystals
-    numbcrys = 20*20*20;
-    
     % initialize structure that holds crystal info. Outlined above.
     NAMES = struct('theta', 1, 'phi', 2, 'rss', 3, 'vel', 4, 'ecdot', 5, 'odf', 6,... 
         'crysSize', 7, 'disdens', 8, 'dislEn', 9, 'shmidt', 10);
     
     % initialize connectivity structure
-    CONN = nan(numbcrys,12);
+    CONN = nan(in.numbcrys,12);
     switch in.contype
         case 'cube'
             % cubic connectivity, 6 nearest neigbors
-            for ii = 1:numbcrys
+            for ii = 1:in.numbcrys
                 % get index for current crystal
                 [I J K] = ind2sub([20 20 20], ii);
                 % get the top-bottom-left-right-back-front indexes
@@ -142,10 +139,6 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
             % load in file names
         
         otherwise
-            CONN = NaN(numbcrys,12);
-             % CONN is a NUMBCRYSx12 vector holding the crystal number for each nearest
-             % neighbor (first 6 used for  cubic and all twelve used for hexognal
-             % or fcc type packing)  
             crysStruct = {0, 0, zeros(1,3), zeros(3,3), zeros(3,3), 0, 0, 0, 0, zeros(3,3,3)};
             % CrysDist is a cell array containing all the individual crystal
             % structured for a crystal distrobution
@@ -155,7 +148,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
             crysStruct{8} = 4*1e10; % m^{-2}
 
             % build a crystal distrobution
-            crysDist = repmat(crysStruct, numbcrys,1);
+            crysDist = repmat(crysStruct, in.numbcrys,1);
             
             switch in.distype
                 case 'iso'
@@ -165,10 +158,10 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
                         NAMES.files{ii} = sprintf('EL%09.0f', ii);
                         % create isotropic distrobution of angles
                         THETA = in.disangles(ii,1) + (in.disangles(ii,2)-in.disangles(ii,1))...
-                                *rand(numbcrys,1);
-                        PHI = 2*pi*rand(numbcrys,1);
+                                *rand(in.numbcrys,1);
+                        PHI = 2*pi*rand(in.numbcrys,1);
                         % creat isotropic distrobution of grain size
-                        GRAINS = in.grain(1) + (in.grain(2)-in.grain(1))*rand(numbcrys,1);
+                        GRAINS = in.grain(1) + (in.grain(2)-in.grain(1))*rand(in.numbcrys,1);
                         % place crystal params into crystal distrobutions
                         crysDist(:,1) = num2cell(THETA);
                         crysDist(:,2) = num2cell(PHI);
@@ -189,7 +182,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
         tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]); %#ok<PFBNS>
         
         % initialize velocity gradiant and single crystal strain rate
-        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), CONN, ii, in);        
+        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), in, ii, CONN);        
         
         % initial dislocation energy
         tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));

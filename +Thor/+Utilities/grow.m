@@ -16,20 +16,23 @@ function [ cdist ] = grow( cdist, SET, elem )
     Ko = 9.2e-9; % m^2 s^{-1}
     Q = 40; % kJ mol^{-1}
     R = 0.008314472; % kJ K^{-1} mol^{-1}
+    dislEnAv = 0; % J m^{-3}
+    C = 1; %#ok<NASGU> % J^{-1} m^3
     
     % calculate grain growth factor
-    K = Ko*exp(-Q/(R*SET.T(elem)));
+    K = Ko*exp(-Q/(R*(273.13+SET.T(elem)))); % m^2 s^{-1}
     
     % find the average dislocaton energy
     for ii = 1:(SET.numbcrys)
-        dislEnAv = dislEnAv + cdist{ii,9}/(SET.numbcrys);
+        dislEnAv = dislEnAv + cdist{ii,9}/(SET.numbcrys); % J m^{-3}
     end
     
     % grow grain
     for ii = 1:(SET.numbcrys)
-        % modify grain growth by dilocation energy
-        Ki = (dislEnAv - cdist{ii,9})*K;
+%         % modify grain growth by dilocation energy
+%         Ki = (dislEnAv - cdist{ii,9})*C*K;
+        Ki = K;
         % calculate new crystal diameter
-        cdist{ii, 7} = (Ki*SET.tsize + SET.Do^2)^(1/2);
+        cdist{ii, 7} = (Ki*SET.tsize + SET.Do^2)^(1/2); % m
     end
 end

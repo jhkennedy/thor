@@ -16,10 +16,10 @@ function [ cdist ] = disl( cdist, SET, elem )
     for ii = 1:SET.numbcrys
         
         % time change of the dislocation density
-        rhodot = Thor.Utilities.disldot(SET.T(elem), cdist{ii,7}, cdist{ii,5}, cdist{ii,8});
+        rhodot = Thor.Utilities.disldot(SET.T(elem), cdist{ii,7}, cdist{ii,5}, cdist{ii,8}); % m^{-2} s^{-1}
         
         % set new dislocation density
-        cdist{ii, 8} = cdist{ii,8}+rhodot*SET.tsize;
+        cdist{ii, 8} = cdist{ii,8}+rhodot*SET.tsize; % m^{-2}
     end
 end
 

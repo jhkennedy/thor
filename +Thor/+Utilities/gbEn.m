@@ -7,6 +7,6 @@ function [ Egb ] = gbEn( D )
 
 GAMMAgb = 0.0065; % J m^{-2}
 
-Egb = 3*GAMMAgb/D;
+Egb = 3*GAMMAgb/D; % J m^{-3}
 
 end

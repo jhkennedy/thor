@@ -8,12 +8,12 @@ function [ vel ] = bvel( cdist )
 %
 %   See also Thor.setup
 
-    vel = zeros(3,3);
+    vel = zeros(3,3); % s^{-1}
 
     for ii = 1:8000
-        vel = vel + cdist{ii,4};
+        vel = vel + cdist{ii,4}; % s^{-1}
     end
     
-    vel = vel/8000;
+    vel = vel/8000; % s^{-1}
 end
 

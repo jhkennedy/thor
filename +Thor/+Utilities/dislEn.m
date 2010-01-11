@@ -8,18 +8,18 @@ function [ cdist ] = dislEn( cdist )
 %   
 %   See also Thor.setup
 
-
-rho = cell2mat(cdist(:,8));
+rho = cell2mat(cdist(:,8)); % m^{-2}
 
 kappa = 0.35; % adjustible parameter -- Thor2002 eqn. 19 -- value set [38]
 G = 3.4e9; % Pa
 b = 4.5e-10; % m
 
-Re = 1/(rho.^(1/2)); 
+Re = 1./(rho.^(1/2)); % m
 
-Edis = kappa*G*b^2*log(Re/b);
+Edis = kappa*G*b^2.*log(Re/b); % J / m
+Edis = Edis.*rho; % J m^{-3}
 
-cdist(:,9) = num2cell(Edis);
+cdist(:,9) = num2cell(Edis); % J m^{-3}
 
 end
 
