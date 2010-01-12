@@ -1,5 +1,6 @@
 %% Test Thor 2001 results
 
+% % % % % % %
 % % figure 3
 %
 % matlabpool
