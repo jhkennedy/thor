@@ -19,8 +19,6 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
 
 
 %% Initialize variables
-% SET.A = [0    -2    -5   -10   -15   -20   -25   -30   -35   -40   -45   -50;...
-%         [6.8  2.4   1.6  .46   .29   .17  .094   .051  .027  .014 .0073 .0038]*1e-24 ];
     
     ALPHA = 3.6e-27; % s^{-1} Pa^{-3}
     for tt = 2:size(SET.A,2)

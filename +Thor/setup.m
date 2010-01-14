@@ -57,6 +57,9 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %       in.Tunit is a character array that specifies the units of T. Possible units are
 %       'kelvin' and 'celsius' where 'kelvin' is the default. 
 %
+%       in.A is an 2x12 array holding the tempurature dependance of Glen's flow law
+%       parameter as taken from 'The Physics of Glaciers' by Patterson. (3rd Ed.)
+%
 % SETUP saves a set of variables in the form of  EL********, where  ********* is the
 % element number, into directory called 'CrysDists'. nelem files are created with each
 % containing a crystal distrobution. The distrobutions are aranged in an 8000x10 cell
