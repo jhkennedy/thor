@@ -5,9 +5,11 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 % files are specified, setup will build crystal distrobution based on the parameters set
 % in 'in'.
 %
-%   'in' is a structure holding the initial model parameters. 
+%   'in' is a structure holding the initial model parameters. The in structure can be
+%   built by calling the function Thor.Build.structure.
+%
 %       in.nelem is a scalar value, [NELEM], giving the number of elements or crystal
-%       distrobutions.    
+%       distrobutions.
 %       
 %       in.contype is a character array specifying the packing structure of the
 %       crystals. NUMBCRYS crystals are used in each distrobution. Possible values
@@ -40,7 +42,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %       in.stress is a 3x3xNELEM array holding the stress tensor for each element.
 %
 %       in.grain is a 1x2 array holding, [MIN, MAX], the minimum, MIN, and maximum, MAX,
-%       crystal diameters for building a crystal distrobution. Grain sizes are piccked
+%       crystal diameters for building a crystal distrobution. Grain sizes are picked
 %       randomly from within this open interval. 
 %
 %       in.Do is a scaler value holding the initial average grain size. 
@@ -99,7 +101,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %   change the model settings over time while keeping the initial settings in 'in' intact
 %   throughout the model.
 %
-%   see also Thor
+%   see also Thor, Thor.Build, and Thor.Build.structure
 
     %% Initialize variables
     

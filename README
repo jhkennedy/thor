@@ -1,0 +1,60 @@
+==========================================
+ MATLAB PACKAGE INSTALLATION INSTRUCTIONS
+==========================================
+
+MATLAB will automatically recognize this package once the +Thor directory added
+the matlab path. There are two standard ways of doing this:
+
+    1) Coppy the +Thor directory into your user path. You can find this path by 
+       typing at the comand prompt
+
+            >> userpath
+       
+    2) Adding the folder containing the +Thor directory to the matlab path. If 
+       +Thor is located at /usr/local/matlab/packages/+Thor then you would add 
+       this path to the matlab path by typing at the comand prompt
+            
+            >> path(path, '/usr/local/matlab/packages/')
+       
+       Any further packages coppied into this directory using the '+' syntax for
+       MATLAB packages will be automatically recognised by MATLAB. 
+
+       =======================
+          USING THE PACKAGE
+       =======================
+
+        All functions in package Thor are called in matlab by
+
+            >> Thor.FUNCTION
+
+        Likewise all functions in subpackages of Thor are called by
+
+            >> Thor.SUBPACKAGE.FUNCTION
+
+        and so on and so forth. 
+
+        This package is compliant with MATLABs standard help function. As such, you can 
+        see a list of funtions and subpackages in Thor by typing
+
+            >> help Thor
+
+        Likewise you can do the same for a subpackage by typing
+
+            >> help Thor.SUBPACKAGE
+
+        You can get help on a function by typing 
+
+            >> help Thor.FUNCTION
+
+        or for a function in a subpackage
+
+            >> help Thor.SUBPACKAGE.FUNCTION
+
+        and so on and so forth. 
+
+==========================================
+ OCTAVE PACKAGE INSTALLATION INSTRUCTIONS
+==========================================
+
+    Currently this package does not work in matlab because octave doesn't use the '+'
+    syntax for packages. A fix is in the works. 
