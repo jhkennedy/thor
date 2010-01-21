@@ -41,7 +41,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %
 %       in.stress is a 3x3xNELEM array holding the stress tensor for each element.
 %
-%       in.grain is a 1x2 array holding, [MIN, MAX], the minimum, MIN, and maximum, MAX,
+%       in.grain is a NELEMx2 array holding, [MIN, MAX], the minimum, MIN, and maximum, MAX,
 %       crystal diameters for building a crystal distrobution. Grain sizes are picked
 %       randomly from within this open interval. 
 %
@@ -113,24 +113,25 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
     CONN = nan(in.numbcrys,12);
     switch in.contype
         case 'cube'
-            % cubic connectivity, 6 nearest neigbors
-            for ii = 1:in.numbcrys
-                % get index for current crystal
-                [I J K] = ind2sub([20 20 20], ii);
-                % get the top-bottom-left-right-back-front indexes
-                cons = [I-1, J, K; I+1, J, K; I, J-1, K;...
-                          I, J+1, K; I, J, K-1; I, J, K+1];
-                % try to get linear indecies
-                for jj = 1:6
-                    try
-                        CONN(ii,jj) = sub2ind([20 20 20],...
-                                        cons(jj,1),cons(jj,2),cons(jj,3));
-                    catch ME %#ok<NASGU>
-                        % subscrypt was outside of array. This will hapen at all
-                        % corners and walls. Will leave value as NaN.
-                    end
-                end
-             end
+            % cube length width hight array
+            cube = [in.width, in.width, in.width];
+            % initialize connectivity structure
+            CONN = nan(in.numbcrys,12);
+            % get cubic connectivity, 6 nearest neighbors
+                % get indices for crystals
+                [I,J,K] = ind2sub(cube,1:in.numbcrys);
+                % get the top, bottom, left, right, back, front indices 1xNUMBCRYS*6
+                cons = [I-1, I+1,   I,   I,   I,   I;...
+                          J,   J, J-1, J+1,   J,   J;...
+                          K,   K,   K,   K, K-1, K+1 ];
+                % mask any unvalid indexes
+                mask = [I-1, I+1, J-1, J+1,  K-1, K+1 ];
+                mask = mask<1 | mask>in.width;
+                % get valid index numbers on the conecting crystals
+                ind = sub2ind(cube, cons(1,~mask)', cons(2,~mask)', cons(3,~mask)');
+            % set connectivity matrix
+            CONN(~mask) = ind;
+        
         case 'hex'
           % hexagonal connectivity, 12 nearest neigbors  
     end

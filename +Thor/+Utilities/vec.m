@@ -20,15 +20,7 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
 
 %% Initialize variables
     
-    ALPHA = 3.6e-27; % s^{-1} Pa^{-3}
-    for tt = 2:size(SET.A,2)
-        if SET.T(elem,1) >= SET.A(1,tt)
-            ALPHA = SET.A(2,tt)+(SET.T(elem,1)-SET.A(1,tt-1))*...
-                    ( (SET.A(2,tt-1)-SET.A(2,tt)) /...
-                      (SET.A(1,tt-1)-SET.A(1,tt))) ; % s^{-1} Pa^{-3}
-            break;
-        end
-    end
+    ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T);% s^{-1} Pa^{-3}
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
     
     % initialize rate of shearing
