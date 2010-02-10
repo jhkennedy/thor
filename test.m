@@ -23,7 +23,7 @@
 %     edot = zeros(3,3,in.nelem);
 %     for ii = 1:in.nelem
 %         tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]);
-%         edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}));
+%         edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}), SETTINGS);
 %     end
 %     
 %     toc
@@ -53,10 +53,10 @@
 
 try
    
-    close all; clear all; clc;
+    close all; clear all;
 
     h = waitbar(0, 'Initializing . . .');
-    timesteps = 25;
+    timesteps = 10;
     
     tic;
     matlabpool;
@@ -66,7 +66,7 @@ try
      load +Thor/+Build/initial.mat
     
     in.T = in.T - 15;
-    in.soft = [0,1];
+    in.soft = [1,1];
     
     [CONN, NAMES, SET] = Thor.setup(in); toc
     

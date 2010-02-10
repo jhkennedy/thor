@@ -41,11 +41,11 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %
 %       in.stress is a 3x3xNELEM array holding the stress tensor for each element.
 %
-%       in.grain is a NELEMx2 array holding, [MIN, MAX], the minimum, MIN, and maximum, MAX,
-%       crystal diameters for building a crystal distrobution. Grain sizes are picked
-%       randomly from within this open interval. 
+%       in.grain is a NELEMx2 array holding, [MIN, MAX], the minimum, MIN, and maximum,
+%       MAX, crystal diameters for building a crystal distrobution for each element. Grain
+%       sizes are picked randomly from within this open interval. 
 %
-%       in.Do is a scaler value holding the initial average grain size. 
+%       in.Do is a NELEMx1 array holding the initial average grain size for each element. 
 %
 %       in.numbcrys is a scaler value holding the number of crystals in the elements. 
 %
@@ -167,7 +167,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
                                 *rand(in.numbcrys,1);
                         PHI = 2*pi*rand(in.numbcrys,1);
                         % creat isotropic distrobution of grain size
-                        GRAINS = in.grain(1) + (in.grain(2)-in.grain(1))*rand(in.numbcrys,1);
+                        GRAINS = in.grain(ii,1) + (in.grain(ii,2)-in.grain(ii,1))*rand(in.numbcrys,1);
                         % place crystal params into crystal distrobutions
                         crysDist(:,1) = num2cell(THETA);
                         crysDist(:,2) = num2cell(PHI);

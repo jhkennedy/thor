@@ -336,6 +336,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
          set(Hsave,'Callback', @CBHsave);
          function CBHsave(HObject, eventdata)
              if sum(cbtest) == 5;
+                evalin('base', 'default.Do = mean(default.grain,2);');
                 evalin('base', ['save ./+Thor/+Build/Settings/',ssname,' default']);
              else
                  errordlg('Not all the variable boxes are checked, make sure you have created the variables.','Error Saving  Structure','modal');
@@ -347,6 +348,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
          set(Hset2,'Callback', @CBHset2);
          function CBHset2(HObject, eventdata)
              if sum(cbtest) == 5;
+                evalin('base', 'default.Do = mean(default.grain,2);');
                 evalin('base', ['save ./+Thor/+Build/Settings/',ssname,' default']);
              else
                  errordlg('Not all the variable boxes are checked, make sure you have created the variables.','Error Saving  Structure','modal');
