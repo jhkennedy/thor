@@ -19,7 +19,8 @@ function [ cdist ] = migre( cdist, SET, elem )
         rhoo = 1e10; % m^{-2} 
         % effectice stress
         s = SET.stress(:,:,elem); % Pa
-        es = (s(1,1)^2+s(2,2)^2+s(3,3)^2+2*s(1,2)^2+2*s(1,3)^2+2*s(2,3)^2)^(1/2); % Pa
+        es = ( s(1,1)^2 + s(2,2)^2 + s(1,1)*s(2,2) ...
+              + s(1,2)^2 + s(2,3)^2 +s(3,1)^2 )^(1/2); % Pa
         % new crystal size
         pc = 1; % Pa^{4/3} m
         D = pc*es^(-4/3); % m

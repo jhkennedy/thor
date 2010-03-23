@@ -20,7 +20,7 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
 
 %% Initialize variables
     
-    ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T);% s^{-1} Pa^{-3}
+    ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T(elem,1));% s^{-1} Pa^{-3}
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
     
     % initialize rate of shearing
@@ -53,9 +53,9 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
         end
 
         % calculate the rate of shearing on each slip system
-        GAMMA(1,1) = ALPHA*BETA*esoft*cdist{ii,3}(1,1)*abs(esoft*cdist{ii,3}(1,1))^(n-1); % s^{-1}
-        GAMMA(1,2) = ALPHA*BETA*esoft*cdist{ii,3}(1,2)*abs(esoft*cdist{ii,3}(1,2))^(n-1); % s^{-1}
-        GAMMA(1,3) = ALPHA*BETA*esoft*cdist{ii,3}(1,3)*abs(esoft*cdist{ii,3}(1,3))^(n-1); % s^{-1}
+        GAMMA(1,1) = ALPHA*BETA*esoft*cdist{ii,3}(1)*abs(esoft*cdist{ii,3}(1))^(n-1); % s^{-1}
+        GAMMA(1,2) = ALPHA*BETA*esoft*cdist{ii,3}(2)*abs(esoft*cdist{ii,3}(2))^(n-1); % s^{-1}
+        GAMMA(1,3) = ALPHA*BETA*esoft*cdist{ii,3}(3)*abs(esoft*cdist{ii,3}(3))^(n-1); % s^{-1}
 
         % calculate the velocity gradient of crystal ii
         cdist{ii,4} = cdist{ii,10}(:,:,1).*GAMMA(1,1) + cdist{ii,10}(:,:,2).*GAMMA(1,2) +...

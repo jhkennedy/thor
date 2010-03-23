@@ -1,4 +1,4 @@
-function [ CONN, NAMES, SET ] = step(CONN, NAMES, SET )
+function step(CONN, NAMES, SET, RUN )
 % [CONN, NAMES, SET] = step(CONN, NAMES, SET) preforms a time step specified in SET on all
 % the crystal distrobutions in NAMES with a conectivity structure specified by CONN. 
 %   CONN is a (SET.numbcrys)x12 array holding the crystal number for each nearest neighbor
@@ -20,10 +20,10 @@ function [ CONN, NAMES, SET ] = step(CONN, NAMES, SET )
 %            Thor.Utilities.migre
 
 
-    parfor ii = 1:SET.nelem
+    for ii = 1:SET.nelem
 
         % load element ii
-        tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]); %#ok<PFBNS>
+        tmp = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}]);
         
         % rotate the crstals from last time steps calculations
         tmp.(NAMES.files{ii}) = Thor.Utilities.rotate(tmp.(NAMES.files{ii}), SET );
@@ -47,7 +47,8 @@ function [ CONN, NAMES, SET ] = step(CONN, NAMES, SET )
         tmp.(NAMES.files{ii}) = Thor.Utilities.migre(tmp.(NAMES.files{ii}), SET, ii);
                 
         % save element ii
-        isave(['./+Thor/CrysDists/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
+        isave(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
+        
     end
 end
 

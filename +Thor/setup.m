@@ -1,9 +1,11 @@
-function [ CONN, NAMES, SETTINGS] = setup( in  )
-% [ CONN, NAMES, SETTINGS ] = SETUP( in ) sets up the the model. Initial settings set in
+function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
+% [ CONN, NAMES, SETTINGS ] = SETUP( in, RUN ) sets up the the model. Initial settings set in
 % 'in' are used to build the connectivity structure, CONN, the list of crystal
 % distrobution names, NAMES, and the model settings, SETTINGS. If no crystal distrobution
 % files are specified, setup will build crystal distrobution based on the parameters set
 % in 'in'.
+%
+%   RUN is the run number to seperate different runs.
 %
 %   'in' is a structure holding the initial model parameters. The in structure can be
 %   built by calling the function Thor.Build.structure.
@@ -81,7 +83,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %   NAMES.files holes a column vector of all the files names where the row number
 %   corrosponds to the crystal number.
 %       therefor, a crystal distrobution can be accessed as such:
-%           eval(['load ./CrysDists/' NAMES.files{*********}]);
+%           eval(['load ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{*********}]);
 %       and the contents of a loaded crystal distrobution as such:
 %           EL*********{crystal_number, NAMES.field_name}
 %   However, for parallel applications in matlab, this functionality is resticted. It is
@@ -103,8 +105,13 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
 %
 %   see also Thor, Thor.Build, and Thor.Build.structure
 
-    %% Initialize variables
+    %% make directory for run
+    warning off MATLAB:MKDIR:DirectoryExists
+    eval(['mkdir ./+Thor/CrysDists/Run' num2str(RUN) '/']);
+    eval(['mkdir ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/']);
     
+    %% Initialize variables
+      
     % initialize structure that holds crystal info. Outlined above.
     NAMES = struct('theta', 1, 'phi', 2, 'rss', 3, 'vel', 4, 'ecdot', 5, 'odf', 6,... 
         'crysSize', 7, 'disdens', 8, 'dislEn', 9, 'shmidt', 10);
@@ -174,7 +181,7 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
                         crysDist(:,7) = num2cell(GRAINS);
                         % save crystal distrobutions
                         eval([NAMES.files{ii} '= crysDist;']);
-                        eval(['save ./+Thor/CrysDists/' NAMES.files{ii} ' ' NAMES.files{ii}]);
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
                         eval(['clear ' NAMES.files{ii}])
                     end
             end
@@ -183,9 +190,9 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
     
     %% calculate initials 
     
-    parfor ii = 1:in.nelem % loop through the elements
+    for ii = 1:in.nelem % loop through the elements
         % load element ii
-        tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]); %#ok<PFBNS>
+        tmp = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}]); 
         
         % initialize velocity gradiant and single crystal strain rate
         tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), in, ii, CONN);        
@@ -194,11 +201,15 @@ function [ CONN, NAMES, SETTINGS] = setup( in  )
         tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));
         
         % save element ii
-        isave(['./+Thor/CrysDists/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
+        isave(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
+        clear tmp;
     end
     
     % set the model settings
     SETTINGS = in;
+    
+    % save a copy of the initial crystal distrobutions
+    Thor.Utilities.saveStep(NAMES, SETTINGS, RUN, 0, 0);
     
 end
 

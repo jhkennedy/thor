@@ -10,15 +10,12 @@ function [ edot ] = bedot( cdist, SET )
 %
 %   See also Thor.setup
 
-    edot = zeros(3,3); % s^{-1}
 
     ODF = sum([cdist{1:SET.numbcrys,6}]); % -
-
-    for ii = 1:SET.numbcrys
-        edot = edot + cdist{ii,5}; % s^{-1}
-    end
-
+    
+    temp = reshape([cdist{1:SET.numbcrys,5}],9,[]);
+    temp = sum(temp,2);
+    edot = reshape(temp,3,3); % s^{-1}
+   
     edot = edot/ODF; % s^{-1}
-
 end
-

@@ -70,16 +70,16 @@ try
     
     [CONN, NAMES, SET] = Thor.setup(in); toc
     
-    cdist1 = load(['./+Thor/CrysDists/' NAMES.files{pltcrys}]);
+    cdist1 = load(['./+Thor/CrysDists/Run' num2str(0) '/' NAMES.files{pltcrys}]);
     
     waitbar(0, h, 'Calculating...');
     
     for ii=1:timesteps
-    [ CONN, NAMES, SET ] = Thor.step(CONN, NAMES, SET ); toc
+    [ CONN, NAMES, SET ] = Thor.step(CONN, NAMES, SET, 0 ); toc
     waitbar(ii/timesteps, h);
     end
     
-    cdist2 = load(['./+Thor/CrysDists/' NAMES.files{pltcrys}]);
+    cdist2 = load(['./+Thor/CrysDists/Run' num2str(0) '/' NAMES.files{pltcrys}]);
         
     matlabpool close;
     

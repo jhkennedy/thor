@@ -1,4 +1,4 @@
-function structure
+function [f] =  structure
 %%   structure is a gui used to build the initial structure for the Thor model. 
 %
 %
@@ -211,8 +211,6 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
             if (get(HObject,'Value') == get(HObject,'Max'))
                 % Checkbox is checked-take approriate action
                 cbtest(5) = 1;
-                CBTEST = sum(cbtest);
-                evalin('base', int2str(CBTEST));
             else
                 % Checkbox is not checked-take approriate action
                 cbtest(5) = 0;
@@ -251,7 +249,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
         end
     
     % Time Step Size
-    Htsize    = uicontrol(HComp3,'Style', 'edit','String','100',...
+    Htsize    = uicontrol(HComp3,'Style', 'edit','String','3.1557e9',...
                             'Units', 'Normalized','Position',[.4,.15,.25,.4]);
          Htext9  = uicontrol(HComp3,'Style','text','String',...
                              'Time Step Size',...
@@ -264,8 +262,8 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
         end
                          
     % Time Step Units
-    Htunit     = uicontrol(HComp3,'Style','popupmenu','Value',5,...
-                            'String', {'Seconds','Days', 'Weeks', 'Months', 'Years'},...
+    Htunit     = uicontrol(HComp3,'Style','popupmenu','Value',1,...
+                            'String', {'Seconds','Days', 'Weeks', 'Years'},...
                             'Units', 'Normalized','Position',[.7,.15,.25,.4]);
          Htext10  = uicontrol(HComp3,'Style','text','String',...
                              'Time Step Units',...
@@ -311,7 +309,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
              evalin('base', 'in = default;');
              evalin('base','save ./+Thor/+Build/initial.mat in');
              evalin('base','clear default in');
-             close(f);
+             delete(f);
          end   
      
 %% Construct the create settings components
@@ -336,6 +334,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
          set(Hsave,'Callback', @CBHsave);
          function CBHsave(HObject, eventdata)
              if sum(cbtest) == 5;
+                evalin('base', '[default.tsize, default.tunit] = Thor.Utilities.tempUnitSwitch(default.tsize, default.tunit);');
                 evalin('base', 'default.Do = mean(default.grain,2);');
                 evalin('base', ['save ./+Thor/+Build/Settings/',ssname,' default']);
              else
@@ -348,6 +347,7 @@ Hexpl = uicontrol('Style', 'edit','HorizontalAlignment','left','Max',2,'Min',0,.
          set(Hset2,'Callback', @CBHset2);
          function CBHset2(HObject, eventdata)
              if sum(cbtest) == 5;
+                evalin('base', '[default.tsize, default.tunit] = Thor.Utilities.tempUnitSwitch(default.tsize, default.tunit);');
                 evalin('base', 'default.Do = mean(default.grain,2);');
                 evalin('base', ['save ./+Thor/+Build/Settings/',ssname,' default']);
              else

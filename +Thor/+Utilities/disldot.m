@@ -19,8 +19,8 @@ function [ rhodot ] = disldot( T, D, edot, rho )
 %
 %   See also Thor.setup
 
-    Medot = ( edot(1,1)*edot(2,2)+edot(2,2)*edot(3,3)+edot(3,3)*edot(1,1)...
-                   -(edot(1,2)^2+edot(2,3)^2+edot(3,1)^2) )^(1/2); % s^{-1}
+    Medot = ( edot(1,1)^2 + edot(2,2)^2 + edot(1,1)*edot(2,2) ...
+             + edot(1,2)^2 + edot(2,3)^2 +edot(3,1)^2 )^(1/2); % s^{-1}
 
     Ko = 9.2e-9; % m^2 s^{-1}
     Q = 40; % kJ mol^{-1}
