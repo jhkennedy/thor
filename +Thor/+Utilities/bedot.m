@@ -14,6 +14,9 @@ function [ edot ] = bedot( cdist, SET )
     ODF = sum([cdist{1:SET.numbcrys,6}]); % -
     
     temp = reshape([cdist{1:SET.numbcrys,5}],9,[]);
+    todf = [cdist{1:SET.numbcrys,6}];
+    todf = repmat(todf,9,1);
+    temp = temp.*todf;
     temp = sum(temp,2);
     edot = reshape(temp,3,3); % s^{-1}
    

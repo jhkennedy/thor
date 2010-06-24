@@ -66,7 +66,7 @@ function [ cdist, esoft ] = soft( cdist, CONN, cnumb, xcec )
 
     % calculate the magnitude of the RSS on the crystal
     To = norm(B(1,:)*cdist{cnumb,3}(1,1)+B(2,:)*cdist{cnumb,3}(1,2)+B(3,:)*cdist{cnumb,3}(1,3));
-
+    
     % calculate the softness parameter
     esoft = 1/(xc + N*ec)*(xc + ec*Ti/To);
 

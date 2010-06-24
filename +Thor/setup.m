@@ -25,7 +25,11 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
 %
 %       in.distype is a character array specifying the type of crystal
 %       distrobution to make. Possible values are 'iso'.
-%           iso results in a isotropic randomly generated crystal pattern.
+%           'iso' results in a isotropic randomly generated crystal pattern.
+%            'same' results in a distrobution that is the same for every element. 
+%            'NNI' results in a distrobution that has the same eigen values but the
+%               crystals are randomly placed into the distrobutin so that the nighboors
+%               are random for each element.   
 %
 %       in.disangles is an NELEMx2 array holding [Ao1, A1; ...; Ao_NELEM, A_NELEM]
 %       where the 'Ao's are the girdle angle of the crystal distrobution and
@@ -62,7 +66,9 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
 %       'kelvin' and 'celsius' where 'kelvin' is the default. 
 %
 %       in.A is an 2x12 array holding the tempurature dependance of Glen's flow law
-%       parameter as taken from 'The Physics of Glaciers' by Patterson. (3rd Ed.)
+%       parameter as taken from 'The Physics of Glaciers' by Patterson.
+%       (3rd Ed.) It should have units of s^{-1} Pa^{-n}, where n is the
+%       glen exponent. 
 %
 % SETUP saves a set of variables in the form of  EL********, where  ********* is the
 % element number, into directory called 'CrysDists'. nelem files are created with each
@@ -165,7 +171,8 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
             
             switch in.distype
                 case 'iso'
-                    % create and crystal distrobution for each element and save then to disk
+                    % create and crystal distrobution for each element and save them to
+                    % disk 
                     for ii = 1:in.nelem
                         % set file name
                         NAMES.files{ii} = sprintf('EL%09.0f', ii);
@@ -178,6 +185,55 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
                         % place crystal params into crystal distrobutions
                         crysDist(:,1) = num2cell(THETA);
                         crysDist(:,2) = num2cell(PHI);
+                        crysDist(:,7) = num2cell(GRAINS);
+                        % save crystal distrobutions
+                        eval([NAMES.files{ii} '= crysDist;']);
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
+                        eval(['clear ' NAMES.files{ii}])
+                    end
+                case 'same'
+                    % create the same crystal distrobution for same number of crystals and
+                    % distrobution angles then save them to disk 
+                    for ii = 1:in.nelem
+                        % set file name
+                        NAMES.files{ii} = sprintf('EL%09.0f', ii);
+                        % create distrobution of angles
+                        PHI = linspace(0,2*pi, in.width*in.width);
+                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
+                        PHI= repmat(PHI,1,in.width);
+                        THETA = repmat(THETA,in.width*in.width,1);
+                        THETA = reshape(THETA,1,[]);
+                        % create distrobution of grain size
+                        GRAINS = in.Do(ii,1)*ones(in.numbcrys, 1);
+                        % place crystal params into crystal distrobutions
+                        crysDist(:,1) = num2cell(THETA);
+                        crysDist(:,2) = num2cell(PHI);
+                        crysDist(:,7) = num2cell(GRAINS);
+                        % save crystal distrobutions
+                        eval([NAMES.files{ii} '= crysDist;']);
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
+                        eval(['clear ' NAMES.files{ii}])
+                    end
+                case 'NNI'
+                    % create the same crystal distrobution for same number of crystals and
+                    % distrobution angles then save them to disk 
+                    for ii = 1:in.nelem
+                        % set file name
+                        NAMES.files{ii} = sprintf('EL%09.0f', ii);
+                        % create distrobution of angles
+                        PHI = linspace(0,2*pi, in.width*in.width);
+                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
+                        PHI= repmat(PHI,1,in.width);
+                        THETA = repmat(THETA,in.width*in.width,1);
+                        THETA = reshape(THETA,1,[]);
+                        % randomize order of crystals
+                        sort = [randperm(in.numbcrys)',THETA',PHI'];
+                        sort = sortrows(sort,1);
+                        % create distrobution of grain size
+                        GRAINS = in.Do(ii,1)*ones(in.numbcrys, 1);
+                        % place crystal params into crystal distrobutions
+                        crysDist(:,1) = num2cell(sort(:,2));
+                        crysDist(:,2) = num2cell(sort(:,3));
                         crysDist(:,7) = num2cell(GRAINS);
                         % save crystal distrobutions
                         eval([NAMES.files{ii} '= crysDist;']);

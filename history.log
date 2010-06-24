@@ -1,0 +1,443 @@
+    1  cd /joe/Documents/Programing/Programs/
+    2  ls
+    3  cd /joe/
+    4  ls
+    5  ls -l
+    6  cd ..
+    7  ls
+    8  man chmod
+    9   man chown
+   10   man chown
+   11  sudo chown -hR 503:503 /joe/
+   12  sudo chown -hR 503:503 /joe/
+   13  logout
+   14  man yum
+   15  sudo yum install brz
+   16  sudo yum install bzr
+   17  cd /etc/
+   18  ls
+   19  cd yum.repos.d/
+   20  ls
+   21  gedit CentOS-Base.repo 
+   22  sudo yum update
+   23  sudo yum list available
+   24  sudo yum list available > less
+   25  sudo yum list available | less
+   26  wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+   27  rpm --import linux_signing_key.pub
+   28  sudo wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+   29  sudo rpm --import linux_signing_key.pub
+   30  rpm -qi gpg-pubkey-7fac5991-*
+   31  gksu gedit google.repo
+   32  sudo gedit google.repo
+   33  cd ..
+   34  cd ~
+   35  ls
+   36  cd Desktop/
+   37  ls
+   38  su
+   39  yum install acroread
+   40  sudo yum install acroread
+   41  sudo yum install flash-plugin
+   42  man yum
+   43  sudo yum search gnumeric
+   44  sudo yum search gedit
+   45  man yum
+   46  man yum
+   47  sudo gedit /usr/NX/home/nx/.ssh/sshd_config
+   48  sudo /etc/init.d/ssh restart
+   49  cd /etc/
+   50  ls
+   51  cd init.d/
+   52  ls
+   53  sudo sshd restart
+   54  sudo ./sshd restart
+   55  sudo usr/NX/bin/nxserver --status
+   56  sudo /usr/NX/bin/nxserver --status
+   57  sudo /usr/NX/bin/nxserver --status
+   58  sudo /usr/NX/scripts/setup/nxserver --keygen
+   59  cd /joe/Documents/Ubuntu/
+   60  ls
+   61  chmod -x centosguide
+   62  ls
+   63  ./centosguide
+   64  ls -a
+   65  ls -l
+   66  chmod -a+x centosguide
+   67  chmod +x centosguide
+   68  ls -l
+   69  ./centosguide 
+   70  sudo rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-2.noarch.rpm
+   71  sudo rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-3.noarch.rpm
+   72  sudo yum install bzr
+   73  man eco
+   74  man echo
+   75  echo stuff > out.txt
+   76  gedit out.txt 
+   77  rm out.txt 
+   78  ./centosguide >out.txt
+   79  gedit out.txt 
+   80  gedit out.txt &
+   81  sudo yum unison
+   82  sudo yum install unison
+   83  ifconfig
+   84  hostname
+   85  synergys
+   86  sudo yum synergy
+   87  sudo yum install synergy
+   88  synergys --help
+   89  gedit /home/joseph/.synergy.conf
+   90  synergys -f
+   91  gedit /home/joseph/.synergy.conf 
+   92  synergys -f
+   93  gedit /home/joseph/.synergy.conf &
+   94  synergys -f -n ice
+   95  synergys -f -n ice.gi.alaska.edu
+   96  synergys -f
+   97  sudo gedit /etc/sysconfig/iptables
+   98  sudo system-config-securitylevel
+   99  sudo gedit /etc/sysconfig/iptables
+  100  synergys -f
+  101  su
+  102  /home/.gconf
+  103  cd /home/
+  104  ls
+  105  cd joseph/
+  106  ls
+  107  ls -a
+  108  cp ./.gconf ./.gconf.bak
+  109  ls -a
+  110  cp .gconf .gconf.bak
+  111  ls
+  112  ls -a
+  113  edit .gconf
+  114  gedit .gconf
+  115  su
+  116  synergys
+  117  sudo yum install skype
+  118  sudo yum update
+  119  sudo yum install tetex tetex-fonts tetex-dvips tetex-latex ghostscrip
+  120  sudo yum install ghostscript
+  121  yum install gcc g++
+  122  sudo yum install gcc g++
+  123  sudo yum install gcc-c++
+  124  sudo yup search java
+  125  man ym
+  126  man yum
+  127  sudo yum search java
+  128  sudo yum install bibtex2html
+  129  sudo yum install referencer
+  130  sudo yum update
+  131  sudo yum install referencer
+  132  su
+  133  su
+  134  su
+  135  exit
+  136  java
+  137  java -showversion
+  138  java -version
+  139  who
+  140  sudo shutdown -r now
+  141  su
+  142  exit
+  143  man matlab
+  144  matlab -h
+  145  cd /joe/Documents/Programing/Programs/Thor/trunk/
+  146  ls
+  147  man nohup
+  148  man bash
+  149  nohup \matlab -nojvm -nodisplay < test.m > test.log 2>&1
+  150  ls
+  151  less test.log 
+  152  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  153  less test.log 
+  154  sudo yum install qcad
+  155  cd /joe/Documents/Programing/Programs/Thor/trunk/
+  156  ls
+  157  less test.log
+  158  gedit test.m &
+  159  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  160  gedit test.log
+  161  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  162  gedit test.log
+  163  gedit test.log
+  164  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  165  gedit test.log
+  166  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  167  gedit test.log
+  168  gedit test.log
+  169  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  170  gedit test.log
+  171  gedit test.m
+  172  nohup \matlab -nodesktop -nosplash < test.m > test.log 2>&1
+  173  gedit test.log
+  174  histoy
+  175  history
+  176  cd /joe/Documents/Research/EigenCone/DataforJoe.zip_FILES/DataforJoe/SipleFabricLarry
+  177  ls
+  178  cp 992.409.txt 992.409v.txt
+  179  gedit 992.409v.txt 
+  180  cd /joe/Documents/Programing/Programs/EigenDistro/trunk/Siple/
+  181  ls
+  182  rm *~
+  183  ls
+  184  gedit 992.409.txt 
+  185  cp 992.409.txt 992.409v.txt
+  186  ls
+  187  rm 992.409.txt 
+  188  ls
+  189  exit
+  190  cd /joe/Documents/Programing/Programs/EigenDistro/trunk/Siple/
+  191  ls
+  192  gedit 776.683v.txt 
+  193  gedit 50.75topv.txt 
+  194  rm *~
+  195  ls
+  196  edit 302.082v.txt 
+  197  gedit 302.082v.txt 
+  198  cd /joe/Documents/Writing/Talks/NWGlaciology/
+  199  pdflatex 2009.tex
+  200  pdflatex 2009.tex
+  201  gedit 2009.tex &
+  202  pdflatex 2009.tex
+  203  pdflatex 2009.tex
+  204  pdflatex 2009.tex
+  205  gnome-open 2009.pdf
+  206  cd /tmp/
+  207  ls
+  208  cd Desktop/
+  209  md5sum ubuntu-9.10-desktop-amd64.iso 
+  210  su
+  211  cd Desktop/
+  212  ls
+  213  su
+  214  exit
+  215  asla
+  216  alsa
+  217  alsaalsamixer
+  218  alsamixer
+  219  exit
+  220  cd /joe/Documents/Programing/Programs/Thor/trunk/+Thor/CrysDists/
+  221  ls
+  222  rm *
+  223  ls
+  224  cd ..
+  225  ls
+  226  cd CrysDists/
+  227  ls
+  228  exit
+  229  xrandr
+  230  xrandr -o left
+  231  xrandr -o left
+  232  su
+  233  su
+  234  exit
+  235  su
+  236  exit
+  237  cd /joe/Documents/
+  238  ls
+  239  exit
+  240  synergyc
+  241  pgrep synergy*
+  242  cd Desktop/
+  243  su
+  244  exit
+  245  su
+  246  exit
+  247  bztr
+  248  bzr
+  249  bzr about
+  250  man bzr
+  251  bzr version
+  252  su
+  253  su
+  254  exit
+  255  su
+  256  su
+  257  exit
+  258  man chmod
+  259  man chown
+  260  man ls
+  261  info ls
+  262  cd /
+  263  ls
+  264  ls -l public
+  265  su
+  266  cd public/srv/bzr/
+  267  ls
+  268  touch test.txt
+  269  ls -l
+  270  cd ..
+  271  ls -l
+  272  mkdir svn
+  273  cd ..
+  274  ls
+  275  mkdir vrs
+  276  ls
+  277  rm vrs
+  278  rm -R vrs
+  279  ls
+  280  ls -l
+  281  su
+  282  ls
+  283  ls -l
+  284  cd srv
+  285  ls -l
+  286  mkdir svn
+  287  rmdir svn
+  288  ls
+  289  man ssh
+  290  cd /public/
+  291  chmod -R g+rwx srv/
+  292  ls -l
+  293  chown -R  joseph:FEMcoders srv/
+  294  su
+  295  cd /joe/Documents/Programing/Programs/
+  296  ls
+  297  cd Thor/trunk/
+  298  ls
+  299  bzr push bzr+ssh://ice.gi.alaska.edu/public/srv/bzr/THOR/trunk
+  300  bzr diff
+  301  bzr commit -m 'commit changes from agu09'
+  302  bzr push bzr+ssh://ice.gi.alaska.edu/public/srv/bzr/THOR/trunk
+  303  nxserver --list
+  304  su
+  305  cd /joe/Documents/Programing/Programs/Thor/trunk/
+  306  ls
+  307  bzr merge
+  308  history
+  309  bzr revno
+  310  bzr commit
+  311  bzr merge
+  312  bzr merge bzr+ssh://joseph@ice.gi.alaska.edu/public/srv/bzr/THOR/trunk
+  313  gedit test.m
+  314  bzr commit
+  315  bzr bind
+  316  bzr unbind
+  317  bzr bind bzr+ssh://joseph@ice.gi.alaska.edu/public/srv/bzr/THOR/trunk
+  318  bzr merge
+  319  bzr revno
+  320  bzr merge
+  321  bzr commit -m 'merged with paul test'
+  322  bzr commit --local -m 'merged with paul test'
+  323  gedit test.m
+  324  bzr update
+  325  bzr status
+  326  bzr commit
+  327  gedit test.m
+  328  bzr commit
+  329  bzr push bzr+ssh://joseph@ice.gi.alaska.edu/public/srv/bzr/THOR/trunk
+  330  cd /joe/Documents/Programing/Programs/Thor/trunk/
+  331  bzr status
+  332  bzr add ./+Thor/+Build/initial.mat 
+  333  bzr commit -m 'added initial settings variable file'
+  334  bzr commit -m 'fixed taylor data  variable file'
+  335  man grep
+  336  man find
+  337  yum install python
+  338  su
+  339  rpm -Uvh http://yum.chrislea.com/centos/5/i386/chl-release-5-3.noarch.rpm
+  340  2rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CHL
+  341  rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CHL
+  342  su
+  343  python
+  344  python26
+  345  cd ~/Desktop/
+  346  ls
+  347  cd Python-2.6.4/
+  348  ls
+  349  configure
+  350  ./configure
+  351  make
+  352  make altinstall
+  353  su
+  354  exit
+  355  su
+  356  ls
+  357  rpm octave-3.2.3-1.fc12.x86_64.rpm 
+  358  rpm -Uhv octave-3.2.3-1.fc12.x86_64.rpm 
+  359  yum install octave-3.2.3-1.fc12.x86_64.rpm 
+  360  su
+  361  su
+  362  ls
+  363  cd Desktop/
+  364  ls
+  365  su
+  366  synergys
+  367  synergys
+  368  man synergys
+  369  ls
+  370  ls -a
+  371  gedit synergy.conf
+  372  gedit synergy.conf~
+  373  gedit
+  374  gedit synergy.conf
+  375  synergys
+  376  ls
+  377  cp synergy.conf .synergy.conf
+  378  rm synergy.conf 
+  379  ls
+  380  synergys
+  381  cd /joe/Documents/Programing/Programs/Thor/trunk/
+  382  bzr status
+  383  bzr commit -m 'enabled 2002 functionality'
+  384  cd /home/joseph/.ssh/
+  385  chown -R joseph /home/joseph/.ssh/
+  386  su -c 'chown -R joseph /home/joseph/.ssh/'
+  387  cd /home/joseph/.ssh/
+  388  ls
+  389  gedit known_hosts 
+  390  pkill firefox
+  391  synergy -f --config /home/joseph/.synergy.conf
+  392  synergys -f --config /home/joseph/.synergy.conf
+  393  gedit /home/joseph/.synergy.conf
+  394  synergys -f --config /home/joseph/.synergy.conf
+  395  gedit /home/joseph/.synergy.conf
+  396  synergys -f --config /home/joseph/.synergy.conf
+  397  pkill synergys
+  398  pkill synergy
+  399  synergys -f --config /home/joseph/.synergy.conf
+  400  pkill synergys
+  401  pkill synergy
+  402  su
+  403  exit
+  404  cd /var/log/
+  405  ls
+  406  less messages
+  407  su
+  408  su
+  409  su
+  410  exit
+  411  su
+  412  exit
+  413  su
+  414  exit
+  415  su
+  416  su
+  417  xournal
+  418  xournal
+  419  su
+  420  exit
+  421  cd /joe/Documents/Programing/Programs/Thor/trunk/+Thor/CrysDists/
+  422  ls
+  423  rm *.mat
+  424  ls
+  425  cd Run1
+  426  ls
+  427  cd ..
+  428  cd /joe/Documents/Programing/Programs/Thor/trunk/+Thor/CrysDists/
+  429  ls
+  430  cd ..
+  431  cd +Build/Settings/
+  432  ls
+  433  rm test.mat 
+  434  history
+  435  history | less
+  436  man history
+  437  ls
+  438  cd ..
+  439  ls
+  440  cd ..
+  441  cd ..
+  442  ls
+  443  history > history.log

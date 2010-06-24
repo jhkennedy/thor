@@ -1,4 +1,4 @@
-function step(CONN, NAMES, SET, RUN )
+function step(CONN, NAMES, SET, RUN, tstep )
 % [CONN, NAMES, SET] = step(CONN, NAMES, SET) preforms a time step specified in SET on all
 % the crystal distrobutions in NAMES with a conectivity structure specified by CONN. 
 %   CONN is a (SET.numbcrys)x12 array holding the crystal number for each nearest neighbor
@@ -38,13 +38,16 @@ function step(CONN, NAMES, SET, RUN )
         tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));
         
         % grow the crystals
-        tmp.(NAMES.files{ii}) = Thor.Utilities.grow(tmp.(NAMES.files{ii}), SET, ii);
+        tmp.(NAMES.files{ii}) = Thor.Utilities.grow(tmp.(NAMES.files{ii}), SET, ii, tstep);
         
         % check for polyiginization
         tmp.(NAMES.files{ii}) = Thor.Utilities.poly(tmp.(NAMES.files{ii}), SET, ii);
         
         % check for migration recrystallization
         tmp.(NAMES.files{ii}) = Thor.Utilities.migre(tmp.(NAMES.files{ii}), SET, ii);
+        
+        % calculate new velocity gradients and crystal strain rates -- from poly and migre
+        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), SET, ii, CONN); 
                 
         % save element ii
         isave(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});

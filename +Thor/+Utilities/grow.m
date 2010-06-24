@@ -1,4 +1,4 @@
-function [ cdist ] = grow( cdist, SET, elem )
+function [ cdist ] = grow( cdist, SET, elem, tstep )
 % [cdist]=grow( cdist, SET, elem) calculates the new crystal size of each crystal in a
 % distrobution cidst for an element elem, using the settings in SET. 
 %   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
@@ -33,6 +33,6 @@ function [ cdist ] = grow( cdist, SET, elem )
 %         Ki = (dislEnAv - cdist{ii,9})*C*K;
         Ki = K;
         % calculate new crystal diameter
-        cdist{ii, 7} = (Ki*SET.tsize + SET.Do(elem)^2)^(1/2); % m
+        cdist{ii, 7} = (Ki*SET.tsize*tstep + SET.Do(elem)^2)^(1/2); % m
     end
 end

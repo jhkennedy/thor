@@ -20,7 +20,7 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
 
 %% Initialize variables
     
-    ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T(elem,1));% s^{-1} Pa^{-3}
+    ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T(elem,1));% s^{-1} Pa^{-n}
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
     
     % initialize rate of shearing
@@ -47,7 +47,14 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
         % clalculate the softness parameter
         switch SET.ynsoft
             case 'yes'
-               [cdist esoft] = Thor.Utilities.soft(cdist, CONN(ii,:), ii, SET.soft); % -
+               if cdist{ii,3} == 0
+                   esoft = 1;
+               else
+                   [cdist esoft] = Thor.Utilities.soft(cdist, CONN(ii,:), ii, SET.soft); % -
+                   if esoft > 10
+                      esoft = 10; 
+                   end
+               end
             case 'no'
                 esoft = 1; % -
         end
@@ -67,7 +74,7 @@ function [ cdist] = vec( cdist, SET, elem, CONN)
         S123(:,:,3) = (cdist{ii,10}(:,:,3) + cdist{ii,10}(:,:,3)')/2; % s^{-1}
 
         % calculate the strain rate for crystal ii
-        cdist{ii,5} = cdist{ii,6}*(S123(:,:,1).*GAMMA(1,1) + S123(:,:,2).*GAMMA(1,2) +...
+        cdist{ii,5} = (S123(:,:,1).*GAMMA(1,1) + S123(:,:,2).*GAMMA(1,2) +...
                       S123(:,:,3).*GAMMA(1,3)); % s^{-1}
     end
 
