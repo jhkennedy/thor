@@ -1,8 +1,7 @@
 function [ cdist ] = disl( cdist, SET, elem )
 % [cdist]=DISL(cdist, SET, elem) calculates the new dislocation density for each crystal in
 % in the distrobution cdist of element elem, bassed on the settings specified in SET.
-%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
-%   distrubution structure is outlined in Thor.setup.
+%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
@@ -12,14 +11,25 @@ function [ cdist ] = disl( cdist, SET, elem )
 %   
 %   See also Thor.setup
 
+    % Physicsal constants
+    Ko = 9.2e-9; % m^2 s^{-1}
+    Q = 40; % kJ mol^{-1}
+    R = 0.008314472; % kJ K^{-1} mol^{-1}
+    b = 4.5e-10; % m
+    alpha = 2; % constant greater than 1, thor 2002
+
+    % claculate the grain growth factor
+    K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}
+
+    % calculate the Magnitude of the strain rate
+    ecdot = reshape(cdist.ecdot, 9,[]); % s^{-1}
+    Medot = sqrt( ecdot(1,:).^2 + ecdot(5,:).^2 + ecdot(1,:).*ecdot(5,:) + ecdot(4,:).^2 + ecdot(8,:).^2 + ecdot(3,:).^2)'; % s^{-1}
     
-    for ii = 1:SET.numbcrys
-        
-        % time change of the dislocation density
-        rhodot = Thor.Utilities.disldot(SET.T(elem), cdist{ii,7}, cdist{ii,5}, cdist{ii,8}); % m^{-2} s^{-1}
-        
-        % set new dislocation density
-        cdist{ii, 8} = cdist{ii,8}+rhodot*SET.tsize; % m^{-2}
-    end
+    % claclulate the change in the dislocation density
+    rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
+    
+    % set the new dislocation density
+    cdist.dislDens = cdist.dislDens + rhodot*(SET.tstep); % m^{-2}
+    
 end
 

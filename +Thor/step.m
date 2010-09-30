@@ -1,62 +1,64 @@
-function step(CONN, NAMES, SET, RUN, tstep )
-% [CONN, NAMES, SET] = step(CONN, NAMES, SET) preforms a time step specified in SET on all
-% the crystal distrobutions in NAMES with a conectivity structure specified by CONN. 
-%   CONN is a (SET.numbcrys)x12 array holding the crystal number for each nearest neighbor
-%   in the columns (first 6 used for  cubic and all twelve used for hexognal or fcc type
-%   packing) of the crystal specified by the row number. 
+function step(NAMES, SET, RUN, STEP, SAVE )
+% step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on all
+% the crystal distrobutions in NAMES. 
 %
 %   NAMES holds all the files names for the crystal distrobutions. NAMES is outlined in
 %   Thor.setup.
 %
 %   SET is a structure holding the model settings as outlined in Thor.setup.
 %
-% step load in a crystal distrobution for each element and rotates the crystals. Then step
-% calulates new velocity gradients, crystal strain rates, dislocation densities,
-% dislocation energies, grain sizes, as well as checking for polygonization and migration
-% recrystallization. step then saves the stepped crystal distrobutions to disk.
+%   RUN is the current run number.
 %
-%   See also Thor.setup, Thor.Utilities.rotate, Thor.Utilities.vec, Thor.Utilities.disl,
-%            Thor.Utilities.dislEn, Thor.Utilities.grow, Thor.Utilities.poly, and
-%            Thor.Utilities.migre
+%   TSTEP is the current time step being preformed.
+%
+%   SAVE is a vector constaing all the timesteps that should be saved.
+%
+% step loads in a crystal distrobution for each element and  calulates new velocity
+% gradients, crystal strain rates, dislocation densities, dislocation energies, grain
+% sizes, as well as checking for polygonization and migration recrystallization. step then
+% rotates the crystals, saves the stepped crystal distrobutions to disk, and saves a copy
+% if the current time step is listed in SAVE.    
+%
+%   See also Thor.setup, Thor.Utilities.vec, Thor.Utilities.disl, Thor.Utilities.dislEn,
+%   Thor.Utilities.grow, Thor.Utilities.poly, Thor.Utilities.migre, and
+%   Thor.Utilities.rotate.
 
 
     for ii = 1:SET.nelem
 
         % load element ii
-        tmp = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}]);
+        cdist = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}]);
         
-        % rotate the crstals from last time steps calculations
-        tmp.(NAMES.files{ii}) = Thor.Utilities.rotate(tmp.(NAMES.files{ii}), SET );
-        
-        % calculate new velocity gradients and crystal strain rates
-        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), SET, ii, CONN);        
+        % calculate velocity gradients and crystal strain rates
+        cdist = Thor.Utilities.vec( cdist, SET, ii);        
         
         % calculate new dislocation density
-        tmp.(NAMES.files{ii}) = Thor.Utilities.disl(tmp.(NAMES.files{ii}), SET, ii);
-        
-        % calculate new dislocation energy
-        tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));
+        cdist = Thor.Utilities.disl(cdist, SET, ii);
         
         % grow the crystals
-        tmp.(NAMES.files{ii}) = Thor.Utilities.grow(tmp.(NAMES.files{ii}), SET, ii, tstep);
+        cdist = Thor.Utilities.grow(cdist, SET, ii, STEP);
         
         % check for polyiginization
-        tmp.(NAMES.files{ii}) = Thor.Utilities.poly(tmp.(NAMES.files{ii}), SET, ii);
+        cdist = Thor.Utilities.poly(cdist, SET, ii);
         
         % check for migration recrystallization
-        tmp.(NAMES.files{ii}) = Thor.Utilities.migre(tmp.(NAMES.files{ii}), SET, ii);
+        cdist = Thor.Utilities.migre(cdist, SET, ii);
+        
+        % check crystal orientation bounds
+        cdist = Thor.Utilities.bound(cdist);
         
         % calculate new velocity gradients and crystal strain rates -- from poly and migre
-        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), SET, ii, CONN); 
-                
-        % save element ii
-        isave(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
+        cdist = Thor.Utilities.vec( cdist, SET, ii);
         
+        % rotate the crstals from last time steps calculations
+        cdist = Thor.Utilities.rotate(cdist, SET ); %#ok<NASGU>
+        
+        % save crystal distrobutions
+        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+        
+        % save a copy of crystal distrobutions at specified time steps
+        if any(SAVE == STEP)
+            eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step' num2str(STEP,'%05.0f') '_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+        end
     end
-end
-
-%% extra functions
-function isave(file, fin, var) %#ok<INUSL>
-    eval([var '=fin;']);
-    save(file, var);
 end

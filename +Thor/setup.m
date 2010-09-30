@@ -1,9 +1,9 @@
-function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
-% [ CONN, NAMES, SETTINGS ] = SETUP( in, RUN ) sets up the the model. Initial settings set in
-% 'in' are used to build the connectivity structure, CONN, the list of crystal
-% distrobution names, NAMES, and the model settings, SETTINGS. If no crystal distrobution
-% files are specified, setup will build crystal distrobution based on the parameters set
-% in 'in'.
+function [ NAMES, SET] = setup( in, RUN )
+% [ NAMES, SETTINGS ] = SETUP( in, RUN ) sets up the the model.
+%   Initial settings set in 'in' are used to build the list of crystal
+%   distrobution names, NAMES, and the model settings, SETTINGS. If no
+%   crystal distrobution files are specified, setup will build crystal
+%   distrobution based on the parameters set in 'in'.     
 %
 %   RUN is the run number to seperate different runs.
 %
@@ -12,16 +12,6 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
 %
 %       in.nelem is a scalar value, [NELEM], giving the number of elements or crystal
 %       distrobutions.
-%       
-%       in.contype is a character array specifying the packing structure of the
-%       crystals. NUMBCRYS crystals are used in each distrobution. Possible values
-%       are 'cubic' or 'hex'. 
-%           cubic results in a 20x20x20 cubic distrobution of crystals, each 
-%           having 6 nearest neighbors. 
-%       
-%           hex results in a 20x20x20 hexagonal closed pack structure, with
-%           each crystal having 12 nearest neighboors. 
-%
 %
 %       in.distype is a character array specifying the type of crystal
 %       distrobution to make. Possible values are 'iso'.
@@ -69,39 +59,28 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
 %       parameter as taken from 'The Physics of Glaciers' by Patterson.
 %       (3rd Ed.) It should have units of s^{-1} Pa^{-n}, where n is the
 %       glen exponent. 
+%       
+%       in.connName is a character array holding the name of the
+%       connectivity array .mat file. This is built with
+%       Thor.Build.connectivity.
 %
 % SETUP saves a set of variables in the form of  EL********, where  ********* is the
 % element number, into directory called 'CrysDists'. nelem files are created with each
 % containing a crystal distrobution. The distrobutions are aranged in an 8000x10 cell
 % array.
-%   NAMES is a structure holding th cell locations of the information
-%   specified by each field of NAMES. The information cells are:
-%      1) theta holds the colatitudinal orientation angle for the crystal
-%      2) phi holds the longitudinal orientation angle for the crystal
-%      3) rss holds the resolved shear stress on the crystal
-%      4) vel holds he velocity gradient tensor for the crystal
-%      5) ecdot holds the single crystal strain rate
-%      6) odf hold the crystals controbution to the orientation distrobution function, ODF
-%      7) crysSize holds the crystal diameter for the crystal
-%      8) disdens holds the dislocation density for the crystal
-%      9) dislEn holds the dislocation energy for the crystal
-%      10)shmidt holds the shmidt tensor for the three slip systems of the crystal
+%
 %   NAMES.files holes a column vector of all the files names where the row number
 %   corrosponds to the crystal number.
 %       therefor, a crystal distrobution can be accessed as such:
 %           eval(['load ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{*********}]);
 %       and the contents of a loaded crystal distrobution as such:
 %           EL*********{crystal_number, NAMES.field_name}
-%   However, for parallel applications in matlab, this functionality is resticted. It is
-%   therefore best to use NAMES as a reference to remember the cell locations and not use
-%   it as a programing convention. The file can still be accesed the through the NAMES
-%   structure when the proxy save function isave is used. (Matlab restricts the use of
-%   eval in parallel for loops). 
+%   However, for parallel applications in matlab, this functionality is
+%   resticted. The file can still be accesed the through the NAMES
+%   structure when the proxy save function isave is used. (Matlab restricts
+%   the use of eval in parallel for loops). 
 %
-% setup returns variables CONN, NAMES, and SETTINGS. 
-%   CONN is a NUMBCRYSx12 array holding the crystal number for each nearest neighbor in
-%   the columns (first 6 used for  cubic and all twelve used for hexognal or fcc type
-%   packing) of the crystal specified by the row number. 
+% setup returns variables NAMES, and SETTINGS. 
 %
 %   NAMES is outlined above.
 %
@@ -109,45 +88,14 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
 %   change the model settings over time while keeping the initial settings in 'in' intact
 %   throughout the model.
 %
-%   see also Thor, Thor.Build, and Thor.Build.structure
+%   see also Thor, Thor.Build, Thor.Build.structure, and Thor.Build.connectivity.
 
     %% make directory for run
     warning off MATLAB:MKDIR:DirectoryExists
     eval(['mkdir ./+Thor/CrysDists/Run' num2str(RUN) '/']);
     eval(['mkdir ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/']);
     
-    %% Initialize variables
-      
-    % initialize structure that holds crystal info. Outlined above.
-    NAMES = struct('theta', 1, 'phi', 2, 'rss', 3, 'vel', 4, 'ecdot', 5, 'odf', 6,... 
-        'crysSize', 7, 'disdens', 8, 'dislEn', 9, 'shmidt', 10);
-    
-    % initialize connectivity structure
-    CONN = nan(in.numbcrys,12);
-    switch in.contype
-        case 'cube'
-            % cube length width hight array
-            cube = [in.width, in.width, in.width];
-            % initialize connectivity structure
-            CONN = nan(in.numbcrys,12);
-            % get cubic connectivity, 6 nearest neighbors
-                % get indices for crystals
-                [I,J,K] = ind2sub(cube,1:in.numbcrys);
-                % get the top, bottom, left, right, back, front indices 1xNUMBCRYS*6
-                cons = [I-1, I+1,   I,   I,   I,   I;...
-                          J,   J, J-1, J+1,   J,   J;...
-                          K,   K,   K,   K, K-1, K+1 ];
-                % mask any unvalid indexes
-                mask = [I-1, I+1, J-1, J+1,  K-1, K+1 ];
-                mask = mask<1 | mask>in.width;
-                % get valid index numbers on the conecting crystals
-                ind = sub2ind(cube, cons(1,~mask)', cons(2,~mask)', cons(3,~mask)');
-            % set connectivity matrix
-            CONN(~mask) = ind;
-        
-        case 'hex'
-          % hexagonal connectivity, 12 nearest neigbors  
-    end
+
         
     %% initialize crystal distributions
     switch in.distype
@@ -158,119 +106,94 @@ function [ CONN, NAMES, SETTINGS] = setup( in, RUN )
             % load in file names
         
         otherwise
-            crysStruct = {0, 0, zeros(1,3), zeros(3,3), zeros(3,3), 0, 0, 0, 0, zeros(3,3,3)};
-            % CrysDist is a cell array containing all the individual crystal
-            % structured for a crystal distrobution
 
             %% Initial crystal prameters
             %  dislocation density -- thor2002 -- value set [38]
-            crysStruct{8} = 4*1e10; % m^{-2}
+            cdist.dislDens = ones(in.numbcrys,1)*4*1e10; % m^{-2}
 
-            % build a crystal distrobution
-            crysDist = repmat(crysStruct, in.numbcrys,1);
             
             switch in.distype
                 case 'iso'
-                    % create and crystal distrobution for each element and save them to
-                    % disk 
+                   
+                    % set file names for each element
+                    fname = @(x) sprintf('EL%09.0f', x);
+                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+                    
                     for ii = 1:in.nelem
-                        % set file name
-                        NAMES.files{ii} = sprintf('EL%09.0f', ii);
-                        % create isotropic distrobution of angles
-                        THETA = in.disangles(ii,1) + (in.disangles(ii,2)-in.disangles(ii,1))...
-                                *rand(in.numbcrys,1);
-                        PHI = 2*pi*rand(in.numbcrys,1);
+                        % creat isotropic distrobution of angles
+                        cdist.theta = in.disangles(ii,1) + (in.disangles(ii,2)-in.disangles(ii,1))...
+                                    *rand(in.numbcrys,1);
+                        cdist.phi = 2*pi*rand(in.numbcrys,1);
+                        
+
                         % creat isotropic distrobution of grain size
-                        GRAINS = in.grain(ii,1) + (in.grain(ii,2)-in.grain(ii,1))*rand(in.numbcrys,1);
-                        % place crystal params into crystal distrobutions
-                        crysDist(:,1) = num2cell(THETA);
-                        crysDist(:,2) = num2cell(PHI);
-                        crysDist(:,7) = num2cell(GRAINS);
+                        cdist.size = in.grain(ii,1) + (in.grain(ii,2)-in.grain(ii,1))*rand(in.numbcrys,1);
+
                         % save crystal distrobutions
-                        eval([NAMES.files{ii} '= crysDist;']);
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
-                        eval(['clear ' NAMES.files{ii}])
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
+                     
                 case 'same'
                     % create the same crystal distrobution for same number of crystals and
                     % distrobution angles then save them to disk 
+                    
+                    % set file names for each element
+                    fname = @(x) sprintf('EL%09.0f', x);
+                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+                    
                     for ii = 1:in.nelem
-                        % set file name
-                        NAMES.files{ii} = sprintf('EL%09.0f', ii);
-                        % create distrobution of angles
+                        % creat isotropic distrobution of angles
                         PHI = linspace(0,2*pi, in.width*in.width);
                         THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
-                        PHI= repmat(PHI,1,in.width);
+                        cdist.phi= repmat(PHI,1,in.width)';
                         THETA = repmat(THETA,in.width*in.width,1);
-                        THETA = reshape(THETA,1,[]);
-                        % create distrobution of grain size
-                        GRAINS = in.Do(ii,1)*ones(in.numbcrys, 1);
-                        % place crystal params into crystal distrobutions
-                        crysDist(:,1) = num2cell(THETA);
-                        crysDist(:,2) = num2cell(PHI);
-                        crysDist(:,7) = num2cell(GRAINS);
+                        cdist.theta = reshape(THETA,1,[])';
+
+                        % creat isotropic distrobution of grain size
+                        cdist.size = in.Do(ii,1)*ones(in.numbcrys, 1);
+
                         % save crystal distrobutions
-                        eval([NAMES.files{ii} '= crysDist;']);
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
-                        eval(['clear ' NAMES.files{ii}])
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
+                    
                 case 'NNI'
                     % create the same crystal distrobution for same number of crystals and
-                    % distrobution angles then save them to disk 
+                    % distrobution angles but randomize the packing then save them to disk 
+                    
+                    % set file names for each element
+                    fname = @(x) sprintf('EL%09.0f', x);
+                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+                    
                     for ii = 1:in.nelem
-                        % set file name
-                        NAMES.files{ii} = sprintf('EL%09.0f', ii);
-                        % create distrobution of angles
+                        % creat isotropic distrobution of angles
                         PHI = linspace(0,2*pi, in.width*in.width);
                         THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
-                        PHI= repmat(PHI,1,in.width);
+                        PHI = repmat(PHI,1,in.width);
                         THETA = repmat(THETA,in.width*in.width,1);
                         THETA = reshape(THETA,1,[]);
+
                         % randomize order of crystals
                         sort = [randperm(in.numbcrys)',THETA',PHI'];
                         sort = sortrows(sort,1);
-                        % create distrobution of grain size
-                        GRAINS = in.Do(ii,1)*ones(in.numbcrys, 1);
-                        % place crystal params into crystal distrobutions
-                        crysDist(:,1) = num2cell(sort(:,2));
-                        crysDist(:,2) = num2cell(sort(:,3));
-                        crysDist(:,7) = num2cell(GRAINS);
+
+                        cdist.theta = sort(:,2);
+                        cdist.phi = sort(:,3);
+
+                        % creat isotropic distrobution of grain size
+                        cdist.size = in.Do(ii,1)*ones(in.numbcrys, 1);
+
                         % save crystal distrobutions
-                        eval([NAMES.files{ii} '= crysDist;']);
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' ' NAMES.files{ii}]);
-                        eval(['clear ' NAMES.files{ii}])
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
+                    
             end
     end
-    
-    
-    %% calculate initials 
-    
-    for ii = 1:in.nelem % loop through the elements
-        % load element ii
-        tmp = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}]); 
-        
-        % initialize velocity gradiant and single crystal strain rate
-        tmp.(NAMES.files{ii}) = Thor.Utilities.vec( tmp.(NAMES.files{ii}), in, ii, CONN);        
-        
-        % initial dislocation energy
-        tmp.(NAMES.files{ii}) = Thor.Utilities.dislEn(tmp.(NAMES.files{ii}));
-        
-        % save element ii
-        isave(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}], tmp.(NAMES.files{ii}), NAMES.files{ii});
-        clear tmp;
-    end
+
+    % Save a copy for step zero
+    eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
     
     % set the model settings
-    SETTINGS = in;
+    SET = in;
     
-    % save a copy of the initial crystal distrobutions
-    Thor.Utilities.saveStep(NAMES, SETTINGS, RUN, 0, 0);
     
-end
-
-%% extra functions
-function isave(file, fin, var) %#ok<INUSL>
-    eval([var '=fin;']);
-    save(file, var);
 end

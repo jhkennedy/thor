@@ -1,7 +1,6 @@
 function [ cdist ] = migre( cdist, SET, elem )
 % [cdist]=migre(cdist,SET,elem) recrystalizes crystals that are favorable to do so. 
-%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
-%   distrubution structure is outlined in Thor.setup.
+%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
@@ -12,38 +11,47 @@ function [ cdist ] = migre( cdist, SET, elem )
 %
 %   See also Thor.setup
 
-    % only active above 12 degrees celsius
-    if SET.T(elem)>(-12)
-
-        % new crystal dislocation density
-        rhoo = 1e10; % m^{-2} 
-        % effectice stress
-        s = SET.stress(:,:,elem); % Pa
-        es = ( s(1,1)^2 + s(2,2)^2 + s(1,1)*s(2,2) ...
-              + s(1,2)^2 + s(2,3)^2 +s(3,1)^2 )^(1/2); % Pa
-        % new crystal size
-        pc = 1; % Pa^{4/3} m
-        D = pc*es^(-4/3); % m
-
-        for ii = 1:SET.numbcrys
-
-            % get grain boundry energy
-            Egb = Thor.Utilities.gbEn(cdist{ii,7}); % J  m^{-3}
-            % check to see if it energetically favorable to recrystalize
-            if cdist{ii,9}>Egb
-                % set new crystals dislocation density
-                cdist{ii,8} = rhoo; % m^{-2}
-                % set new crystal size
-                cdist{ii,7} = D; % m
-                % find a soft orientation
-                    RSS = sum(cell2mat(cdist(:,3)).^2,2).^(1/2);
-                    RSS = RSS == max(RSS);
-                    % pick an new theta ~ +- 10 degrees different than softest crystal
-                    cdist{ii,1} = cdist{RSS,1} +(-1+2*rand(1))*0.02;
-                    % pick an new phi ~ +- 10 degrees different than softest crystal
-                    cdist{ii,2} = cdist{RSS,2} +(-1+2*rand(1))*0.02;
-            end
-        end
+    % only active above -12 degrees C
+    if SET.T(elem) <= -12
+        return
     end
-end
 
+    % Effective stress
+    S = SET.stress(:,:,elem); % Pa
+    Estress = sqrt( (S(1,1) -S(2,2))^2/2 + (S(2,2) -S(3,3))^2/2 + (S(3,3) -S(1,1))^2/2 ...
+                    +3*( S(1,2)^2 + S(2,3)^2 +S(3,1)^2 ) ); % Pa
+
+    % new crystal dislocation density
+    rhoo = 1e10; % m^{-2} 
+    % new crystal size
+    pc = 1; % Pa^{4/3} m -- perportionality constant [Shimizu 2008]
+    D = pc*Estress^(-4/3); % m
+    
+    % calculate the grain boundary energy
+    Ggb = 0.0065; % J m^{-2}
+    Egb = 3*Ggb./cdist.size;
+    
+    % calculate the dislocation energy
+    kappa = 0.35; % adjustible parameter -- Thor2002 eqn. 19 -- value set [38]
+    G = 3.4e9; % Pa
+    b = 4.5e-10; % m
+    % find the average dislocation energy
+    Edis = kappa.*G.*cdist.dislDens.*b.^2.*log(1./( sqrt(cdist.dislDens).*b) ); % J m^{-3}
+    
+    % check to see if it energetically favorable to recrystalize
+    mask = Edis > Egb;
+    
+    % set new dislocation densities
+    cdist.dislDens(mask) = rhoo; % m^{-2}
+    % set new crystal size
+    cdist.size(mask) = cdist.size(mask)*0+D;
+    
+    % find a soft orientation
+    theta = cdist.theta(cdist.MRSS == max(cdist.MRSS)); theta = theta(1);
+    phi = cdist.phi(cdist.MRSS == max(cdist.MRSS)); phi = phi(1);
+    
+    
+    % set new angles randomly within +- 10 degrees of soft orientation
+    cdist.theta(mask) = theta +(-1+2*rand( size(cdist.theta(mask)) ) )*0.02;
+    cdist.phi(mask) = phi +(-1+2*rand( size(cdist.phi(mask)) ) )*0.02;
+end   

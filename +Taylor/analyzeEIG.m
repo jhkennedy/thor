@@ -1,4 +1,5 @@
 
+load +Taylor/Results/TAYLOR.mat
 
 e1 = cell2mat(E1');
 e2 = cell2mat(E2');

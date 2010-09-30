@@ -29,7 +29,7 @@ try
     
     % set up model
         % build the different runs
-        runs = 16;
+        runs = 8;
         timesteps = 22900; % step-size is definded in in.tsize
         IN(runs) = in; % initialize each runs settings 
 
@@ -140,7 +140,7 @@ try
             if DEBUG == 1; display(['ii: ',num2str(kk),', Stress(3,3): ',num2str(SET{kk}.stress(3,3,1))]); end
             if DEBUG == 1; display(['ii: ',num2str(kk),', Stress(2,2): ',num2str(SET{kk}.stress(2,2,1))]); end
             if DEBUG == 1; display(['ii: ',num2str(kk),', Stress(1,1): ',num2str(SET{kk}.stress(1,1,1))]); end
-            Taylor.taylorStep(CONN{kk},NAMES{kk},SET{kk}, kk, ll, SAVE);
+            Thor.step(NAMES{kk},SET{kk}, kk, ll, SAVE);
         end
     end
     TIME(3) = toc;

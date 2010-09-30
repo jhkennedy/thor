@@ -1,8 +1,7 @@
 function [ vel ] = bvel( cdist, SET )
-% [vel]=bvel(cdist) claculates the modeled bulk velocity gradient for the crystal
+% [vel]=bvel(cdist, SET) claculates the modeled bulk velocity gradient for the crystal
 % distrobution specified by cdist
-%   cdist is a crystal distrobution is aranged in an SET.NUMBCRYSx10 cell array. The crystal
-%   distrubution structure is outlined in Thor.setup.
+%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
@@ -10,12 +9,7 @@ function [ vel ] = bvel( cdist, SET )
 %
 %   See also Thor.setup
 
-    vel = zeros(3,3); % s^{-1}
+vel = sum(cdist.vel,3)/SET.numbcrys;
 
-    for ii = 1:SET.numbcrys
-        vel = vel + cdist{ii,4}; % s^{-1}
-    end
-    
-    vel = vel/SET.numbcrys; % s^{-1}
 end
 

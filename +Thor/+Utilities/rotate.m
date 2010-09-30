@@ -1,8 +1,7 @@
 function [ cdist ] = rotate( cdist, SET )
 % [cdist]=rotate(cdist, SET) rotates the crystals based on the information in the crystal
 % distrobution cdist based on the setting in SET.
-%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The crystal
-%   distrubution structure is outlined in Thor.setup.
+%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
@@ -10,43 +9,37 @@ function [ cdist ] = rotate( cdist, SET )
 %
 %   See also Thor.setup
 
-
     Od = 0; % s^{-1} bulk rotation rate boundry condition
 
     % modeled velocity gradient
     Lm = Thor.Utilities.bvel(cdist, SET); % s^{-1}
+
     % modeled rotation rate
     Om = (1/2)*(Lm - Lm'); % s^{-1}
+
     % bulk roation 
     Ob = Od + Om; % s^{-1}
     
-    for ii = 1:SET.numbcrys
-        % single crystal plastic rotation rate
-        Op = (1/2)*(cdist{ii,4} - cdist{ii,4}'); % s^{-1}
-        % crystal lattice rotation
-        Os = Ob - Op; % s^{-1}
-        % C-axis orientation
-        N   = [sin(cdist{ii,1}).*cos(cdist{ii,2}) sin(cdist{ii,1}).*sin(cdist{ii,2}) cos(cdist{ii,1})]; % -
-        % new C-axis orientation
-        N = expm(SET.tsize*Os)*N'; % -
-        % make N a unit vector
-        N = N/(N(1)^2+N(2)^2+N(3)^2)^(1/2); % -
-        % new angles
-        PHI = atan2( N(2),N(1) ); % -
-        THETA = acos( N(3) ); % -
-        % check boundry conditions
-        if THETA>pi/2
-            THETA = pi - THETA; % -
-            PHI = PHI + pi; % -
-        elseif THETA<0;
-            THETA = abs(THETA); % -
-            PHI = PHI + pi; % -
-        end
-        % make sure PHI isn't negitive
-        PHI = rem(PHI+2*pi, 2*pi); % -
-        % set new angles
-        cdist{ii,1}= THETA; % -
-        cdist{ii,2}= PHI; % -
-    end
-end
+    % single crystal plastic rotation rate
+    Op = cdist.vel/2 - permute(cdist.vel,[2,1,3])/2; % s^{-1}
 
+    % crystal latice rotation
+    Os = repmat(Ob,[1,1,SET.numbcrys]) - Op;
+    
+    % C-axis orientations
+    N   = [sin(cdist.theta).*cos(cdist.phi) sin(cdist.theta).*sin(cdist.phi) cos(cdist.theta)]; % -
+    
+    % get new C-axis orientation
+    N = N'+squeeze(sum(SET.tstep*Os.*permute(reshape(repmat(N,[1,3])',3,3,[]),[2,1,3]),2)); % -
+    
+    % make sure N is a unit vector
+    N = N./repmat(sqrt(N(1,:).^2+N(2,:).^2+N(3,:).^2),[3,1]); % -
+    
+    % get new angles
+    cdist.phi = atan2(N(2,:),N(1,:))'; % -
+    cdist.theta = acos(N(3,:))'; % -
+    
+    % check bounds
+    cdist = Thor.Utilities.bound(cdist);
+    
+end
