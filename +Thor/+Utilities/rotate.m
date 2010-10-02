@@ -30,10 +30,14 @@ function [ cdist ] = rotate( cdist, SET )
     N   = [sin(cdist.theta).*cos(cdist.phi) sin(cdist.theta).*sin(cdist.phi) cos(cdist.theta)]; % -
     
     % get new C-axis orientation
-    N = N'+squeeze(sum(SET.tstep*Os.*permute(reshape(repmat(N,[1,3])',3,3,[]),[2,1,3]),2)); % -
+    for ii = 1:SET.numbcrys
+        N(ii,:) = expm(SET.tstep*Os(:,:,ii))*N(ii,:)';
+            % can't vectorize this. expm is generator of finite rotations from
+            % infintesimal rotation Os
+    end
     
     % make sure N is a unit vector
-    N = N./repmat(sqrt(N(1,:).^2+N(2,:).^2+N(3,:).^2),[3,1]); % -
+    N = N'./repmat(sqrt(N(:,1)'.^2+N(:,2)'.^2+N(:,3)'.^2),[3,1]); % -
     
     % get new angles
     cdist.phi = atan2(N(2,:),N(1,:))'; % -

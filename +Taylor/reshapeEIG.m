@@ -17,3 +17,9 @@ function [one, two, three] = reshapeEIG(EIG)
         three{ii} = sum(three{ii},2)'/sE(3);
         
     end
+    
+        one   = cell2mat(one');
+        two   = cell2mat(two'); 
+        three = cell2mat(three');
+        
+end
