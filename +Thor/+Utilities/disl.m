@@ -22,14 +22,13 @@ function [ cdist ] = disl( cdist, SET, elem )
     K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}
 
     % calculate the Magnitude of the strain rate
-    ecdot = reshape(cdist.ecdot, 9,[]); % s^{-1}
-    Medot = sqrt( ecdot(1,:).^2 + ecdot(5,:).^2 + ecdot(1,:).*ecdot(5,:) + ecdot(4,:).^2 + ecdot(8,:).^2 + ecdot(3,:).^2)'; % s^{-1}
+    Medot = squeeze(sqrt(sum(sum(cdist.ecdot.^2,2),1)/2)); % s^{-1}
     
     % claclulate the change in the dislocation density
     rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
     
     % set the new dislocation density
-    cdist.dislDens = cdist.dislDens + rhodot*(SET.tstep); % m^{-2}
+    cdist.dislDens = cdist.dislDens + rhodot*SET.tstep; % m^{-2}
     
 end
 

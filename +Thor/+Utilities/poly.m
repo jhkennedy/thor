@@ -20,20 +20,23 @@ function [ cdist ] = poly( cdist, SET, elem )
                     -(S(1,2)^2+S(2,3)^2+S(3,1)^2) ); % Pa
     
     % see if polygonize is favorable
-    mask = cdist.MRSS./Mstress < del;
+    mask = (cdist.MRSS/Mstress < del) & (cdist.dislDens > rhop);
     
-    % reduce dislocation density
-    cdist.dislDens(mask) = cdist.dislDens(mask) -rhop; % m^{-2}
-    % halve the crystal size
-    cdist.size(mask) = cdist.size(mask)/2;
-    % rotate the crystal
-    task = cdist.theta < pi/6;
-    % if withing 30 degrees of vertical move crystal away by 5 degrees
-    cdist.theta(mask & task) = cdist.theta(mask & task) + pi/36; % -
-    % else choose sign at random and then move crystal +/- 5 degrees
-    rask = rand(SET.numbcrys,1) <= 0.5;
-    cdist.theta(mask & ~task & rask) = cdist.theta(mask & ~task & rask) + pi/36;
-    cdist.theta(mask & ~task & ~rask) = cdist.theta(mask & ~task & ~rask) - pi/36;
-    
+    if any(mask)
+        % reduce dislocation density
+        cdist.dislDens(mask) = cdist.dislDens(mask) -rhop; % m^{-2}
+        % halve the crystal size
+        cdist.size(mask) = cdist.size(mask)/2;
+        % rotate the crystal
+        task = cdist.theta < pi/6;
+        % if withing 30 degrees of vertical move crystal away by 5 degrees
+        cdist.theta(mask & task) = cdist.theta(mask & task) + pi/36; % -
+        % else choose sign at random and then move crystal +/- 5 degrees
+        rask = rand(SET.numbcrys,1) <= 0.5;
+        cdist.theta(mask & ~task & rask) = cdist.theta(mask & ~task & rask) + pi/36;
+        cdist.theta(mask & ~task & ~rask) = cdist.theta(mask & ~task & ~rask) - pi/36;
+    else
+        return
+    end
 end
 

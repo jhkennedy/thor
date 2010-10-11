@@ -131,6 +131,8 @@ function [ NAMES, SET] = setup( in, RUN )
 
                         % save crystal distrobutions
                         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                        % Save a copy for step zero
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
                      
                 case 'same'
@@ -143,10 +145,10 @@ function [ NAMES, SET] = setup( in, RUN )
                     
                     for ii = 1:in.nelem
                         % creat isotropic distrobution of angles
-                        PHI = linspace(0,2*pi, in.width*in.width);
-                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
-                        cdist.phi= repmat(PHI,1,in.width)';
-                        THETA = repmat(THETA,in.width*in.width,1);
+                        PHI = linspace(0,2*pi, in.width(1)*in.width(2));
+                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
+                        cdist.phi= repmat(PHI,1,in.width(3))';
+                        THETA = repmat(THETA,in.width(1)*in.width(2),1);
                         cdist.theta = reshape(THETA,1,[])';
 
                         % creat isotropic distrobution of grain size
@@ -154,6 +156,8 @@ function [ NAMES, SET] = setup( in, RUN )
 
                         % save crystal distrobutions
                         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                        % Save a copy for step zero
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
                     
                 case 'NNI'
@@ -166,10 +170,10 @@ function [ NAMES, SET] = setup( in, RUN )
                     
                     for ii = 1:in.nelem
                         % creat isotropic distrobution of angles
-                        PHI = linspace(0,2*pi, in.width*in.width);
-                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width);
-                        PHI = repmat(PHI,1,in.width);
-                        THETA = repmat(THETA,in.width*in.width,1);
+                        PHI = linspace(0,2*pi, in.width(1)*in.width(2));
+                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
+                        PHI = repmat(PHI,1,in.width(3));
+                        THETA = repmat(THETA,in.width(1)*in.width(2),1);
                         THETA = reshape(THETA,1,[]);
 
                         % randomize order of crystals
@@ -184,13 +188,12 @@ function [ NAMES, SET] = setup( in, RUN )
 
                         % save crystal distrobutions
                         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                        % Save a copy for step zero
+                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
                     end
                     
             end
     end
-
-    % Save a copy for step zero
-    eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
     
     % set the model settings
     SET = in;

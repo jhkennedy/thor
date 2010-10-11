@@ -1,6 +1,6 @@
 %% Test recode
 
-close all, clear all, clc
+close all; clear all; clc
 load in
 
 [NAMES, SET] = Thor.setup(in, 1337);
@@ -21,7 +21,7 @@ cp3 = Thor.Utilities.grow(cp2, SET, 1, 1);
 cp4 = Thor.Utilities.poly(cp3, SET, 1);
 
 % check for migration recrystallization
-cp5 = Thor.Utilities.migre(cp4, SET, 1);
+cp5 = Thor.Utilities.migre(cp3, SET, 1);
 
 % check crystal orientation bounds
 cp6 = Thor.Utilities.bound(cp5);

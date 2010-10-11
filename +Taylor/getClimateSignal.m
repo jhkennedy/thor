@@ -14,7 +14,7 @@ try
     tic;
 
     % manually load in initial setings structure
-    load ./+Thor/+Build/Settings/Taylor_getSoft.mat
+    load ./+Thor/+Build/Settings/Taylor_getClimateSignal.mat
 
     DATE = now;
     display(['Run started ',datestr(DATE)]);
@@ -22,7 +22,7 @@ try
     % set up model
         % build the different runs
         runs = 8;
-        timesteps = 2100; % step-size is definded in in.tstep 2290
+        timesteps = 200; % step-size is definded in in.tstep 
         IN(runs) = in; % initialize each runs settings 
 
 
@@ -54,8 +54,8 @@ try
         DEAPTH = Taylor.getDeapth(to, SAVE, in.tstep, AGE); %#ok<NASGU> % m
         
         % Surface vertical velocity (RAYMOND 1983)
-        yts = 60*60*24*365*1000; % s a^{-1}
-        Vs = abs((AGE(2,2)-AGE(1,2))/((AGE(2,2)-AGE(1,2))*yts)); % m s^{-1}
+        kyts = 60*60*24*365*1000; % s ka^{-1}
+        Vs = abs((AGE(2,2)-AGE(1,2))/((AGE(2,2)-AGE(1,2))*kyts)); % m s^{-1}
         
         
         % initialize density of ice
@@ -93,6 +93,26 @@ try
         end
     TIME(2) = toc;
     display(['Total elapsed time to setup Thor is ',num2str(TIME(2)),' seconds.']);
+    
+    % set climate layers
+    for qq = 1:runs
+        for rr = 1:SET(qq).nelem
+            cdist = load(['./+Thor/CrysDists/Run' num2str(qq) '/' NAMES(qq).files{rr}]);
+            cdist.theta(eigenMask(:,2)) = cdist.theta(eigenMask(:,2))*0.9;
+            cdist.size(eigenMask(:,2)) = cdist.size(eigenMask(:,2))*2;
+            eval(['save ./+Thor/CrysDists/Run' num2str(qq) '/' NAMES(qq).files{rr} ' -struct cdist theta phi size dislDens']);
+            eval(['save ./+Thor/CrysDists/Run' num2str(qq) '/SavedSteps/Step00000_' NAMES(qq).files{rr} ' -struct cdist theta phi size dislDens']);
+        end
+    end
+%     % save crystal distrobutions
+%                         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+%                     end
+%                     
+%             end
+%     end
+% 
+%     % Save a copy for step zero
+%     eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
     
     
     % step each run
@@ -135,7 +155,7 @@ try
     display(['for ',num2str(runs),'runs is ',num2str(TIME(3)),' seconds.']);
     
     %% calculate eigenvalues at each saved time step for each run
-        EIG = zeros(3,size(SAVE,2),in.nelem,runs);
+        EIG = zeros(3,size(eigenMask,2),size(SAVE,2),in.nelem,runs);
         for oo = 1:runs
             for mm = 1:in.nelem
                 for nn = 1:size(SAVE,2)
@@ -145,19 +165,19 @@ try
                                    num2str(SAVE(nn), '%05.0f') '_' NAMES(oo).files{mm}]);
                     
                     % calculate eigenvalue
-                    EIG(:,nn,mm,oo) = Thor.Utilities.eigen( cdist );
+                    EIG(:,:,nn,mm,oo) = Thor.Utilities.eigenClimate( cdist, eigenMask );
                 end
             end
         end
         
         % get average eignevalues for each run
-        [E1 E2 E3] = Taylor.reshapeEIG(EIG); %#ok<NASGU>
+%         [E1 E2 E3] = Taylor.reshapeClimateEIG(EIG); %#ok<NASGU>
         
         
         % clear unessacary variables
         clear in mm nn oo softmax softmin cdist
         % save all variables
-        save ./+Taylor/getSoft.mat
+        save ./+Taylor/getClimateSignal.mat
     
     TIME(4) = toc;
     display('Total elapsed time to calculate eigenvalues at each saved time step');
@@ -173,7 +193,7 @@ catch ME
     TIME(5) = toc;
     display(['Total elapsed time before crash is ',num2str(TIME(5)),' seconds.']);
     
-    save ./+Taylor/getSoftCrash.mat
+    save ./+Taylor/getClimateSignalCrash.mat
     
     rethrow(ME);
 

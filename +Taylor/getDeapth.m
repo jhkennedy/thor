@@ -9,4 +9,4 @@ stepsize = stepsize/(365*24*60*60*1000); % kyr
 t = to+step*stepsize; %  kyr
 
 % get depth at current time
-z = interp1(AGE(:,1), AGE(:,2), t);
+z = interp1(AGE(:,1), AGE(:,2), t,'linear', 'extrap');
