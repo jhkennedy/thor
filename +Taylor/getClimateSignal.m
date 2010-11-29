@@ -103,17 +103,7 @@ try
             eval(['save ./+Thor/CrysDists/Run' num2str(qq) '/' NAMES(qq).files{rr} ' -struct cdist theta phi size dislDens']);
             eval(['save ./+Thor/CrysDists/Run' num2str(qq) '/SavedSteps/Step00000_' NAMES(qq).files{rr} ' -struct cdist theta phi size dislDens']);
         end
-    end
-%     % save crystal distrobutions
-%                         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-%                     end
-%                     
-%             end
-%     end
-% 
-%     % Save a copy for step zero
-%     eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-    
+    end    
     
     % step each run
     parfor kk = 1:runs 
@@ -173,9 +163,9 @@ try
         % get average eignevalues for each run
 %         [E1 E2 E3] = Taylor.reshapeClimateEIG(EIG); %#ok<NASGU>
         
-        
+%%        
         % clear unessacary variables
-        clear in mm nn oo softmax softmin cdist
+        clear mm nn oo qq rr softmax softmin cdist
         % save all variables
         save ./+Taylor/getClimateSignal.mat
     
