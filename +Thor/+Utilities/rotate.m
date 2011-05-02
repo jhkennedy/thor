@@ -40,8 +40,9 @@ function [ cdist ] = rotate( cdist, SET )
     N = N'./repmat(sqrt(N(:,1)'.^2+N(:,2)'.^2+N(:,3)'.^2),[3,1]); % -
     
     % get new angles
-    cdist.phi = atan2(N(2,:),N(1,:))'; % -
-    cdist.theta = acos(N(3,:))'; % -
+    HXY = sqrt(N(1,:).^2+N(2,:).^2);
+    cdist.theta = atan2(HXY,N(3,:))';
+    cdist.phi   = atan2(N(2,:),N(1,:))';
     
     % check bounds
     cdist = Thor.Utilities.bound(cdist);

@@ -98,100 +98,137 @@ function [ NAMES, SET] = setup( in, RUN )
 
         
     %% initialize crystal distributions
-    switch in.distype
-        case 'saved'
-            % check that a saved distribution is of the right size and structure, if not,
-            % build appropriate structure
-            
-            % load in file names
-        
-        otherwise
+    switch in.distype{1,:}
+        case 'iso'
+            %  dislocation density -- thor2002 -- value set [38]
+            cdist.dislDens = ones(in.numbcrys,1)*4*1e10; % m^{-2}
+            % set file names for each element
+            fname = @(x) sprintf('EL%09.0f', x);
+            NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
 
-            %% Initial crystal prameters
+            for ii = 1:in.nelem
+                % creat isotropic distrobution of angles
+                cdist.theta = in.disangles(ii,1) + (in.disangles(ii,2)-in.disangles(ii,1))...
+                            *rand(in.numbcrys,1);
+                cdist.phi = 2*pi*rand(in.numbcrys,1);
+
+
+                % creat isotropic distrobution of grain size
+                cdist.size = in.grain(ii,1) + (in.grain(ii,2)-in.grain(ii,1))*rand(in.numbcrys,1);
+                in.Do(:,ii) = cdist.size;
+
+                % save crystal distrobutions
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                % Save a copy for step zero
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+            end
+
+        case 'same'
+            % create the same crystal distrobution for same number of crystals and
+            % distrobution angles then save them to disk 
+            
+            %  dislocation density -- thor2002 -- value set [38]
+            cdist.dislDens = ones(in.numbcrys,1)*4*1e10; % m^{-2}
+            
+            % set file names for each element
+            fname = @(x) sprintf('EL%09.0f', x);
+            NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+
+            for ii = 1:in.nelem
+                % creat isotropic distrobution of angles
+                PHI = linspace(0,2*pi, in.width(1)*in.width(2));
+                THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
+                cdist.phi= repmat(PHI,1,in.width(3))';
+                THETA = repmat(THETA,in.width(1)*in.width(2),1);
+                cdist.theta = reshape(THETA,1,[])';
+
+                % creat isotropic distrobution of grain size
+                cdist.size = mean(in.grain).*ones(size(cdist.theta));
+                in.Do(:,ii) = cdist.size;    
+                
+                % save crystal distrobutions
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                % Save a copy for step zero
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+            end
+
+        case 'NNI'
+            % create the same crystal distrobution for same number of crystals and
+            % distrobution angles but randomize the packing then save them to disk 
+            
             %  dislocation density -- thor2002 -- value set [38]
             cdist.dislDens = ones(in.numbcrys,1)*4*1e10; % m^{-2}
 
+            % set file names for each element
+            fname = @(x) sprintf('EL%09.0f', x);
+            NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+
+            for ii = 1:in.nelem
+                % creat isotropic distrobution of angles
+                PHI = linspace(0,2*pi, in.width(1)*in.width(2));
+                THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
+                PHI = repmat(PHI,1,in.width(3));
+                THETA = repmat(THETA,in.width(1)*in.width(2),1);
+                THETA = reshape(THETA,1,[]);
+
+                % randomize order of crystals
+                sort = [randperm(in.numbcrys)',THETA',PHI'];
+                sort = sortrows(sort,1);
+
+                cdist.theta = sort(:,2);
+                cdist.phi = sort(:,3);
+
+                % creat isotropic distrobution of grain size
+                cdist.size = mean(in.grain).*ones(size(cdist.theta));
+                in.Do(:,ii) = cdist.size;
+                
+                % save crystal distrobutions
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                % Save a copy for step zero
+                eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+            end
             
-            switch in.distype
-                case 'iso'
-                   
-                    % set file names for each element
-                    fname = @(x) sprintf('EL%09.0f', x);
-                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
-                    
-                    for ii = 1:in.nelem
-                        % creat isotropic distrobution of angles
-                        cdist.theta = in.disangles(ii,1) + (in.disangles(ii,2)-in.disangles(ii,1))...
-                                    *rand(in.numbcrys,1);
-                        cdist.phi = 2*pi*rand(in.numbcrys,1);
-                        
+        otherwise
+            % load saved crystal distrobution
+            
+            % set file names for each element
+            fname = @(x) sprintf('EL%09.0f', x);
+            NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
+            
+            for ii = 1:in.nelem
 
-                        % creat isotropic distrobution of grain size
-                        cdist.size = in.grain(ii,1) + (in.grain(ii,2)-in.grain(ii,1))*rand(in.numbcrys,1);
+                % check to see if file exists
+                if logical(exist(in.distype{ii,1}, 'file'))
 
-                        % save crystal distrobutions
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-                        % Save a copy for step zero
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                    % load file
+                    cdist = load(in.distype{ii,1});
+                    if all(isfield(cdist,{'size','theta','phi','dislDens'}) )
+                        if all(size(cdist.theta) == size(cdist.phi)) && all(size(cdist.theta) == size(cdist.size)) && all(size(cdist.theta) == size(cdist.dislDens))
+
+                            % set the number of crystals in the settings
+                            in.numbcrys = size(cdist.theta,1);
+                            % set the initial grain size in the setting
+                            in.Do(:,ii) = cdist.size;
+                            
+                            % save crystal distrobutions
+                            eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                            % Save a copy for step zero
+                            eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
+                            
+                            
+                        else
+                            error('Thor:Setup:fieldSize','The loaded crystal distrobution''s theta, phi, size and dislDens fields were not all the same size; one or more crystals are missing information. ')
+                        end
+                    else
+                        error('Thor:Setup:missingFields', 'The loaded crystal distrobution was missing a required field. %s needs to have the fields theta, phi, size and dislDens.', in.distype{ii,1});
                     end
-                     
-                case 'same'
-                    % create the same crystal distrobution for same number of crystals and
-                    % distrobution angles then save them to disk 
-                    
-                    % set file names for each element
-                    fname = @(x) sprintf('EL%09.0f', x);
-                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
-                    
-                    for ii = 1:in.nelem
-                        % creat isotropic distrobution of angles
-                        PHI = linspace(0,2*pi, in.width(1)*in.width(2));
-                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
-                        cdist.phi= repmat(PHI,1,in.width(3))';
-                        THETA = repmat(THETA,in.width(1)*in.width(2),1);
-                        cdist.theta = reshape(THETA,1,[])';
+                else
 
-                        % creat isotropic distrobution of grain size
-                        cdist.size = in.Do(ii,1)*ones(in.numbcrys, 1);
-
-                        % save crystal distrobutions
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-                        % Save a copy for step zero
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-                    end
-                    
-                case 'NNI'
-                    % create the same crystal distrobution for same number of crystals and
-                    % distrobution angles but randomize the packing then save them to disk 
-                    
-                    % set file names for each element
-                    fname = @(x) sprintf('EL%09.0f', x);
-                    NAMES.files = cellfun(fname,num2cell(1:in.nelem),'UniformOutput',false);
-                    
-                    for ii = 1:in.nelem
-                        % creat isotropic distrobution of angles
-                        PHI = linspace(0,2*pi, in.width(1)*in.width(2));
-                        THETA = linspace(in.disangles(ii,1),in.disangles(ii,2), in.width(3));
-                        PHI = repmat(PHI,1,in.width(3));
-                        THETA = repmat(THETA,in.width(1)*in.width(2),1);
-                        THETA = reshape(THETA,1,[]);
-
-                        % randomize order of crystals
-                        sort = [randperm(in.numbcrys)',THETA',PHI'];
-                        sort = sortrows(sort,1);
-
-                        cdist.theta = sort(:,2);
-                        cdist.phi = sort(:,3);
-
-                        % creat isotropic distrobution of grain size
-                        cdist.size = in.Do(ii,1)*ones(in.numbcrys, 1);
-
-                        % save crystal distrobutions
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-                        % Save a copy for step zero
-                        eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step00000_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
-                    end
-                    
+                    error('Thor:Setup:fileNotFound', ['The distobution type ',in.distype{ii,1},...
+                                                      ' was not a known type or a file in matlabs path. Possible distrobution types are '...
+                                                      'iso, same and NNI. Files must be ''.mat'' files and be in Matlabs path; '...
+                                                      'the ''.mat'' extension must be included.'])
+                end
             end
     end
     

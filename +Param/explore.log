@@ -9,13 +9,30 @@ Warning: No window system found.  Java option 'MWT' ignored
   To get started, type one of these: helpwin, helpdesk, or demo.
   For product information, visit www.mathworks.com.
  
->> >> >> >> >> >> >> Starting matlabpool using the 'local' configuration ... connected to 8 labs.
-Run started 30-Nov-2010 17:11:13
-Elapsed time to intitialize Thor is 0.60174 seconds.
-Total elapsed time to setup Thor is 0.91494 seconds.
-Total elapsed time to step Thor through 2 time steps
-for 8runs is 19.4711 seconds.
-Total elapsed time to calculate eigenvalues at each saved time step
-for each run is 20.0745 seconds.
+>> >> >> >> >> >> >> >> >> >> Starting matlabpool using the 'local' configuration ... connected to 4 labs.
+
+ Run started 01-Apr-2011 14:20:55 
+
+
+ Time to set up Thor is 6.85278 seconds. 
+
+
+ Time to step Thor through 1000 time steps for 32 runs is 
+     522290 seconds. 
+
+
+ Time to calculate the eigenvalues is: 
+     231.861 seconds. 
+
 Sending a stop signal to all the labs ... stopped.
+
+ Total time to run PARAM is 
+     522540 seconds. 
+
+
+ Goodbye! 
+
+
+ Run ended 07-Apr-2011 15:29:56 
+
 >> >> 

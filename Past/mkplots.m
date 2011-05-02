@@ -82,12 +82,23 @@ legend('No NNI','mild NNI','full NNI')
 axis([0.04,.09,50,400])
 
 %% stress
+depth = AGE(:,2);
+stress = zeros(3,3,size(depth,1));
+for ii = 1:size(depth,1)
+    temp = interp1q(Z', T', depth(ii));
+    ALPHA = interp1(SET(1).A(1,:), SET(2).A(2,:),temp);
+    Dev = 2*(ALPHA).^(-1./3).*(2*Vs./Z(2)).^(1./3).*(1-depth(ii)./Z(2)).^(1./3);
+    stress(3,3,ii) = -Dev;
+    stress(1,1,ii) = Dev;
+    stress(2,2,ii) = Dev;
+end
 
-plot(squeeze(stress(3,3,:)),depth,'-b',...
-         squeeze(stress(2,2,:)),depth,'-r',...
-         squeeze(stress(1,1,:)),depth,'--g',...
+figure,
+plot(squeeze(stress(3,3,:))/100000,depth,'-b',...
+         squeeze(stress(2,2,:))/100000,depth,'-r',...
+         squeeze(stress(1,1,:))/100000,depth,'--g',...
          'LineWidth',4,'MarkerSize',6);
 set(gca,'YDir','reverse','FontSize',20, 'FontWeight','bold')
 ylabel('Depth (m)')
-xlabel('Deviatoric Stress (Pa)')
+xlabel('Deviatoric Stress (bar)')
 legend('S_{33}','S_{22}','S_{11}','Location','North')

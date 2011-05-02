@@ -28,9 +28,8 @@ else
     load(['+Thor/+Build/Settings/CONN/' CONN])
     
     sumrss = @(x) sum(cdist.MRSS(x)); % Pa
-    numnbr = @(x) size(x,2); % -
 
-    N  = cellfun(numnbr, CONN); % -
+    N  = cellfun('size', CONN,2); % -
     Ti = cellfun(sumrss, CONN); % Pa
     
     esoft = 1./(xc + N*ec).*(xc + ec.*Ti./cdist.MRSS); % -

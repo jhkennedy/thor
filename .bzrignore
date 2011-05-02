@@ -1,1 +1,8 @@
 ./+Thor/CrysDists/*
+./*/Results/*
+./*/getClimateSignal.log
+./*/getClimateSignal.mat
+./*/getClimateSignalCrash.mat
+./*/exploreCRASH.mat
+./*/exploreResults.mat
+./*/Settings/*.mat

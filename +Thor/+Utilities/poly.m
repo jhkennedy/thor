@@ -1,4 +1,4 @@
-function [ cdist ] = poly( cdist, SET, elem )
+function [ cdist ] = poly( cdist, SET, elem, step )
 % [cdist]=poly(cdist, SET, elem) polygonizes crystals favorable do so.
 %   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %   
@@ -27,6 +27,8 @@ function [ cdist ] = poly( cdist, SET, elem )
         cdist.dislDens(mask) = cdist.dislDens(mask) -rhop; % m^{-2}
         % halve the crystal size
         cdist.size(mask) = cdist.size(mask)/2;
+        SET.Do(mask,elem) = cdist.size(mask);
+        SET.to(mask,elem) = step;
         % rotate the crystal
         task = cdist.theta < pi/6;
         % if withing 30 degrees of vertical move crystal away by 5 degrees

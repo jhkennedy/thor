@@ -1,4 +1,4 @@
-function [ cdist ] = migre( cdist, SET, elem )
+function [ cdist ] = migre( cdist, SET, elem, step )
 % [cdist]=migre(cdist,SET,elem) recrystalizes crystals that are favorable to do so. 
 %   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
 %   
@@ -45,6 +45,8 @@ function [ cdist ] = migre( cdist, SET, elem )
             cdist.dislDens(mask) = rhoo; % m^{-2}
             % set new crystal size
             cdist.size(mask) = cdist.size(mask)*0+D;
+            SET.Do(mask,elem) = cdist.size(mask);
+            SET.to(mask,elem) = step;
 
             % find a soft orientation
             theta = cdist.theta(cdist.MRSS == max(cdist.MRSS)); theta = theta(1);

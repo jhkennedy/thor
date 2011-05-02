@@ -1,4 +1,4 @@
-function [ EIG, V, N ] = eigenClimate( cdist , eigenMask)
+function [ EIG ] = eigenClimateOld( cdist , eigenMask)
 % [EIG]=eigen( cdist SET) calulates the orientation eigenvalues of the crystal
 % distrobution cdist. 
 %   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell array. The
@@ -17,24 +17,23 @@ function [ EIG, V, N ] = eigenClimate( cdist , eigenMask)
 % see also Thor.setup
 
     M = size(eigenMask,2);
-    EIG = zeros(3,M);
-    
-    % for each mask
     for ii = 1:M
-        % get crystal info
         SIZE = cdist.size(eigenMask(:,ii));
         THETA = cdist.theta(eigenMask(:,ii));
         PHI = cdist.phi(eigenMask(:,ii));
         
         % calculate weights for average
-        Vol = SIZE.^3; % m^3
-        Vol = repmat(Vol/sum(Vol),[1,3]);
+        V = SIZE.^3; % m^3
+        V = reshape(repmat(V/sum(V),[9,1]),3,3,[]); % -
 
         % C-axis orientations
         N   = [sin(THETA).*cos(PHI) sin(THETA).*sin(PHI) cos(THETA)]; % -
-        
-        % calculate eigenvalues
-        sv = svd(Vol.*N);
-        EIG(:,ii) = (sv/norm(sv)).^2;
+
+        % build orientation matricies
+        j=1:3;
+        eigmat = V.*reshape(repmat(N',3,1).* N(:,j(ones(3,1),:)).',3,3,[]); % -
+
+        % claculate the eigenvalues
+        EIG(:,ii) = eig(sum(eigmat,3));
     end
 end

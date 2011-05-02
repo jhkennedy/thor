@@ -39,10 +39,10 @@ function step(NAMES, SET, RUN, STEP, SAVE )
         cdist = Thor.Utilities.grow(cdist, SET, ii, STEP);
         
         % check for polyiginization
-        cdist = Thor.Utilities.poly(cdist, SET, ii);
+        cdist = Thor.Utilities.poly(cdist, SET, ii, STEP);
         
         % check for migration recrystallization
-        cdist = Thor.Utilities.migre(cdist, SET, ii);
+        cdist = Thor.Utilities.migre(cdist, SET, ii, STEP);
         
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);
