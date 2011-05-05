@@ -1,17 +1,18 @@
 function [ cdist, R1, R2, R3 ] = shmidt( cdist, n, stress )
-% [cdist, R1, R2, R3]=SHMIDT( cdist, n, stress ) returns the crystal distrobution
-% structure with the shmidt tensors and magnitude of the rss for each of the three slip
-% systems on each crystal in the distrobution.  
+% [cdist, R1, R2, R3]=SHMIDT( cdist, n, stress ) returns the crystal
+% distrobution structure with the shmidt tensors and magnitude of the rss for
+% each of the three slip systems on each crystal in the distrobution.  
+% 
 %   cdist is the structure holding the crystal distrobution
 %
 %   n is the number of crystals in the distrobution
 %
 %   stress is a 3X3Xn matrix holding the stress 
 %
-% SHMIDT returns the crystal distrobution structure with the added fields of S1, S2, S3
-% (size 3x3xn) and MRSS (size nx1) which give the Shmidt tensor for each of the three slip
-% systems and the magnitued of the RSS. SHMIDT also returns the RSS on each slip system;
-% R1, R2 and R3 (size nx1).
+% SHMIDT returns the crystal distrobution structure with the added fields of S1,
+% S2, S3 (size 3x3xn) and MRSS (size nx1) which give the Shmidt tensor for each
+% of the three slip systems and the magnitued of the RSS. SHMIDT also returns
+% the RSS on each slip system; R1, R2 and R3 (size nx1).   
 %
 % see also Thor.setup.
 

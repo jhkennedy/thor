@@ -1,5 +1,5 @@
 function [ NAMES, SET] = setup( in, RUN )
-% [ NAMES, SETTINGS ] = SETUP( in, RUN ) sets up the the model.
+% [ NAMES, SET ] = SETUP( in, RUN ) sets up the the model.
 %   Initial settings set in 'in' are used to build the list of crystal
 %   distrobution names, NAMES, and the model settings, SETTINGS. If no
 %   crystal distrobution files are specified, setup will build crystal
@@ -7,88 +7,88 @@ function [ NAMES, SET] = setup( in, RUN )
 %
 %   RUN is the run number to seperate different runs.
 %
-%   'in' is a structure holding the initial model parameters. The in structure can be
-%   built by calling the function Thor.Build.structure.
+%   'in' is a structure holding the initial model parameters. The in structure
+%   can be built from the template +Thor/+Build/inTEMPLATE.mat. This sturcture
+%   will become the settings structure SET after SETUP is run. 
 %
-%       in.nelem is a scalar value, [NELEM], giving the number of elements or crystal
-%       distrobutions.
+%       in.nelem is a scalar value, [NELEM], giving the number of elements or
+%       crystal distrobutions. 
+%
+%       in.numbcrys is a scaler value holding the number of crystals in the
+%       elements.  
 %
 %       in.distype is a character array specifying the type of crystal
-%       distrobution to make. Possible values are 'iso'.
+%       distrobution to either make or load. To make a distrobution set 
+%       in.distype to 'iso', 'same' or 'NNI'. 
 %           'iso' results in a isotropic randomly generated crystal pattern.
-%            'same' results in a distrobution that is the same for every element. 
-%            'NNI' results in a distrobution that has the same eigen values but the
-%               crystals are randomly placed into the distrobutin so that the nighboors
-%               are random for each element.   
+%            'same' results in a distrobution that is the same for every
+%            element. 'NNI' is the same as 'same' except that the crystals are
+%            randomly ordered for each element.   
 %
-%       in.disangles is an NELEMx2 array holding [Ao1, A1; ...; Ao_NELEM, A_NELEM]
-%       where the 'Ao's are the girdle angle of the crystal distrobution and
-%       the 'A's are the cone angles of the distrobution
+%       in.stress is a 3x3xNELEM array holding the stress tensor for each
+%       element.
 %
-%       in.ynsoft is a character array of either 'yes' or 'no' that turns on or off the
-%       softness parameter due to nearest neighbor interaction
+%       in.xcec is a NELEMx2 array holding the numeric softness parameters,
+%       [xc1, ec1; ...; xc_NELEM, ec_NELEM] where the 'xc's are the
+%       contributions of the center crystals and the 'ec's are the controbutions
+%       of each neighbor crystal.  
 %
-%       in.soft is a 1x2 array holding the numeric softness parameters, [xc, ec].
-%           xc is the contribution of the center crystal and ec is the controbution of
-%           each neighbor crystal
+%       in.T is a NELEMx1 array holding the temperature of each element in
+%       degrees celcius. 
 %
-%       in.glenexp is a NELEMx1 array holding the exponent from glens flow law for each
-%       element. 3 is the defalut value for all elements.
+%       in.glenexp is a NELEMx1 array holding the exponent from glens flow law
+%       for each element. 3 is the defalut value for all elements.  
 %
-%       in.stress is a 3x3xNELEM array holding the stress tensor for each element.
+%       in.width is a 1x3 array holding the length width and hight of the
+%       crystal distrobutions
 %
-%       in.grain is a NELEMx2 array holding, [MIN, MAX], the minimum, MIN, and maximum,
-%       MAX, crystal diameters for building a crystal distrobution for each element. Grain
-%       sizes are picked randomly from within this open interval. 
-%
-%       in.Do is a NELEMx1 array holding the initial average grain size for each element. 
-%
-%       in.numbcrys is a scaler value holding the number of crystals in the elements. 
-%
-%       in.tsize is the time interval between sucessive steps.
-%
-%       in.tunit is a character array that specifies the units of tsize. Possible units
-%       are 'year','day', and 'seconds', where 'year' is the default.
-%
-%       in.T is a NELEMx1 array holding the temperature of each element.
+%       in.tsize is the time interval between sucessive steps in seconds.
 %       
-%       in.Tunit is a character array that specifies the units of T. Possible units are
-%       'kelvin' and 'celsius' where 'kelvin' is the default. 
-%
-%       in.A is an 2x12 array holding the tempurature dependance of Glen's flow law
-%       parameter as taken from 'The Physics of Glaciers' by Patterson.
-%       (3rd Ed.) It should have units of s^{-1} Pa^{-n}, where n is the
-%       glen exponent. 
-%       
-%       in.connName is a character array holding the name of the
+%       in.CONN is a character array holding the name of the
 %       connectivity array .mat file. This is built with
 %       Thor.Build.connectivity.
+%       
+%       in.A is a 2x12 array holding the tempurature dependance of Glen's flow
+%       law parameter as taken from 'The Physics of Glaciers' by Patterson (3rd
+%       Ed.). It has units of s^{-1} Pa^{-n}, where n is the glen exponent.   
 %
-% SETUP saves a set of variables in the form of  EL********, where  ********* is the
-% element number, into directory called 'CrysDists'. nelem files are created with each
-% containing a crystal distrobution. The distrobutions are aranged in an 8000x10 cell
-% array.
+%       in.to is a NUMBCRYSxNELEM zeros array that will hold the time of last
+%       recrystallization for each crystal. This is needed by the normal growth
+%       law.
 %
-%   NAMES.files holes a column vector of all the files names where the row number
-%   corrosponds to the crystal number.
-%       therefor, a crystal distrobution can be accessed as such:
-%           eval(['load ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{*********}]);
-%       and the contents of a loaded crystal distrobution as such:
-%           EL*********{crystal_number, NAMES.field_name}
-%   However, for parallel applications in matlab, this functionality is
-%   resticted. The file can still be accesed the through the NAMES
-%   structure when the proxy save function isave is used. (Matlab restricts
-%   the use of eval in parallel for loops). 
+%       in also has a number of optional parameters. If in.distype is set to
+%       create crystal distrobutions, THOR will need these optional settings.
+%
+%           in.disangles is an NELEMx2 array holding [Ao1, A1; ...; Ao_NELEM,
+%           A_NELEM] where the 'Ao's are the girdle angles of the crystal
+%           distrobution and the 'A's are the cone angles of the distrobution. 
+%
+%           in.grain is a NELEMx2 array holding, [MIN, MAX], the minimum, MIN,
+%           and maximum, MAX, crystal diameters for building a crystal
+%           distrobution for each element. Grain sizes are picked randomly from
+%           within this open interval.    
+%
+%       SETUP will also create the structure in.Do, NUMBCRYSxNELEM array, which
+%       saves the initial grain size of each crystal. This is needed by the
+%       normal growth law. 
+%
+% SETUP saves a set of variables in the form of  EL********.mat, where
+% ********* is the element number, into directory +Thor/CrysDists. nelem files
+% are created with each containing the fields of the crystal distrobution
+% structure: theta, phi, size and dislDens.
 %
 % setup returns variables NAMES, and SETTINGS. 
+%       
+%   NAMES.files holes a column vector of all the EL********.mat files names
+%   where the row number corrosponds to the crystal number. Therefor, a crystal
+%   distrobution can be accessed as such:  
+%       cdist = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}])
 %
-%   NAMES is outlined above.
+%   SET is an equivelent structure to 'in' outlined above. SET will be used to
+%   change the model settings over time while keeping the initial settings in
+%   'in' intact throughout the model. 
 %
-%   SETTINGS is an equivelent structure to 'in' outlined above. SETTINGS will be used to
-%   change the model settings over time while keeping the initial settings in 'in' intact
-%   throughout the model.
-%
-%   see also Thor, Thor.Build, Thor.Build.structure, and Thor.Build.connectivity.
+%   see also Thor, Thor.Build, Thor.Build.connectivity, and Thor.Utilities.grow.
 
     %% make directory for run
     warning off MATLAB:MKDIR:DirectoryExists

@@ -1,7 +1,9 @@
 function [ cdist ] = disl( cdist, SET, elem )
-% [cdist]=DISL(cdist, SET, elem) calculates the new dislocation density for each crystal in
-% in the distrobution cdist of element elem, bassed on the settings specified in SET.
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
+% [cdist]=DISL(cdist, SET, elem) calculates the new dislocation density for each
+% crystal in the distrobution cdist of element elem, bassed on the settings
+% specified in SET.  
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup. 
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %

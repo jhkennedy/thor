@@ -1,14 +1,16 @@
 function [ cdist ] = grow( cdist, SET, elem, step )
-% [cdist]=grow( cdist, SET, elem, step) calculates the new crystal sizes of cidst for an
-% element elem, using the settings in SET.  
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
+% [cdist]=grow( cdist, SET, elem, step) calculates the new crystal sizes of
+% cidst for an element elem, using the settings in SET.   
+%
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup. 
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
 %   elem is the element number of the crystal distrobution, cdist.
 %
-%   Step is the current time-step used to calculate the growth according to a parabolic
-%   growth law.  
+%   step is the current time-step used to calculate the growth according to a
+%   parabolic growth law.
 %
 % grow returns a crystal distrobution with updated crystal sizes. 
 %

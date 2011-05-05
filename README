@@ -33,8 +33,8 @@ the matlab path. There are two standard ways of doing this:
 
         and so on and so forth. 
 
-        This package is compliant with MATLABs standard help function. As such, you can 
-        see a list of funtions and subpackages in Thor by typing
+        This package is compliant with MATLABs standard help function. As such, 
+        you can see a list of funtions and subpackages in Thor by typing
 
             >> help Thor
 
@@ -56,5 +56,5 @@ the matlab path. There are two standard ways of doing this:
  OCTAVE PACKAGE INSTALLATION INSTRUCTIONS
 ==========================================
 
-    Currently this package does not work in matlab because octave doesn't use the '+'
-    syntax for packages. A fix is in the works. 
+    Currently this package does not work in octave because octave doesn't use 
+    the '+' syntax for packages. A fix is in the works. 

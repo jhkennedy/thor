@@ -1,7 +1,9 @@
 function [ cdist ] = rotate( cdist, SET )
-% [cdist]=rotate(cdist, SET) rotates the crystals based on the information in the crystal
-% distrobution cdist based on the setting in SET.
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
+% [cdist]=rotate(cdist, SET) rotates the crystals based on the information in
+% the crystal distrobution cdist based on the setting in SET. 
+%
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup. 
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %

@@ -1,16 +1,20 @@
 function [ cdist] = vec( cdist, SET, elem)
-% [cdist]=vec(cdist, SET, elem) calculates the velocity gradient and single crystal
-% strain rate for every crystal in cdist. cdist is the crystal disrobution for element
-% elem. Vec uses the settings in SET and the connectivity structure specified by CONN.
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
+% [cdist]=vec(cdist, SET, elem) calculates the velocity gradient and single
+% crystal strain rate for every crystal in cdist. cdist is the crystal
+% disrobution for element elem. Vec uses the settings in SET and the
+% connectivity structure specified by CONN.   
+%   
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup.   
 %
 %   SET is the setting structure outlined in Thor.setup.
 %
 %   elem is the element number that cdist is a part of.
 %
-% vec returns cdist with new fields for the shmidt tensors on each slip system (.S1, .S2,
-% .S3 size 3x3xN) magnitude of the RSS (.MRSS size Nx1), velocity gradient on the crystals
-% (.vel size 3x3xN) and the strain rate on the crystals (.ecdot size 3x3xN). 
+% vec returns cdist with new fields for the shmidt tensors on each slip system
+% (.S1, .S2, .S3 size 3x3xN) magnitude of the RSS (.MRSS size Nx1), velocity
+% gradient on the crystals (.vel size 3x3xN) and the strain rate on the crystals
+% (.ecdot size 3x3xN).    
 %
 %   See also Thor.setup
 

@@ -529,7 +529,7 @@ try
                                num2str(SAVE(nn), '%05.0f') '_' NAMES(oo).files{mm}]);
 
                 % calculate eigenvalue
-                EIG(:,:,nn,mm,oo) = Thor.Utilities.eigenClimate( cdist, eigenMask );
+                EIG(:,:,nn,mm,oo) = Thor.Utilities.eigenLayers( cdist, eigenMask );
             end
         end
     end

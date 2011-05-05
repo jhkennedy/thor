@@ -1,10 +1,14 @@
 function [ cdist ] = poly( cdist, SET, elem, step )
-% [cdist]=poly(cdist, SET, elem) polygonizes crystals favorable do so.
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
+% [cdist]=poly(cdist, SET, elem, step) polygonizes crystals favorable do so.
+% 
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup.    
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
 %   elem is the element number of the crystal distrobution, cdist.
+%
+%   step is the current time step.
 %
 % poly returns the crystal distrobution with polygonized crystals. 
 %

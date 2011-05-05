@@ -1,12 +1,10 @@
 function [ cdist ] = bound( cdist )
 % [cdist]=bound(cdist,SET,elem) checks the crystal orientation bounds and fixes
-% orientations outside the bounds. 
-%   cdist is the structure holding the crystal distrobution outlined in Thor.setup.
-%   
-%   SET is a structure holding the model setting as outlined in Thor.setup.
+% orientations outside the bounds.
 %
-%   elem is the element number of the crystal distrobution, cdist.
-%
+%   cdist is the structure holding the crystal distrobution outlined in
+%   Thor.setup. 
+
 % bound returns a crystal distrobution, cdist, with propperly bounded crystals.
 %
 %   See also Thor.setup

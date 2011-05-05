@@ -1,4 +1,4 @@
-function [EIG] = analyzeSavedResultsPar( Dir, in, runs, eigenMask, SAVE, NAMES)
+function [EIG] = savedResultsPar( Dir, in, runs, eigenMask, SAVE, NAMES)
     
  %% calculate eigenvalues at each saved time step for each run
     EIG = zeros(3,size(eigenMask,2),size(SAVE,2),in(1).nelem, runs);
@@ -20,7 +20,7 @@ end
                                num2str(SAVE(nn), '%05.0f') '_' NAMES(oo).files{mm}]);
 
                 % calculate eigenvalue
-                eig(:,:,nn,mm) = Thor.Utilities.eigenClimate( cdist, eigenMask );
+                eig(:,:,nn,mm) = Thor.Utilities.eigenLayers( cdist, eigenMask );
             end
         end
     end

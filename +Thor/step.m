@@ -1,27 +1,28 @@
 function step(NAMES, SET, RUN, STEP, SAVE )
-% step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on all
-% the crystal distrobutions in NAMES. 
+% step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on
+% all the crystal distrobutions in NAMES. 
 %
-%   NAMES holds all the files names for the crystal distrobutions. NAMES is outlined in
-%   Thor.setup.
+%   NAMES holds all the files names for the crystal distrobutions. NAMES is
+%   outlined in Thor.setup.
 %
 %   SET is a structure holding the model settings as outlined in Thor.setup.
 %
 %   RUN is the current run number.
 %
-%   TSTEP is the current time step being preformed.
+%   STEP is the current time step being preformed.
 %
 %   SAVE is a vector constaing all the timesteps that should be saved.
 %
-% step loads in a crystal distrobution for each element and  calulates new velocity
-% gradients, crystal strain rates, dislocation densities, dislocation energies, grain
-% sizes, as well as checking for polygonization and migration recrystallization. step then
-% rotates the crystals, saves the stepped crystal distrobutions to disk, and saves a copy
-% if the current time step is listed in SAVE.    
+% step loads in a crystal distrobution for each element and  calulates new
+% velocity gradients, crystal strain rates, dislocation densities, dislocation
+% energies, grain sizes, as well as checking for polygonization and migration
+% recrystallization. step then rotates the crystals, saves the stepped crystal
+% distrobutions to disk, and saves a copy if the current time step is listed in
+% SAVE.
 %
-%   See also Thor.setup, Thor.Utilities.vec, Thor.Utilities.disl, Thor.Utilities.dislEn,
-%   Thor.Utilities.grow, Thor.Utilities.poly, Thor.Utilities.migre, and
-%   Thor.Utilities.rotate.
+%   See also Thor.setup, Thor.Utilities.vec, Thor.Utilities.disl,
+%   Thor.Utilities.dislEn, Thor.Utilities.grow, Thor.Utilities.poly,
+%   Thor.Utilities.migre, and Thor.Utilities.rotate.
 
 
     for ii = 1:SET.nelem
