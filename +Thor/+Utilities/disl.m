@@ -30,7 +30,7 @@ function [ cdist ] = disl( cdist, SET, elem )
     rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
     
     % set the new dislocation density
-    cdist.dislDens = cdist.dislDens + rhodot*SET.tstep; % m^{-2}
+    cdist.dislDens = cdist.dislDens + rhodot*SET.tstep(elem); % m^{-2}
     
 end
 

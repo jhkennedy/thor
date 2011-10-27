@@ -42,8 +42,16 @@ function [ NAMES, SET] = setup( in, RUN )
 %       in.width is a 1x3 array holding the length width and hight of the
 %       crystal distrobutions
 %
-%       in.tsize is the time interval between sucessive steps in seconds.
-%       
+%       in.tstep is a NELEMx1 array that will hold the current length of
+%       the time step in seconds for each element. 
+%
+%       in.ti is a NELEMx1 array that will hold the current model time in
+%       seconds for each element.  
+%
+%       in.to is a NUMBCRYSxNELEM zeros array that will hold the time of last
+%       recrystallization for each crystal. This is needed by the normal growth
+%       law.
+%
 %       in.CONN is a character array holding the name of the
 %       connectivity array .mat file. This is built with
 %       Thor.Build.connectivity.
@@ -51,10 +59,6 @@ function [ NAMES, SET] = setup( in, RUN )
 %       in.A is a 2x12 array holding the tempurature dependance of Glen's flow
 %       law parameter as taken from 'The Physics of Glaciers' by Patterson (3rd
 %       Ed.). It has units of s^{-1} Pa^{-n}, where n is the glen exponent.   
-%
-%       in.to is a NUMBCRYSxNELEM zeros array that will hold the time of last
-%       recrystallization for each crystal. This is needed by the normal growth
-%       law.
 %
 %       in also has a number of optional parameters. If in.distype is set to
 %       create crystal distrobutions, THOR will need these optional settings.
@@ -76,6 +80,15 @@ function [ NAMES, SET] = setup( in, RUN )
 % ********* is the element number, into directory +Thor/CrysDists. nelem files
 % are created with each containing the fields of the crystal distrobution
 % structure: theta, phi, size and dislDens.
+%
+%   theta is the co-latitude angles of the crystals in the distrobution.
+%
+%   phi is the azimuth angles of the crystals in the distrobution. 
+%
+%   size is the sizes of the crystals in the distrobution.
+%
+%   dislDens is the dislocation densities of the crystals in the
+%   distrobution. 
 %
 % setup returns variables NAMES, and SETTINGS. 
 %       

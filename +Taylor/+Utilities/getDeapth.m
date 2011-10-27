@@ -1,4 +1,4 @@
-function [z] = getDeapth(to, step, stepsize, AGE)
+function [z] = getDeapth(to, step, stepsize, TLR)
 % [z] = getDeapth(to, step, stepsize, AGE) returns the deapth, z (1x1), at time
 % to+step*stepsize according to the deapth age relation in AGE. 
 
@@ -9,4 +9,4 @@ stepsize = stepsize/(365*24*60*60*1000); % kyr
 t = to+step*stepsize; %  kyr
 
 % get depth at current time
-z = interp1(AGE(:,1), AGE(:,2), t,'linear', 'extrap');
+z = interp1(TLR.AGE(:,1), TLR.AGE(:,2), t,'linear', 'extrap');

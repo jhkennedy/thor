@@ -26,16 +26,11 @@ function [ EIG ] = eigenLayers( cdist , eigenMask)
         SIZE = cdist.size(eigenMask(:,ii));
         THETA = cdist.theta(eigenMask(:,ii));
         PHI = cdist.phi(eigenMask(:,ii));
-        
-        % calculate weights for average
-        Vol = SIZE.^3; % m^3
-        Vol = repmat(Vol/sum(Vol),[1,3]);
 
         % C-axis orientations
         N   = [sin(THETA).*cos(PHI) sin(THETA).*sin(PHI) cos(THETA)]; % -
         
         % calculate eigenvalues
-        sv = svd(Vol.*N);
-        EIG(:,ii) = (sv/norm(sv)).^2;
+        EIG(:,ii) = svd(diag((SIZE.^(3/2)/sum(SIZE.^(3/2))).^(1/2),0)*N).^2;
     end
 end

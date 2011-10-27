@@ -14,15 +14,10 @@ function [ EIG ] = eigen( cdist )
 %
 % see also Thor.setup and Thor.Utilities.eigenClimate
 
-    % calculate weights for average
-    Vol = cdist.size.^3; % m^3
-    Vol = repmat(Vol/sum(Vol),[1,3]);
-
     % C-axis orientations
     N   = [sin(cdist.theta).*cos(cdist.phi) sin(cdist.theta).*sin(cdist.phi) cos(cdist.theta)]; % -
 
     % calculate eigenvalues
-    sv = svd(Vol.*N);
-    EIG = (sv/norm(sv)).^2;
+    EIG = svd(diag((cdist.size.^(3/2)/sum(cdist.size.^(3/2))).^(1/2),0)*N).^2;
     
 end

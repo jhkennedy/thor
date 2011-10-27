@@ -60,7 +60,7 @@ cstep = load('./+Thor/CrysDists/Run1337/EL000000001');
 %     edot = zeros(3,3,in.nelem);
 %     for ii = 1:in.nelem
 %         tmp = load(['./+Thor/CrysDists/' NAMES.files{ii}]);
-%         edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}), SETTINGS);
+%         edot(:,:,ii) = Thor.Utilities.bedot(tmp.(NAMES.files{ii}));
 %     end
 %     
 %     toc

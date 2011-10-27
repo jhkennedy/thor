@@ -1,11 +1,13 @@
-function [ cdist ] = rotate( cdist, SET )
-% [cdist]=rotate(cdist, SET) rotates the crystals based on the information in
+function [ cdist ] = rotate( cdist, SET, elem )
+% [cdist]=rotate(cdist, SET, elem) rotates the crystals based on the information in
 % the crystal distrobution cdist based on the setting in SET. 
 %
 %   cdist is the structure holding the crystal distrobution outlined in
 %   Thor.setup. 
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
+%
+%   elem is the element number of the crystal distrobution, cdist.
 %
 % rotate returns a crystal distrobution, cdist, with rotated orientation angles.
 %
@@ -14,7 +16,7 @@ function [ cdist ] = rotate( cdist, SET )
     Od = 0; % s^{-1} bulk rotation rate boundry condition
 
     % modeled velocity gradient
-    Lm = Thor.Utilities.bvel(cdist, SET); % s^{-1}
+    Lm = Thor.Utilities.bvel(cdist); % s^{-1}
 
     % modeled rotation rate
     Om = (1/2)*(Lm - Lm'); % s^{-1}
@@ -33,7 +35,7 @@ function [ cdist ] = rotate( cdist, SET )
     
     % get new C-axis orientation
     for ii = 1:SET.numbcrys
-        N(ii,:) = expm(SET.tstep*Os(:,:,ii))*N(ii,:)';
+        N(ii,:) = expm(SET.tstep(elem)*Os(:,:,ii))*N(ii,:)';
             % can't vectorize this. expm is generator of finite rotations from
             % infintesimal rotation Os
     end

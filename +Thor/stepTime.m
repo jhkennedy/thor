@@ -1,4 +1,4 @@
-function step(NAMES, SET, RUN, STEP, SAVE )
+function [SET, NPOLY, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE )
 % step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on
 % all the crystal distrobutions in NAMES. 
 %
@@ -24,6 +24,8 @@ function step(NAMES, SET, RUN, STEP, SAVE )
 %   Thor.Utilities.dislEn, Thor.Utilities.grow, Thor.Utilities.poly,
 %   Thor.Utilities.migre, and Thor.Utilities.rotate.
 
+    NPOLY = zeros(SET.nelem,1);
+    StrainStep = zeros(SET.nelem,1);
 
     for ii = 1:SET.nelem
 
@@ -40,10 +42,10 @@ function step(NAMES, SET, RUN, STEP, SAVE )
         cdist = Thor.Utilities.grow(cdist, SET, ii);
         
         % check for polyiginization
-        cdist = Thor.Utilities.poly(cdist, SET, ii);
+        [cdist, SET, NPOLY(ii,1)] = Thor.Utilities.poly(cdist, SET, ii);
         
         % check for migration recrystallization
-        cdist = Thor.Utilities.migre(cdist, SET, ii);
+        [cdist, SET] = Thor.Utilities.migre(cdist, SET, ii);
         
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);
@@ -51,8 +53,15 @@ function step(NAMES, SET, RUN, STEP, SAVE )
         % calculate new velocity gradients and crystal strain rates -- from poly and migre
         cdist = Thor.Utilities.vec( cdist, SET, ii);
         
+        % calculate bulk strain rate
+        edot = Thor.Utilities.bedot( cdist );
+        
+        % calculate strain step
+        medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
+        StrainStep(ii,1) = SET.tstep(ii)*medot;
+        
         % rotate the crstals from last time steps calculations
-        cdist = Thor.Utilities.rotate(cdist, SET ); %#ok<NASGU>
+        cdist = Thor.Utilities.rotate(cdist, SET, ii ); %#ok<NASGU>
         
         % save crystal distrobutions
         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);

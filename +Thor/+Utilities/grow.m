@@ -1,4 +1,4 @@
-function [ cdist ] = grow( cdist, SET, elem, step )
+function [ cdist ] = grow( cdist, SET, elem )
 % [cdist]=grow( cdist, SET, elem, step) calculates the new crystal sizes of
 % cidst for an element elem, using the settings in SET.   
 %
@@ -9,15 +9,12 @@ function [ cdist ] = grow( cdist, SET, elem, step )
 %
 %   elem is the element number of the crystal distrobution, cdist.
 %
-%   step is the current time-step used to calculate the growth according to a
-%   parabolic growth law.
-%
 % grow returns a crystal distrobution with updated crystal sizes. 
 %
 %   See also Thor.setup
 
     % Physical constants
-    Ko = 9.2e-9; % m^2 s^{-1}
+    Ko = 8.2e-9; % m^2 s^{-1}
     Q = 40; % kJ mol^{-1}
     R = 0.008314472; % kJ K^{-1} mol^{-1}
 %     kappa = 0.35; % adjustible parameter -- Thor2002 eqn. 19 -- value set [38]
@@ -32,6 +29,6 @@ function [ cdist ] = grow( cdist, SET, elem, step )
 %     AvEdis = sum(Edis)/SET.numbcrys; % J m^{-3}
     
     % calculate new crystal diameter
-    cdist.size = sqrt(K*SET.tstep*(step-SET.to(:,elem)) + SET.Do(:,elem).^2);
+    cdist.size = sqrt(K*SET.tstep(elem)*(SET.ti(elem)-SET.to(:,elem)) + SET.Do(:,elem).^2);
     
 end

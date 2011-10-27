@@ -1,5 +1,6 @@
-function [ cdist ] = poly( cdist, SET, elem, step )
-% [cdist]=poly(cdist, SET, elem, step) polygonizes crystals favorable do so.
+function [ cdist, SET, npoly ] = poly( cdist, SET, elem )
+% [cdist, npoly]=poly(cdist, SET, elem, step) polygonizes crystals
+% favorable do so. 
 % 
 %   cdist is the structure holding the crystal distrobution outlined in
 %   Thor.setup.    
@@ -8,9 +9,8 @@ function [ cdist ] = poly( cdist, SET, elem, step )
 %
 %   elem is the element number of the crystal distrobution, cdist.
 %
-%   step is the current time step.
-%
-% poly returns the crystal distrobution with polygonized crystals. 
+% poly returns the crystal distrobution with polygonized crystals and the
+% number of polygonization events, npoly.  
 %
 %   See also Thor.setup
 
@@ -20,11 +20,13 @@ function [ cdist ] = poly( cdist, SET, elem, step )
     
     % magnitude of the stress
     S = SET.stress(:,:,elem); % Pa
-    Mstress = sqrt( S(1,1)*S(2,2)+S(2,2)*S(3,3)+S(3,3)*S(1,1)...
-                    -(S(1,2)^2+S(2,3)^2+S(3,1)^2) ); % Pa
+    Mstress = sqrt(1/2*( S(1,1)^2+S(2,2)^2+S(3,3)^2 )...
+                        +S(1,2)^2+S(2,3)^2+S(3,2)^2  ); % Pa
     
     % see if polygonize is favorable
     mask = (cdist.MRSS/Mstress < del) & (cdist.dislDens > rhop);
+    
+    npoly = sum(mask);
     
     if any(mask)
         % reduce dislocation density
@@ -32,7 +34,7 @@ function [ cdist ] = poly( cdist, SET, elem, step )
         % halve the crystal size
         cdist.size(mask) = cdist.size(mask)/2;
         SET.Do(mask,elem) = cdist.size(mask);
-        SET.to(mask,elem) = step;
+        SET.to(mask,elem) = SET.ti(elem);
         % rotate the crystal
         task = cdist.theta < pi/6;
         % if withing 30 degrees of vertical move crystal away by 5 degrees

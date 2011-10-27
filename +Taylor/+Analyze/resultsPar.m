@@ -1,4 +1,4 @@
-function [EIG] = savedResultsPar( Dir, in, runs, eigenMask, SAVE, NAMES)
+function [EIG] = resultsPar( Dir, in, runs, eigenMask, SAVE, NAMES)
     
  %% calculate eigenvalues at each saved time step for each run
     EIG = zeros(3,size(eigenMask,2),size(SAVE,2),in(1).nelem, runs);

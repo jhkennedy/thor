@@ -5,7 +5,7 @@ cdist = cp1;
     Od = 0; % s^{-1} bulk rotation rate boundry condition
 
     % modeled velocity gradient
-    Lm = Thor.Utilities.bvel(cdist, SET); % s^{-1}
+    Lm = Thor.Utilities.bvel(cdist); % s^{-1}
 
     % modeled rotation rate
     Om = (1/2)*(Lm - Lm'); % s^{-1}

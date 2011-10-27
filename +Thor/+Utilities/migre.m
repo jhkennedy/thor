@@ -1,4 +1,4 @@
-function [ cdist ] = migre( cdist, SET, elem, step )
+function [ cdist, SET ] = migre( cdist, SET, elem )
 % [cdist]=migre(cdist,SET,elem) recrystalizes crystals that are favorable to do
 % so.  
 %
@@ -49,7 +49,7 @@ function [ cdist ] = migre( cdist, SET, elem, step )
             % set new crystal size
             cdist.size(mask) = cdist.size(mask)*0+D;
             SET.Do(mask,elem) = cdist.size(mask);
-            SET.to(mask,elem) = step;
+            SET.to(mask,elem) = SET.ti(elem);
 
             % find a soft orientation
             theta = cdist.theta(cdist.MRSS == max(cdist.MRSS)); theta = theta(1);
