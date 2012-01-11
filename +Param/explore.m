@@ -1,4 +1,5 @@
 % code to explore the parameter space of my model:
+% NO POLLY
     % Stress -> compression, shear, combined, real (Ray. 1983 in Taylor)
         % stress range from 0.1 to 0.4 bar [10000 - 40000 Pa](Pettit 2003)
     % Fabric -> isotropic, 80 deg. cone, 60 deg. cone, 30 deg. cone
@@ -14,7 +15,7 @@ try
     
     % start timing
     tic;     DATE = now;
-    display(sprintf('\n Run started %s \n', datestr(DATE)))
+    display(sprintf('\n No Polly Run started %s \n', datestr(DATE)))
     
     % manually load in initial setting structure
     in = struct([]);

@@ -1,9 +1,9 @@
 Warning: No window system found.  Java option 'MWT' ignored
 
                             < M A T L A B (R) >
-                  Copyright 1984-2009 The MathWorks, Inc.
-                Version 7.8.0.347 (R2009a) 64-bit (glnxa64)
-                             February 12, 2009
+                  Copyright 1984-2010 The MathWorks, Inc.
+                Version 7.12.0.635 (R2011a) 64-bit (glnxa64)
+                               March 18, 2011
 
  
   To get started, type one of these: helpwin, helpdesk, or demo.
@@ -11,24 +11,24 @@ Warning: No window system found.  Java option 'MWT' ignored
  
 >> >> >> >> >> >> >> Starting matlabpool using the 'local' configuration ... connected to 5 labs.
 
- Run started 10-Aug-2011 12:47:47 
+ Run started 28-Oct-2011 14:21:19 
 
 
- Time to set up Thor is 0.569265 seconds. 
+ Time to set up Thor is 0.572676 seconds. 
 
 
  Time to step Thor through 2100 time steps for 5 runs is 
-     17284 seconds. 
+     14621.3 seconds. 
 
 Sending a stop signal to all the labs ... stopped.
 
  Total time to run EVOLVE is 
-     17288 seconds. 
+     14625.3 seconds. 
 
 
  Goodbye! 
 
 
- Run ended 10-Aug-2011 17:35:55 
+ Run ended 28-Oct-2011 18:25:05 
 
 >> >> 

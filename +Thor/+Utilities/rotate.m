@@ -13,14 +13,19 @@ function [ cdist ] = rotate( cdist, SET, elem )
 %
 %   See also Thor.setup
 
-    Od = 0; % s^{-1} bulk rotation rate boundry condition
-
+    % get bulk strain rate for rotation boundry condition
+    edot = Thor.Utilities.bedot( cdist );
+    
+    
     % modeled velocity gradient
     Lm = Thor.Utilities.bvel(cdist); % s^{-1}
 
     % modeled rotation rate
     Om = (1/2)*(Lm - Lm'); % s^{-1}
 
+    % bulk rotation rate boundry condition
+    Od = edot.*[0,1,1;1,0,1;1,1,0] - Om; % s^{-1} 
+    
     % bulk roation 
     Ob = Od + Om; % s^{-1}
     

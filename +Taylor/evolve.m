@@ -38,10 +38,10 @@ try
     switch StressType
         case 'Dome'
             % load in Taylor data -- T, Z, vs, AGE
-            TLR = load('./+Taylor/Data/TLRdome.mat');
+            TLR = load('./+Taylor/Data/TLRdome2p0.mat');
         case 'Ridge'
             % load in Taylor data -- T, Z, vs, AGE
-            TLR = load('./+Taylor/Data/TLRridge.mat');    
+            TLR = load('./+Taylor/Data/TLRridge2p0.mat');    
     end
     
     % initial starting time ~ 100 m
