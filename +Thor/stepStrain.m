@@ -41,7 +41,7 @@ function [SET, NPOLY] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE )
         cdist = Thor.Utilities.grow(cdist, SET, ii);
         
         % check for polyiginization
-%         [cdist, SET, NPOLY(ii,1)] = Thor.Utilities.poly(cdist, SET, ii);
+        [cdist, SET, NPOLY(ii,1)] = Thor.Utilities.poly(cdist, SET, ii);
         
         % check for migration recrystallization
         [cdist, SET] = Thor.Utilities.migre(cdist, SET, ii);

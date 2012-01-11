@@ -40,7 +40,7 @@ function step(NAMES, SET, RUN, STEP, SAVE )
         cdist = Thor.Utilities.grow(cdist, SET, ii);
         
         % check for polyiginization
-%         cdist = Thor.Utilities.poly(cdist, SET, ii);
+        cdist = Thor.Utilities.poly(cdist, SET, ii);
         
         % check for migration recrystallization
         cdist = Thor.Utilities.migre(cdist, SET, ii);
