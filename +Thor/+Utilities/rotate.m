@@ -24,7 +24,7 @@ function [ cdist ] = rotate( cdist, SET, elem )
     Om = (1/2)*(Lm - Lm'); % s^{-1}
 
     % bulk rotation rate boundry condition
-    Od = edot.*[0,1,1;1,0,1;1,1,0] - Om; % s^{-1} 
+    Od = edot.*[0,1,1;-1,0,1;-1,-1,0] - Om; % s^{-1} 
     
     % bulk roation 
     Ob = Od + Om; % s^{-1}
