@@ -29,6 +29,6 @@ function [ cdist ] = grow( cdist, SET, elem )
 %     AvEdis = sum(Edis)/SET.numbcrys; % J m^{-3}
     
     % calculate new crystal diameter
-    cdist.size = sqrt(K*SET.tstep(elem)*(SET.ti(elem)-SET.to(:,elem)) + SET.Do(:,elem).^2);
+    cdist.size = sqrt(K*(SET.ti(elem)-SET.to(:,elem)) + SET.Do(:,elem).^2);
     
 end

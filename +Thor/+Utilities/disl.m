@@ -14,18 +14,20 @@ function [ cdist ] = disl( cdist, SET, elem )
 %   See also Thor.setup
 
     % Physicsal constants
-    Ko = 9.2e-9; % m^2 s^{-1}
+    Ko = 8.2e-9; % m^2 s^{-1}
     Q = 40; % kJ mol^{-1}
     R = 0.008314472; % kJ K^{-1} mol^{-1}
-    b = 4.5e-10; % m
-    alpha = 2; % constant greater than 1, thor 2002
+    b = 3.69e-10; % m
+    alpha = 1; % constant greater than 1, thor 2002 -- yet every uses 1 (thor 2002, De La Chapelle 1998, Montagnant 2000)
 
     % claculate the grain growth factor
     K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}
 
     % calculate the Magnitude of the strain rate
     Medot = squeeze(sqrt(sum(sum(cdist.ecdot.^2,2),1)/2)); % s^{-1}
-    
+
+
+
     % claclulate the change in the dislocation density
     rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
     

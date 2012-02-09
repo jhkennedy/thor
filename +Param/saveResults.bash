@@ -8,6 +8,7 @@ echo ""
 echo "Coppying last run results and control file into $1"
 cp ./+Param/exploreResults.mat +Param/Results/"$1"/exploreResults.mat
 cp ./+Param/explore.m +Param/Results/"$1"/explore.m
+cp ./+Param/explore.log +Param/Results/"$1"/explore.log
 # cp the last runs saved steps into results directory given by $1
 echo ""
 echo "Coppying the saved steps into $1"

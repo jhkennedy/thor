@@ -67,6 +67,7 @@ set(gca,'FontSize',24,'FontWeight','bold',...
 
 %% Strain vs Model Time
 mx = 52; % 52
+stka = (60*60*24*365*1000);
 plot(strainStep(1:mx), ModelTime{1}(1,1:mx)/stka, '-dk',...
      'LineWidth',3)
 xlabel('Strain')
@@ -96,5 +97,4 @@ plot(x, PolyEvents{1}(1,:),'--k',...
  
  xlabel('Strain')
 ylabel('Events')
-set(gca,'FontSize',24,'FontWeight','bold',...
-    'Ylim',[-50,850])
+set(gca,'FontSize',24,'FontWeight','bold')

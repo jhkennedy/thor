@@ -72,7 +72,9 @@ try
             % get current temperature
             temp = interp1q(TLR.Z',TLR.T',depth);
             SET(kk).T = SET(kk).T.*0+temp;
-            SET(kk).ti = ones(SET(kk).nelem,1)*ll;
+            
+            % set current time
+            SET(kk).ti = SET(kk).tstep*ll;
             
             % get current stress (RAYMOND 1983)
             S33 = interp1q(TLR.S33(:,2),TLR.S33(:,1),depth);
