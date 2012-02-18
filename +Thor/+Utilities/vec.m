@@ -31,7 +31,7 @@ function [ cdist] = vec( cdist, SET, elem)
     [cdist, R1, R2, R3] = Thor.Utilities.shmidt(cdist, SET.numbcrys, SET.stress(:,:,elem));
     
     % get the softness parameter 
-    [cdist, esoft] = Thor.Utilities.soft(cdist, SET.CONN, SET.xcec(1), SET.xcec(2)); 
+    [cdist, esoft] = Thor.Utilities.soft(cdist, SET.CONN, SET.xcec(elem,1), SET.xcec(elem,2)); 
 
     % calculate the rate of shearing on each slip system (size Nx1)
     G1 = ALPHA*BETA*esoft.*R1.*abs(esoft.*R1).^(n-1); % s^{-1}
