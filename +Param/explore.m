@@ -18,7 +18,7 @@ try
     
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Param/Settings/explore07_08_2011.mat
+    load ./+Param/Settings/simpleShearExtraTight05_14_2012.mat
     
     runs = 8;        
     
@@ -26,7 +26,7 @@ try
         
     %% set up the model
     
-    MaxStrain  = 0.5;
+    MaxStrain  = 15;
     StrainStep = 0.001;
     TimeSteps = ceil(MaxStrain/StrainStep);
     

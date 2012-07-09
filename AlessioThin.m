@@ -70,3 +70,34 @@ ca_deg = deg(ca);
 % end; clear ii;
 
 cd /home/joseph/Documents/Programs/Thor/trunk/
+
+%% Make Girdle Fabrics
+
+n = 500;
+k = [10,50,100];
+
+t = pi/2;
+Rx = [1,0,0;...
+      0,cos(t),sin(t);...
+      0,-sin(t),cos(t)];
+
+for ii = 1:size(k,2)
+    W(:,:,ii) = Thor.ODF.watsonGenerate(n,k(ii));
+    
+    for jj = 1:n;
+        Wp(jj,:,ii) = (Rx*W(jj,:,ii)')';
+    end
+    
+end
+
+
+% HXY = sqrt(N(:,1).^2+N(:,2).^2);
+% A(:,1) = atan2(HXY,N(:,3))';
+% A(:,2) = atan2(N(:,2),N(:,1))';
+% clear HXY
+% clc
+% cdist.theta = A(:,1);
+% cdist.phi = A(:,2);
+% cdist = Thor.Utilities.bound(cdist);
+% A(:,1) = cdist.theta;
+% A(:,2) = cdist.phi;

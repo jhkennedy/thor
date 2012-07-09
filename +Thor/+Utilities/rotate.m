@@ -14,14 +14,14 @@ function [ cdist ] = rotate( cdist, SET, elem )
 %   See also Thor.setup
 
     % get bulk strain rate for rotation boundry condition
-    edot = Thor.Utilities.bedot( cdist );
+    edot = Thor.Utilities.bedot( cdist ); % X
     
     
     % modeled velocity gradient
-    Lm = Thor.Utilities.bvel(cdist); % s^{-1}
+    Lm = Thor.Utilities.bvel(cdist); % s^{-1} X
 
     % modeled rotation rate
-    Om = (1/2)*(Lm - Lm'); % s^{-1}
+    Om = (1/2)*(Lm - Lm'); % s^{-1} X
 
     % bulk rotation rate boundry condition
     Od = edot.*[0,1,1;-1,0,1;-1,-1,0] - Om; % s^{-1} 
@@ -30,7 +30,7 @@ function [ cdist ] = rotate( cdist, SET, elem )
     Ob = Od + Om; % s^{-1}
     
     % single crystal plastic rotation rate
-    Op = cdist.vel/2 - permute(cdist.vel,[2,1,3])/2; % s^{-1}
+    Op = cdist.vel/2 - permute(cdist.vel,[2,1,3])/2; % s^{-1} X
 
     % crystal latice rotation
     Os = repmat(Ob,[1,1,SET.numbcrys]) - Op;
