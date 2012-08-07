@@ -9,11 +9,16 @@ function [ vel ] = bvel( cdist )
 %
 %   See also Thor.setup
 
-% calculate weights
-A = cdist.size.^(3/2);
-W = reshape(repmat(A,1,9)',3,3,[]);
+    % weight crystals by size
+    A = cdist.size.^(3/2);
+    W = reshape(repmat(A,1,9)',3,3,[]);
 
-% calculate bulk velocity gradient
-vel = sum(W.*cdist.vel,3)/sum(A);
+    % % equal weight to all crystals
+    % A = cdist.numbcrys;
+    % W = 1;
+
+
+    % calculate bulk velocity gradient
+    vel = sum(W.*cdist.vel,3)/sum(A);
 
 end

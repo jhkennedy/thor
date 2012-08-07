@@ -13,27 +13,27 @@ function [ cdist ] = rotate( cdist, SET, elem )
 %
 %   See also Thor.setup
 
-    % get bulk strain rate for rotation boundry condition
-    edot = Thor.Utilities.bedot( cdist ); % X
-    
-    
-    % modeled velocity gradient
-    Lm = Thor.Utilities.bvel(cdist); % s^{-1} X
-
-    % modeled rotation rate
-    Om = (1/2)*(Lm - Lm'); % s^{-1} X
-
-    % bulk rotation rate boundry condition
-    Od = edot.*[0,1,1;-1,0,1;-1,-1,0] - Om; % s^{-1} 
-    
-    % bulk roation 
-    Ob = Od + Om; % s^{-1}
+    % get bulk rotation
+        % get bulk strain rate for rotation boundry condition
+        edot = Thor.Utilities.bedot( cdist ); % X
+        
+        % get bulk strain boundry condition mask (bulk same should only be in same places as deviatoric stress)
+        MSK = (SET.stress(:,:,elem)~= 0).*[0,1,1;-1,0,1;-1,-1,0];
+        
+        % get the boundry condition enhancement 
+        ENH = 1 + sum(sum(abs(edot(MSK+eye(3) == 0))))/sum(sum(abs(edot(MSK ~= 0))));
+        if ENH < 1.001; ENH = 1; end
+        if ENH > 5; ENH = 5; end
+        
+        % bulk rotation rate boundry condition
+        Od = ENH*edot.*MSK; % s^{-1} 
+        
     
     % single crystal plastic rotation rate
     Op = cdist.vel/2 - permute(cdist.vel,[2,1,3])/2; % s^{-1} X
 
     % crystal latice rotation
-    Os = repmat(Ob,[1,1,SET.numbcrys]) - Op;
+    Os = repmat(Od,[1,1,SET.numbcrys]) - Op;
     
     % C-axis orientations
     N   = [sin(cdist.theta).*cos(cdist.phi) sin(cdist.theta).*sin(cdist.phi) cos(cdist.theta)]; % -

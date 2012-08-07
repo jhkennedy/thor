@@ -5,15 +5,15 @@
 addpath /joe/Documents/MATLAB
 
 %% Pick which run and element to use
-run  = 1;
+run  = 3;
 elem = 1;
 
 %% Video setup
 
-% file name
-file = '';
+% which saves to use
+cptr = SAVE(1:1:end);
 % number of frames
-frames = size(SAVE,2);
+frames = size(cptr,2);
 % initialize move structure
 M = moviein(frames);
 
@@ -39,10 +39,10 @@ con_ax = axes('Position', [0,0,1,1], 'parent',h,'layer','top');
 for ff = 1:frames
     
     % load in crystal distribution
-    cdist = load([Dir,'/Run',num2str(run),'/Step',num2str(SAVE(ff),'%05d'),'_EL',num2str(elem,'%09d'),'.mat']);
+    cdist = load([Dir,'/Run',num2str(run),'/Step',num2str(cptr(ff),'%05d'),'_EL',num2str(elem,'%09d'),'.mat']);
     
     % make the contour plot
-    equalAreaContour_dev(con_ax,[cdist.theta(eigenMask(:,2)),cdist.phi(eigenMask(:,2))],'Cmap','jet','Fcolor','white');
+    equalAreaContour(con_ax,[cdist.theta(eigenMask(:,2)),cdist.phi(eigenMask(:,2))],'Cmap','jet','Fcolor','white');
     
     % capture frame
     drawnow;

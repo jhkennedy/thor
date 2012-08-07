@@ -26,8 +26,8 @@ try
         
     %% set up the model
     
-    MaxStrain  = 15;
-    StrainStep = 0.001;
+    MaxStrain  = 1;
+    StrainStep = 0.002;
     TimeSteps = ceil(MaxStrain/StrainStep);
     
     SAVE = [0,1:TimeSteps];

@@ -16,7 +16,7 @@ end
             for nn = 1:size(SAVE,2)
 
                 % load in saved crystal distrobutions
-                cdist = load([Dir, '/Run' num2str(oo) '/SavedSteps/Step'...
+                cdist = load([Dir, '/Run' num2str(oo) '/Step'...
                                num2str(SAVE(nn), '%05.0f') '_' NAMES(oo).files{mm}]);
 
                 % calculate eigenvalue

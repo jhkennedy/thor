@@ -9,9 +9,13 @@ function [ edot ] = bedot( cdist )
 %
 %   See also Thor.setup
     
-    % calculate weights
+    % weight crystals by size
     A = cdist.size.^(3/2);
     W = reshape(repmat(A,1,9)',3,3,[]);
+    
+    % % equal weight to all crystals
+    % A = cdist.numbcrys;
+    % W = 1;
     
     % find the bulk strain rate
     edot = sum(W.*cdist.ecdot,3)./sum(A);
