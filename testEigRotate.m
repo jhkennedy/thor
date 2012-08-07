@@ -67,32 +67,11 @@ VEL = S1.*reshape(repmat(G1',[9,1]),3,3,[])...
       +S3.*reshape(repmat(G3',[9,1]),3,3,[]); % s^{-1}
 
   
- %% calcualte rotation rates for crystals crystals
+ %% calcualte rotation rates for crystals
  
 % calculate the rotation rate
 ROR = (1/2)*(VEL -permute(VEL,[2,1,3]));
 
-% calculate the strain rate
-SRN = (1/2)*(VEL +permute(VEL,[2,1,3]));
-
-% calculate the bulk strain rate
-BSRN = sum(SRN,3)/N;
-
-% get bulk strain boundry condition mask
-MSK = (stress(:,:,1) ~= 0).*[0,1,1;-1,0,1;-1,-1,0];
-
-% % bluk rotation rate boundry condition
-%     % find out how much flow is not in correct bulk direction
-%     a = sum(sum(abs(BSRN+diag(diag(BSRN)))/2));
-%     tmp = diag(diag(BSRN));
-%     b = sum(abs(BSRN(MSK ~= 0)+tmp(MSK ~= 0)))/2;
-%     E2 = 2 - b/a;
-%     E3 = 1.5 - b/(2*a);
-%     E1 = 1;
-BC = repmat(BSRN.*MSK,[1,1,N]);
-
-% cystal lattice rotation
-ROT = BC - ROR;
 
 %% rotate crystals without boundary condition
 % time step
@@ -115,7 +94,7 @@ RAN = atan2(norm(cross(PAX,ZAX)),dot(PAX,ZAX));
 
 
 for ii = 1:N
-    Wnew(ii,:) = (1-cos(RAN))*dot(Wror(ii,:)',RAX)*RAX+cos(RAN)*Wror(ii,:)'+sin(RAN)*cross(RAX,Wror(ii,:)');
+    Wnew(ii,:) = (1-cos(RAN))*dot(Wror(ii,:)',RAX)*RAX+cos(RAN)*Wror(ii,:)'+sin(RAN)*cross(RAX,Wror(ii,:)'); %#ok<SAGROW>
 end
 
 
