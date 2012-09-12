@@ -12,22 +12,6 @@ function [ cdist ] = rotate( cdist, SET, elem )
 % rotate returns a crystal distrobution, cdist, with rotated orientation angles.
 %
 %   See also Thor.setup
-
-%     % get bulk rotation
-%         % get bulk strain rate for rotation boundry condition
-%         edot = Thor.Utilities.bedot( cdist ); % X
-%         
-%         % get bulk strain boundry condition mask (bulk same should only be in same places as deviatoric stress)
-%         MSK = (SET.stress(:,:,elem)~= 0).*[0,1,1;-1,0,1;-1,-1,0];
-%         
-%         % get the boundry condition enhancement 
-%         ENH = 1 + sum(sum(abs(edot(MSK+eye(3) == 0))))/sum(sum(abs(edot(MSK ~= 0))));
-%         if ENH < 1.001; ENH = 1; end
-%         if ENH > 5; ENH = 5; end
-%         
-%         % bulk rotation rate boundry condition
-%         Od = ENH*edot.*MSK; % s^{-1} 
-        
     
     % single crystal plastic rotation rate
     Op = cdist.vel/2 - permute(cdist.vel,[2,1,3])/2; % s^{-1} X
@@ -43,15 +27,15 @@ function [ cdist ] = rotate( cdist, SET, elem )
     
     % rotate crystals without BCs
     for ii = 1:SET.numbcrys
-        Ntmp(ii,:) = expm(SET.tstep(elem)*Op(:,:,ii))*N(ii,:)';
+        Ntmp(ii,:) = expm(SET.tstep(elem)*-Op(:,:,ii))*N(ii,:)';
             % can't vectorize this. expm is generator of finite rotations from
             % infintesimal rotation Os
     end
 
     % apply boundry condition with eigenvectors
         % get eigenvectors of the distribuions
-        [~,~,V0] = svd(diag(ones(1:SET.numbcrys))/SET.numbcrys*N);
-        [~,~,V1] = svd(diag(ones(1:SET.numbcrys))/SET.numbcrys*Ntmp);
+%         [~,~,V0] = svd(N);
+        [~,~,V1] = svd(Ntmp);
         % get principle axes in upper hemisphere
 %         PAX0 = V0(:,1); if (PAX0(3) < 0); PAX0 = -PAX0; end;
         PAX0 = [0;0;1];
