@@ -5,30 +5,35 @@ Warning: No window system found.  Java option 'MWT' ignored
                 Version 7.12.0.635 (R2011a) 64-bit (glnxa64)
                                March 18, 2011
 
+    ----------------------------------------------------------
+        Your MATLAB license will expire in 46 days.
+        Please contact your system administrator or
+        MathWorks to renew this license.
+    ----------------------------------------------------------
  
   To get started, type one of these: helpwin, helpdesk, or demo.
   For product information, visit www.mathworks.com.
  
 >> >> >> >> >> >> >> Starting matlabpool using the 'local' configuration ... connected to 5 labs.
 
- Run started 29-Feb-2012 13:37:44 
+ Run started 16-Oct-2012 06:47:31 
 
 
- Time to set up Thor is 0.502143 seconds. 
+ Time to set up Thor is 0.507685 seconds. 
 
 
  Time to step Thor through 2100 time steps for 5 runs is 
-     14456.1 seconds. 
+     46360.7 seconds. 
 
 Sending a stop signal to all the labs ... stopped.
 
  Total time to run EVOLVE is 
-     14460.1 seconds. 
+     46364.8 seconds. 
 
 
  Goodbye! 
 
 
- Run ended 29-Feb-2012 17:38:44 
+ Run ended 16-Oct-2012 19:40:16 
 
 >> >> 

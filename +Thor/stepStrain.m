@@ -1,4 +1,4 @@
-function [SET, NPOLY] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE )
+function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE, eigenMask )
 % step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on
 % all the crystal distrobutions in NAMES. 
 %
@@ -24,7 +24,8 @@ function [SET, NPOLY] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE )
 %   Thor.Utilities.dislEn, Thor.Utilities.grow, Thor.Utilities.poly,
 %   Thor.Utilities.migre, and Thor.Utilities.rotate.
 
-    NPOLY = zeros(SET.nelem,1);
+    NPOLY = zeros(SET.nelem,size(eigenMask,2));
+    NMIGRE = zeros(SET.nelem,size(eigenMask,2));
 
     for ii = 1:SET.nelem
 
@@ -41,10 +42,10 @@ function [SET, NPOLY] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE )
         cdist = Thor.Utilities.grow(cdist, SET, ii);
         
         % check for polyiginization
-        [cdist, SET, NPOLY(ii,1)] = Thor.Utilities.poly(cdist, SET, ii);
+        [cdist, SET, NPOLY(ii,:)] = Thor.Utilities.poly(cdist, SET, ii, eigenMask);
         
         % check for migration recrystallization
-        [cdist, SET] = Thor.Utilities.migre(cdist, SET, ii);
+        [cdist, SET, NMIGRE(ii,:)] = Thor.Utilities.migre(cdist, SET, ii, eigenMask);
         
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);

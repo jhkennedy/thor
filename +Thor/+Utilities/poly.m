@@ -1,4 +1,4 @@
-function [ cdist, SET, npoly ] = poly( cdist, SET, elem )
+function [ cdist, SET, npoly ] = poly( cdist, SET, elem, eigMask)
 % [cdist, npoly]=poly(cdist, SET, elem, step) polygonizes crystals
 % favorable do so. 
 % 
@@ -18,15 +18,18 @@ function [ cdist, SET, npoly ] = poly( cdist, SET, elem )
     del = 0.065; % ratio threshold -- Thor 2002 [26]
     rhop = 5.4e10; % m^{-2} dislocation density needed to form a wall -- Thor 2002 [26]
     
-    % magnitude of the stress
+    % magnitude (second invariant) of the stress
     S = SET.stress(:,:,elem); % Pa
-    Mstress = sqrt(1/2*( S(1,1)^2+S(2,2)^2+S(3,3)^2 )...
-                        +S(1,2)^2+S(2,3)^2+S(3,2)^2  ); % Pa
+    Mstress = sqrt( sum(sum(S.*S))/2 ); % Pa
     
     % see if polygonize is favorable
     mask = (cdist.MRSS/Mstress < del) & (cdist.dislDens > rhop);
     
-    npoly = sum(mask);
+    % number of polygonization events in each layer
+    npoly = zeros(1,size(eigMask,2));
+    for ii = 1:size(eigMask,2)
+        npoly(1,ii) = sum(mask & eigMask(:,2));
+    end
     
     if any(mask)
         % reduce dislocation density

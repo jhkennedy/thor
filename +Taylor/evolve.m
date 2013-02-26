@@ -14,7 +14,7 @@ try
 
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Taylor/Settings/evolve07_11_2011.mat
+    load ./+Taylor/Settings/2012_10_10_evolve_Tm05.mat
     
     
     %% set up model
@@ -33,7 +33,7 @@ try
 
     
     % which type of symmetric divide?
-    StressType = 'Ridge'; % 'Dome' or 'Ridge'
+    StressType = 'Dome'; % 'Dome' or 'Ridge'
     
     switch StressType
         case 'Dome'
@@ -62,7 +62,8 @@ try
     %% step each run
     parfor kk = 1:runs 
         
-        PolyEvents{kk} = zeros(SET(kk).nelem, timesteps);
+        PolyEvents{kk} = zeros(SET(kk).nelem, size(eigenMask,2), timesteps);
+        MigreEvents{kk} = zeros(SET(kk).nelem, size(eigenMask,2), timesteps);
         StrainStep{kk} = zeros(SET(kk).nelem, timesteps);
         
         for ll = 1:timesteps
@@ -86,7 +87,7 @@ try
             
 
             % perform time step
-            [SET(kk), PolyEvents{kk}(:,ll), StrainStep{kk}(:,ll)] = Thor.stepTime(NAMES(kk),SET(kk), kk, ll, SAVE);
+            [SET(kk), PolyEvents{kk}(:,:,ll), MigreEvents{kk}(:,:,ll), StrainStep{kk}(:,ll)] = Thor.stepTime(NAMES(kk),SET(kk), kk, ll, SAVE, eigenMask);
         end
     end
     

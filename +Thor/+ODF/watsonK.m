@@ -16,7 +16,19 @@ function [ K ] = watsonK( e )
     T = table();
     
     % find which distribution type
-    if e(1)/e(2) > e(2)/e(3) % e2 'small' so bipolar
+    if e(1) == 1/3 % isotropic
+        
+        K = 0;
+        
+    elseif e(1) >= .999 % perfect bipolar
+        
+        K = -inf;
+        
+    elseif e(3) <= .001 % perfect girdle
+        
+        K = inf;
+    
+    elseif e(1)/e(2) > e(2)/e(3) % e2 'small' so bipolar
        
         K = interp1(T(:,1),T(:,2),e(1));
         

@@ -23,10 +23,8 @@ function [ cdist ] = disl( cdist, SET, elem )
     % claculate the grain growth factor
     K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}
 
-    % calculate the Magnitude of the strain rate
+    % calculate the Magnitude (second invariant) of the strain rate
     Medot = squeeze(sqrt(sum(sum(cdist.ecdot.^2,2),1)/2)); % s^{-1}
-
-
 
     % claclulate the change in the dislocation density
     rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}

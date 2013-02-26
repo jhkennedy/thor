@@ -7,7 +7,7 @@
 
 % Param runs:
     % run 1
-%     elem = 1; run = 1;
+    elem = 1; run = 1;
     % run 2
 %     elem = 1; run = 2;
     % run 3
@@ -41,7 +41,7 @@
     % run 16
 %     elem = 2; run = 4;
     % run 17
-    elem = 3; run = 3;
+%     elem = 3; run = 3;
     % run 18
 %     elem = 3; run = 4;
 
@@ -59,9 +59,11 @@ for ii = 1:1:1500
 end
 
 %%
-ii = 62;
+ii = 1;
+
+lvl= [0,2,4,6,8,10];
 
 cdist = load([Dir,'/Run',num2str(run),'/Step',num2str(SAVE(ii),'%05d'),'_EL',num2str(elem,'%09d'),'.mat']);
 figure
-equalAreaContour([cdist.theta(eigenMask(:,2)),cdist.phi(eigenMask(:,2))]);
+[h, ax, cbax] = equalAreaContour([cdist.theta(eigenMask(:,2)),cdist.phi(eigenMask(:,2))],'Contours',lvl,'Cbar','on');
 

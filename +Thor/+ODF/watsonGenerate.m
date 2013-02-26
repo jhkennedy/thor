@@ -16,7 +16,26 @@ function [ W ] = watsonGenerate(N,K)
     n = round(N);
     
     % check type of distribution
-    if K > 0 % Girdle
+    if K == inf; % perfect girdle
+        
+        % generate theta and phi on equator
+        TH = ones(n,1)*pi/2;
+        PH = 2*pi*rand(n,1);
+        
+        % make watson distribution
+        W = [sin(TH).*cos(PH) sin(TH).*sin(PH) cos(TH)];
+    
+    elseif K == -inf; % perfect bipolar (single maximum)
+        
+        W = repmat([0,0,1],n,1);
+        
+    elseif K == 0 % isotropic
+        
+        % generate isotropic distribution
+        w = randn(N,3);
+        W = w./repmat(sqrt(sum(w.^2,2)),1,3);
+        
+    elseif K > 0 % Girdle
         
         % normalizing constant
         a = sqrt(pi/K)*erf(sqrt(K));
@@ -47,11 +66,9 @@ function [ W ] = watsonGenerate(N,K)
         % make watson distribution
         W = [sin(THETA).*cos(PHI) sin(THETA).*sin(PHI) cos(THETA)];
         
-    else % isotropic
+    else
         
-        % generate isotropic distribution
-        w = randn(N,3);
-        W = w./repmat(sqrt(sum(w.^2,2)),1,3);
+        error(['Unknown K value: ', num2str(K)])
         
     end
 end

@@ -47,7 +47,7 @@ function [X,Y,Z] = watsonContourPure( k, PA )
     
     % contour invervals
     se = 1/(6*pi);
-    lvl = se*[2,4,8,10,20,40,60,80,100];
+    lvl = se*(2:2:10);
     
     contourf(X,Y,Z,lvl);
     colormap(greyInv);
@@ -55,7 +55,7 @@ function [X,Y,Z] = watsonContourPure( k, PA )
     axis square;
     axis off;
     line(BX,BY,'LineStyle','-','LineWidth',3,'Color','k');
-    caxis([0,se*100]);
+    caxis([0,lvl(end)]);
     
     
     
