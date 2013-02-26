@@ -1,4 +1,4 @@
-function [ cdist ] = disl( cdist, SET, elem )
+function [ cdist, rhoDotStrain ] = disl( cdist, SET, elem )
 % [cdist]=DISL(cdist, SET, elem) calculates the new dislocation density for each
 % crystal in the distrobution cdist of element elem, bassed on the settings
 % specified in SET.  
@@ -26,8 +26,11 @@ function [ cdist ] = disl( cdist, SET, elem )
     % calculate the Magnitude (second invariant) of the strain rate
     Medot = squeeze(sqrt(sum(sum(cdist.ecdot.^2,2),1)/2)); % s^{-1}
 
+    % dislocations from strain hardening
+    rhoDotStrain = (Medot./(b.*cdist.size) );
+
     % claclulate the change in the dislocation density
-    rhodot = (Medot./(b.*cdist.size) )-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
+    rhodot = rhoDotStrain-alpha.*cdist.dislDens.*K./(cdist.size.^2); % m^{-2} s^{-1}
     
     % set the new dislocation density
     cdist.dislDens = cdist.dislDens + rhodot*SET.tstep(elem); % m^{-2}

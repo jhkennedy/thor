@@ -36,7 +36,7 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
         cdist = Thor.Utilities.vec( cdist, SET, ii);        
         
         % calculate new dislocation density
-        cdist = Thor.Utilities.disl(cdist, SET, ii);
+        [cdist, ~] = Thor.Utilities.disl(cdist, SET, ii);
         
         % grow the crystals
         cdist = Thor.Utilities.grow(cdist, SET, ii);

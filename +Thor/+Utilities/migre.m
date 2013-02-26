@@ -1,16 +1,21 @@
 function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
-% [cdist]=migre(cdist,SET,elem) recrystalizes crystals that are favorable to do
-% so.  
+% [cdist]=migre(cdist,SET,elem, eigMask) recrystalizes crystals that are
+% favorable to do so.
 %
-%   cdist is the structure holding the crystal distrobution outlined in
-%   Thor.setup. 
+%   cdist is the structure holding the crystal distrobution of N crystals
+%   as outlined in Thor.setup.  
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
 %   elem is the element number of the crystal distrobution, cdist.
 %
-% migre returns a crystal distrobution, cdist, with recrystalized crystals that
-% were favorable to do so.  
+%   eigenMask is a NxM logical array where eigenMask(:,m) is the mth layer
+%   in of the crystal distrobution. 
+%
+% migre returns: a crystal distrobution, cdist, with recrystalized crystals
+% that were favorable to do so; the setting structure, SET, and nMigRe, an
+% 1xM array holding the number of recrystalization events in each layer
+% specified by eigMask.
 %
 %   See also Thor.setup
 
