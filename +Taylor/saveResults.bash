@@ -10,7 +10,7 @@ mkdir ./+Taylor/Results/"$1"
 echo ""
 echo "Coppying last run results and control file into $1"
 mv ./+Taylor/evolveResults.mat +Taylor/Results/"$1"/evolveResults.mat
-mv ./+Taylor/evolve.m +Taylor/Results/"$1"/evolve.m
+cp ./+Taylor/evolve.m +Taylor/Results/"$1"/evolve.m
 mv ./+Taylor/evolve.log +Taylor/Results/"$1"/evolve.log
 
 # cp the last runs saved steps into results directory given by $1
@@ -20,6 +20,7 @@ mv ./+Thor/CrysDists/* +Taylor/Results/"$1"/
 
 # clean up results directory
 rm ./+Taylor/Results/"$1"/*/*.mat
+
 # move saved steps from Run#/SavedSteps/* ro Run#/*
 echo ""
 echo "Moving saved steps to the run directory"
