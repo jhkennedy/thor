@@ -10,7 +10,7 @@
 try
     % clean up the enironment and set up parallel processing
     close all; clear all;
-    matlabpool 4;
+    matlabpool 5;
     
     % start timing
     tic;     DATE = now;
@@ -18,22 +18,22 @@ try
     
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Param/Settings/simpleShearExtraTight05_14_2012.mat
+    load ./+Param/Settings/2013_04_08_UniCom_PureShear.mat 
     
-    runs = 8;        
+    runs = 4;        
     
        
         
     %% set up the model
     
-    MaxStrain  = .3;
-    StrainStep = 0.01;
+    MaxStrain  = 1;
+    StrainStep = 0.002;
     TimeSteps = ceil(MaxStrain/StrainStep);
     
     SAVE = [0,1:TimeSteps];
     ModelTime = cell(1,runs);
     PolyEvents = cell(1,runs);
-    
+    MigreEvents= cell(1,runs);
     
     parfor ii = 1:runs
        [NAMES(ii), SET(ii)] = Thor.setup(in(ii), ii); 
