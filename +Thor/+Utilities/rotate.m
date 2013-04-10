@@ -22,32 +22,34 @@ function [ cdist ] = rotate( cdist, SET, elem )
     % C-axis orientations
     N   = [sin(cdist.theta).*cos(cdist.phi) sin(cdist.theta).*sin(cdist.phi) cos(cdist.theta)]; % -
     
-    % initialize temp. crystal arrays
-    Ntmp = N*0;
-    
-    % rotate crystals without BCs
-    for ii = 1:SET.numbcrys
-        Ntmp(ii,:) = expm(SET.tstep(elem)*-Op(:,:,ii))*N(ii,:)';
-            % can't vectorize this. expm is generator of finite rotations from
-            % infintesimal rotation Os
-    end
+    % rotate crystals without BCs (This is a vectorization of expm taken to
+    % 3rd order -- Ni = Ni + A*Ni + (1/2)*A*A*Ni + (1/6)*A*A*A*i;
+    j = 1:3;
+    Ntmp = squeeze(sum(SET.tstep(elem)*-Op .* reshape(N(:,j(ones(3,1),:))',3,3,[]) ,2))'; % A*N
+    N = N + Ntmp;
+    Ntmp = squeeze(sum(SET.tstep(elem)*-Op .* reshape(Ntmp(:,j(ones(3,1),:))',3,3,[]) ,2))'; % A*A*N
+    N = N + (1/2)*Ntmp;
+    Ntmp = squeeze(sum(SET.tstep(elem)*-Op .* reshape(Ntmp(:,j(ones(3,1),:))',3,3,[]) ,2))'; % A*A*A*N
+    N = N + (1/6)*Ntmp;
 
-    % apply boundry condition with eigenvectors
-        % get eigenvectors of the distribuions
-%         [~,~,V0] = svd(N);
-        [~,~,V1] = svd(Ntmp);
-        % get principle axes in upper hemisphere
-%         PAX0 = V0(:,1); if (PAX0(3) < 0); PAX0 = -PAX0; end;
+    % apply boundry condition with eigenvectors (rotate crystals such that
+    % the distribution will have the desired priniple axis PAXO) 
+        % set desired principle axis as verticle
         PAX0 = [0;0;1];
-        PAX1 = V1(:,1); if (PAX1(3) < 0); PAX1 = -PAX1; end;
+        % get eigenvectors and then principle axis from our no BCs rotated
+        % crystal distribution
+        [V1,D1] = eig(N'*N); [~,I1] = max(sum(D1));
+        PAX1 = V1(:,I1); if (PAX1(3) < 0); PAX1 = -PAX1; end;
         % get rotation axis and angle 
         RAX = cross(PAX1,PAX0); RAX = RAX/norm(RAX);
         RAN = atan2(norm(cross(PAX1,PAX0)),dot(PAX1,PAX0));
+        % make the rotation matrix
+        RMA = (1-cos(RAN))*(RAX*RAX') + cos(RAN)*eye(3) + sin(RAN)*[      0,-RAX(3), RAX(2);...
+                                                                     RAX(3),      0, RAX(1);...
+                                                                    -RAX(2), RAX(1),      0];
 
     % bulk rotation of crystals (BC)
-    for ii = 1:SET.numbcrys
-        N(ii,:) = (1-cos(RAN))*dot(Ntmp(ii,:)',RAX)*RAX+cos(RAN)*Ntmp(ii,:)'+sin(RAN)*cross(RAX,Ntmp(ii,:)');
-    end
+    N = squeeze(sum(repmat(RMA,[1,1,SET.numbcrys]).*reshape(N(:,j(ones(3,1),:))',3,3,[]),2))';
     
     % make sure N is a unit vector
     N = N'./repmat(sqrt(N(:,1)'.^2+N(:,2)'.^2+N(:,3)'.^2),[3,1]); % -
