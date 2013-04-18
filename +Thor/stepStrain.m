@@ -35,6 +35,15 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
         % calculate velocity gradients and crystal strain rates
         cdist = Thor.Utilities.vec( cdist, SET, ii);        
         
+        % calculate bulk strain rate
+        edot = Thor.Utilities.bedot( cdist );
+        
+        % calculate time step
+        medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
+        SET.tstep(ii) = StrainStep/medot; 
+        % set model time
+        SET.ti(ii) = SET.ti(ii) + SET.tstep(ii);
+        
         % calculate new dislocation density
         [cdist, ~] = Thor.Utilities.disl(cdist, SET, ii);
         
@@ -49,18 +58,6 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
         
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);
-        
-        % calculate new velocity gradients and crystal strain rates -- from poly and migre
-        cdist = Thor.Utilities.vec( cdist, SET, ii);
-        
-        % calculate bulk strain rate
-        edot = Thor.Utilities.bedot( cdist );
-        
-        % calculate time step
-        medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
-        SET.tstep(ii) = StrainStep/medot; 
-        % set model time
-        SET.ti(ii) = SET.ti(ii) + SET.tstep(ii);
         
         % rotate the crystals from last time steps calculations
         cdist = Thor.Utilities.rotate(cdist, SET, ii ); %#ok<NASGU>

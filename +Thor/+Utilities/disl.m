@@ -35,5 +35,8 @@ function [ cdist, rhoDotStrain ] = disl( cdist, SET, elem )
     % set the new dislocation density
     cdist.dislDens = cdist.dislDens + rhodot*SET.tstep(elem); % m^{-2}
     
+    % set boundary condition (can't have negitive dislocation density)
+    cdist.dislDens(cdist.dislDens <= 0 ) = 0;
+    
 end
 

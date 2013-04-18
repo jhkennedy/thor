@@ -1,4 +1,4 @@
-function [ cdist ] = rotate( cdist, SET, elem )
+function [ cdist ] = rotate3( cdist, SET, elem )
 % [cdist]=rotate(cdist, SET, elem) rotates the crystals based on the information in
 % the crystal distrobution cdist based on the setting in SET. 
 %
@@ -24,13 +24,8 @@ function [ cdist ] = rotate( cdist, SET, elem )
     
     % rotate crystals without BCs
     for ii = 1:SET.numbcrys
-        N(ii,:) = expm(SET.tstep(elem)*-Op(:,:,ii))*N(ii,:)';
-            % can't vectorize this!!! Expm is generator of finite rotations
-            % from infintesimal rotation Os -- tried using taylor series
-            % aprox. to 100 terms, but this still resulted in significant
-            % errors. Can't use expmdemo3 (an eigenvalue method of calc.
-            % expm) as (SET.tstep(elem)*-Op(:,:,ii)) is really poorly
-            % conditioned. 
+        [~,Y] = ode45(@(t,y) Thor.Utilities.rotateODE(-Op(:,:,ii),y),[0,SET.tstep(elem)],N(ii,:)');
+        N(ii,:) = Y(end,:);
     end
 
     % apply boundry condition with eigenvectors (rotate crystals such that

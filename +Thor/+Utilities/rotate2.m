@@ -1,4 +1,4 @@
-function [ cdist ] = rotate( cdist, SET, elem )
+function [ cdist ] = rotate2( cdist, SET, elem )
 % [cdist]=rotate(cdist, SET, elem) rotates the crystals based on the information in
 % the crystal distrobution cdist based on the setting in SET. 
 %
@@ -24,14 +24,21 @@ function [ cdist ] = rotate( cdist, SET, elem )
     
     % rotate crystals without BCs
     for ii = 1:SET.numbcrys
-        N(ii,:) = expm(SET.tstep(elem)*-Op(:,:,ii))*N(ii,:)';
-            % can't vectorize this!!! Expm is generator of finite rotations
+        N(ii,:) = real(expmdemo3(SET.tstep(elem)*-Op(:,:,ii))*N(ii,:)');
+            % can't vectorize this. expm is generator of finite rotations
             % from infintesimal rotation Os -- tried using taylor series
             % aprox. to 100 terms, but this still resulted in significant
-            % errors. Can't use expmdemo3 (an eigenvalue method of calc.
-            % expm) as (SET.tstep(elem)*-Op(:,:,ii)) is really poorly
-            % conditioned. 
+            % errors. Using expmdemo3, an eigenvalue method of calc. expm.
     end
+    % This is a vectorization of expm taken to 100 terms
+    % -- Ni = Ni + A*Ni + (1/2)*A*A*Ni + (1/6)*A*A*A*i + ...
+%     j = 1:3;
+%     Ntmp = N;
+%     for ii = 1:100
+%        Ntmp =  (1/factorial(ii))*squeeze(sum(SET.tstep(elem)*-Op .* reshape(Ntmp(:,j(ones(3,1),:))',3,3,[]) ,2))';
+%        N = N + Ntmp;       
+%     end
+    
 
     % apply boundry condition with eigenvectors (rotate crystals such that
     % the distribution will have the desired priniple axis PAXO) 
@@ -50,7 +57,7 @@ function [ cdist ] = rotate( cdist, SET, elem )
                                                                     -RAX(2), RAX(1),      0];
 
     % bulk rotation of crystals (BC)
-    j = 1:3;
+    j=1:3;
     N = squeeze(sum(repmat(RMA,[1,1,SET.numbcrys]).*reshape(N(:,j(ones(3,1),:))',3,3,[]),2))';
     
     % make sure N is a unit vector
