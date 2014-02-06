@@ -28,7 +28,7 @@ function [ cdist, SET, npoly ] = poly( cdist, SET, elem, eigMask)
     % number of polygonization events in each layer
     npoly = zeros(1,size(eigMask,2));
     for ii = 1:size(eigMask,2)
-        npoly(1,ii) = sum(mask & eigMask(:,2));
+        npoly(1,ii) = sum(mask & eigMask(:,ii));
     end
     
     if any(mask)

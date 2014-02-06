@@ -15,8 +15,12 @@ function [ cdist ] = grow( cdist, SET, elem )
 
     % Physical constants
     Ko = 8.2e-9; % m^2 s^{-1}
-    Q = 40; % kJ mol^{-1}
     R = 0.008314472; % kJ K^{-1} mol^{-1}
+    if SET.T(elem) >= -10
+        Q = 115; % kJ mol^{-1}
+    else
+        Q = 60; % kJ mol^{-1}
+    end
     
     % claculate the grain growth factor
     K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}

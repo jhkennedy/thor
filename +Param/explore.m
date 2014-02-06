@@ -10,7 +10,7 @@
 try
     % clean up the enironment and set up parallel processing
     close all; clear all;
-    matlabpool 5;
+    matlabpool open
     
     % start timing
     tic;     DATE = now;
@@ -18,22 +18,23 @@ try
     
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Param/Settings/2013_04_08_UniCom_PureShear.mat 
+    load ./+Param/Settings/2013_04_08_SimpleShear.mat 
     
-    runs = 4;        
+    runs = length(in);        
     
        
         
     %% set up the model
     
     MaxStrain  = 1;
-    StrainStep = 0.001;
+    StrainStep = 0.0005;
     TimeSteps = ceil(MaxStrain/StrainStep);
     
     SAVE = [0,1:TimeSteps];
     ModelTime = cell(1,runs);
     PolyEvents = cell(1,runs);
     MigreEvents= cell(1,runs);
+    Enhancement = cell(1,runs);
     
     parfor ii = 1:runs
        [NAMES(ii), SET(ii)] = Thor.setup(in(ii), ii); 
@@ -48,10 +49,11 @@ try
         ModelTime{jj} = zeros(SET(jj).nelem, size(SAVE,2) );
         PolyEvents{jj} = zeros(SET(jj).nelem, size(eigenMask,2), TimeSteps);
         MigreEvents{jj} = zeros(SET(jj).nelem, size(eigenMask,2), TimeSteps);
+        Enhancement{jj} = zeros(SET(jj).nelem,TimeSteps);
         i = 1;
         
         for kk = 1:TimeSteps
-            [SET(jj), PolyEvents{jj}(:,:,kk), MigreEvents{jj}(:,:,kk)] = Thor.stepStrain(NAMES(jj), SET(jj), StrainStep, jj, kk, SAVE, eigenMask); % % s^{-1}
+            [SET(jj), PolyEvents{jj}(:,:,kk), MigreEvents{jj}(:,:,kk), Enhancement{jj}(:,kk)] = Thor.stepStrain(NAMES(jj), SET(jj), StrainStep, jj, kk, SAVE, eigenMask); % % s^{-1}
             
             
             % save model time for steps specified in SAVE
@@ -87,12 +89,12 @@ catch ME
     display(sprintf('\n Goodbye! \n'))
     display(sprintf('\n Run ended %s \n', datestr(now)))
     
-    save ./+Param/exploreCRASH.mat
-    
     display(ME.message);
     
     % email me to tell me run has crashed
     !mail -s THOR:CRASH jhkennedy@alaska.edu < ./+Param/explore.log
+    
+    save ./+Param/exploreCRASH.mat
     
     rethrow(ME);
     

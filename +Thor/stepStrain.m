@@ -1,4 +1,4 @@
-function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE, eigenMask )
+function [SET, NPOLY, NMIGRE, ENH] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE, eigenMask )
 % step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on
 % all the crystal distrobutions in NAMES. 
 %
@@ -26,6 +26,7 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
 
     NPOLY = zeros(SET.nelem,size(eigenMask,2));
     NMIGRE = zeros(SET.nelem,size(eigenMask,2));
+    ENH = zeros(SET.nelem,1);
 
     for ii = 1:SET.nelem
 
@@ -41,6 +42,7 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
         % calculate time step
         medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
         SET.tstep(ii) = StrainStep/medot; 
+        
         % set model time
         SET.ti(ii) = SET.ti(ii) + SET.tstep(ii);
         
@@ -50,17 +52,21 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
         % grow the crystals
         cdist = Thor.Utilities.grow(cdist, SET, ii);
         
-        % check for polyiginization
-        [cdist, SET, NPOLY(ii,:)] = Thor.Utilities.poly(cdist, SET, ii, eigenMask);
-        
         % check for migration recrystallization
-        [cdist, SET, NMIGRE(ii,:)] = Thor.Utilities.migre(cdist, SET, ii, eigenMask);
+        if (SET.migre)
+            [cdist, SET, NMIGRE(ii,:)] = Thor.Utilities.migre(cdist, SET, ii, eigenMask);
+        end
+        
+        % check for polyiginization
+        if (SET.poly)
+            [cdist, SET, NPOLY(ii,:)] = Thor.Utilities.poly(cdist, SET, ii, eigenMask);
+        end
         
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);
         
         % rotate the crystals from last time steps calculations
-        cdist = Thor.Utilities.rotate(cdist, SET, ii ); %#ok<NASGU>
+        [cdist, ENH(ii)] = Thor.Utilities.rotate(cdist, SET, ii ); %#ok<ASGLU>
         
         % save crystal distrobutions
         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);

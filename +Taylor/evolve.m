@@ -118,14 +118,14 @@ catch ME
     display(sprintf('\n Goodbye! \n'))
     display(sprintf('\n Run ended %s \n', datestr(now)))
     
-    save ./+Taylor/evolveCrash.mat
-    
     display(ME.message);
     
     % email me to tell me run has crashed
     !mail -s THOR:CRASH jhkennedy@alaska.edu < ./+Taylor/evolve.log
+    
+    save ./+Taylor/evolveCrash.mat
+    
     rethrow(ME);
-
 	
 end
 

@@ -35,31 +35,35 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     Egb = 3*Ggb./cdist.size;
 
     % calculate the dislocation energy
-    kappa = 0.35; % adjustible parameter -- Thor2002 eqn. 19 -- value set [38] 
-    % Thor2002 sets this at 0.35, which aligns with paper he cites 
-    %(>0.1; Mohamed2000 -- a paper based on cold rolling copper to .35 strain),
-    % however, this does not give the correct results -- it will cause an
-    % undeform crystal with the minimum dislocation density to
-    % recrystallize. From Thors paper, he initially starts the crystals
-    % with:
+    kappa = 0.1; 
+      % adjustible parameter -- Thor2002 eqn. 19 -- value set [38] 
+      % Thor2002 sets this at 0.35, which aligns with paper he cites 
+      %(>0.1; Mohamed2000 -- a paper based on cold rolling copper to .35 strain),
+      % however, this does not give the correct results -- it will cause an
+      % undeform crystal with the minimum dislocation density to
+      % recrystallize. From Thors paper, he initially starts the crystals
+      % with:
         % dislDens: 4e10 % m^{-2}
         % size:     4 mm
-    % which gives:
+      % which gives:
         % Egb  = 48.75 J m^{-3}
         % Edis = 89.79 J m^{-3}
-    % then in paragraph [38] he states " initially..., so Edis is very
-    % small relative to the grain boundary energy." Which is not at all the
-    % case using his equations. 
-    %
-    % It looks like kappa should include the log term as well --
-    % log(1./(sqrt(cdist.dislDens).*b)  is equal to about 10. Removing the
-    % log term you would end up with 9.63 J m^{-3} which is actually much
-    % less than 48.75 J m^{-3}. So, keeping the log term in the equation,
-    % you should use kappa = 0.035. Or, drop the log term out of the Edis
-    % equation (line 76) and keep kappa at 0.35. For computational
-    % efficiency, I am going to drop the log term. It can be added in by
-    % coppying it from above. Also, Mohamed2000 states that the log term
-    % can be a constant. Note: LOG is natural log in MATLAB. 
+      % then in paragraph [38] he states " initially..., so Edis is very
+      % small relative to the grain boundary energy." Which is not at all the
+      % case using his equations. 
+      %
+      % It looks like kappa should include the log term as well --
+      % log(1./(sqrt(cdist.dislDens).*b)) is equal to about 10. Removing the
+      % log term you would end up with 9.63 J m^{-3} which is actually much
+      % less than 48.75 J m^{-3}. So, keeping the log term in the equation,
+      % you should use kappa = 0.035. Or, drop the log term out of the Edis
+      % equation (line 76) and keep kappa at 0.35. For computational
+      % efficiency, I am going to drop the log term. It can be added in by
+      % coppying it from above. Also, Mohamed2000 states that the log term
+      % can be a constant. Note: LOG is natural log in MATLAB. 
+      %
+      % Update 12/2/13 -- seems to be having too much MigRe so adujusting
+      % Kappa to 0.1!
     
     G = 3.4e9; % Pa
     b = 4.5e-10; % m
