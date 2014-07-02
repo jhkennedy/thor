@@ -1,20 +1,21 @@
 function [ cdist, esoft ] = soft( cdist, CONN, xc, ec )
-% SOFT(cdist, CONN, cnumb, soft) calculates the softness parameter from the
-% interaction between a crystal and its nearest neighbors. 
+% [ cdist, esoft ] = soft( cdist, CONN, xc, ec ) calculates the softness
+% parameter for a crystal from the interaction between a crystal and its
+% nearest neighbors.
 %
-%   cdist is a crystal distrobution is aranged in an (SET.numbcrys)x10 cell
-%   array. The crystal distrubution structure is outlined in Thor.setup.
+%   cdist is the structure holding the crystal distribution outlined in
+%   Thor.setup.
 %
-%   CONN is a 1x12 array containing the crystal number for the nearest neighboors
-%   in the distrobution.   
+%   CONN is a 1xN array containing the crystal numbers for the N nearest
+%   neighbors in the distribution.   
 %
-%   xc is the Nearest Neighbor Interaction, NNI, controbution from the crystal.
+%   xc is the Nearest Neighbor Interaction, NNI, contribution from the
+%   crystal. 
 %
-%   ec is the controbution from each neighboring crystal. This is usually set in
-%   SETTINGS.soft as outlined in Thor.setup.  
+%   ec is the contribution from each neighboring crystal. 
 %
-% Soft returns the crystal distrobution and the softness parameter, a scalar,
-% for the crysal. 
+% Soft returns the crystal distribution cdist and the scalar esoft which is
+% the softness parameter for the crystal. 
 %
 %   See also Thor.setup
 

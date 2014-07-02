@@ -1,11 +1,12 @@
 function [ cdist ] = bound( cdist )
-% [cdist]=bound(cdist,SET,elem) checks the crystal orientation bounds and fixes
-% orientations outside the bounds.
+% [cdist]=bound(cdist,SET,elem) checks the crystal orientation bounds and
+% fixes orientations outside the bounds. 
 %
-%   cdist is the structure holding the crystal distrobution outlined in
+%   cdist is the structure holding the crystal distribution outlined in
 %   Thor.setup. 
 
-% bound returns a crystal distrobution, cdist, with propperly bounded crystals.
+% bound returns a crystal distribution, cdist, with properly bounded
+% crystals. 
 %
 %   See also Thor.setup
 
@@ -16,7 +17,7 @@ function [ cdist ] = bound( cdist )
         cdist.phi(cdist.theta < 0) = cdist.phi(cdist.theta < 0) + pi;
         cdist.theta(cdist.theta < 0) = abs(cdist.theta(cdist.theta < 0));
         
-        % cdist.theta > pi/2 -- use `other end' of c-axis (symetric: can't
+        % cdist.theta > pi/2 -- use `other end' of c-axis (symmetric: can't
         % tell which side is which)    
         cdist.phi(cdist.theta > pi/2) = cdist.phi(cdist.theta > pi/2) + pi;
         cdist.theta(cdist.theta > pi/2) = pi - cdist.theta(cdist.theta > pi/2);

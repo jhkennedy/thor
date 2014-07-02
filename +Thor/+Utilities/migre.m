@@ -1,21 +1,21 @@
 function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
-% [cdist]=migre(cdist,SET,elem, eigMask) recrystalizes crystals that are
+% [cdist]=migre(cdist,SET,elem, eigMask) recrystallizes crystals that are
 % favorable to do so.
 %
-%   cdist is the structure holding the crystal distrobution of N crystals
+%   cdist is the structure holding the crystal distribution of N crystals
 %   as outlined in Thor.setup.  
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
-%   elem is the element number of the crystal distrobution, cdist.
+%   elem is the element number of the crystal distribution, cdist.
 %
 %   eigenMask is a NxM logical array where eigenMask(:,m) is the mth layer
-%   in of the crystal distrobution. 
+%   in of the crystal distribution. 
 %
-% migre returns: a crystal distrobution, cdist, with recrystalized crystals
-% that were favorable to do so; the setting structure, SET, and nMigRe, an
-% 1xM array holding the number of recrystalization events in each layer
-% specified by eigMask.
+% migre returns: a crystal distribution cdist with recrystallized crystals;
+% SET with updated times of last recrystallization and grain sizes at last
+% recrystallization; and nMigRe, an 1xM array holding the number of
+% recrystallization events in each layer specified by eigMask.
 %
 %   See also Thor.setup
 
@@ -27,7 +27,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     % new crystal dislocation density
     rhoo = 1e10; % m^{-2} 
     % new crystal size
-    pc = 1; % Pa^{4/3} m -- perportionality constant [Shimizu 2008]
+    pc = 1; % Pa^{4/3} m -- proportionality constant [Shimizu 2008]
     D = pc*Estress^(-4/3); % m
 
     % calculate the grain boundary energy
@@ -35,12 +35,12 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     Egb = 3*Ggb./cdist.size;
 
     % calculate the dislocation energy
-    kappa = 0.1; 
-      % adjustible parameter -- Thor2002 eqn. 19 -- value set [38] 
+    kappa = 0.1;
+      % adjustable parameter -- Thor2002 eqn. 19 -- value set [38] 
       % Thor2002 sets this at 0.35, which aligns with paper he cites 
       %(>0.1; Mohamed2000 -- a paper based on cold rolling copper to .35 strain),
       % however, this does not give the correct results -- it will cause an
-      % undeform crystal with the minimum dislocation density to
+      % undeformed crystal with the minimum dislocation density to
       % recrystallize. From Thors paper, he initially starts the crystals
       % with:
         % dislDens: 4e10 % m^{-2}
@@ -59,10 +59,10 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
       % you should use kappa = 0.035. Or, drop the log term out of the Edis
       % equation (line 76) and keep kappa at 0.35. For computational
       % efficiency, I am going to drop the log term. It can be added in by
-      % coppying it from above. Also, Mohamed2000 states that the log term
+      % copying it from above. Also, Mohamed2000 states that the log term
       % can be a constant. Note: LOG is natural log in MATLAB. 
       %
-      % Update 12/2/13 -- seems to be having too much MigRe so adujusting
+      % Update 12/2/13 -- seems to be having too much MigRe so adjusting
       % Kappa to 0.1!
     
     G = 3.4e9; % Pa
@@ -70,7 +70,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     % find the average dislocation energy
     Edis = kappa.*G.*cdist.dislDens.*b.^2; % J m^{-3}
 
-    % check to see if it energetically favorable to recrystalize
+    % check to see if it energetically favorable to recrystallize
     mask = Edis > Egb;
     
     % number of polygonization events in each layer
@@ -92,7 +92,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
 
         % set new theta randomly within +- 10 degrees of soft orientation
         cdist.theta(mask) = theta +(-1+2*rand( size(cdist.theta(mask)) ) )*0.02;
-        % set random phi angle (assumes max MRSS symetric about vertical)
+        % set random phi angle (assumes max MRSS symmetric about vertical)
         cdist.phi(mask) = 2*pi*rand( size(cdist.phi(mask)) );
     else
         return

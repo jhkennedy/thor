@@ -1,28 +1,43 @@
 function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE, eigenMask )
-% step(NAMES, SET, RUN, TSTEP, SAVE) preforms a time step specified in SET on
-% all the crystal distrobutions in NAMES. 
+% [SET, NPOLY, NMIGRE, StrainStep] = step(NAMES, SET, RUN, STEP, SAVE, eigenMask) 
+% preforms a time step specified in SET on all the crystal distributions in NAMES.
+% The inputs are: 
 %
-%   NAMES holds all the files names for the crystal distrobutions. NAMES is
+%   NAMES holds all the files names for the crystal distributions. NAMES is
 %   outlined in Thor.setup.
 %
 %   SET is a structure holding the model settings as outlined in Thor.setup.
 %
-%   RUN is the current run number.
+%   RUN is a scalar holding the current run number.
 %
-%   STEP is the current time step being preformed.
+%   STEP is a scalar holding the current time step being preformed.
 %
-%   SAVE is a vector constaing all the timesteps that should be saved.
+%   SAVE is a vector containing all the timesteps that should be saved.
 %
-% step loads in a crystal distrobution for each element and  calulates new
+%   eigenMask is a N by M logical array where each M column contains N logicals
+%   that are True if the nth crystal in the distribution belongs to the mth layer.
+%
+% stepTime loads in a crystal distribution for each element and  calculates new
 % velocity gradients, crystal strain rates, dislocation densities, dislocation
 % energies, grain sizes, as well as checking for polygonization and migration
-% recrystallization. step then rotates the crystals, saves the stepped crystal
-% distrobutions to disk, and saves a copy if the current time step is listed in
-% SAVE.
+% recrystallization. stepTime then rotates the crystals, saves the stepped crystal
+% distributions to disk, and saves a copy if the current time step is listed in
+% SAVE. stepTime returns [SET, NPOLY, NMIGRE, StrainStep] where:
 %
-%   See also Thor.setup, Thor.Utilities.vec, Thor.Utilities.disl,
-%   Thor.Utilities.dislEn, Thor.Utilities.grow, Thor.Utilities.poly,
-%   Thor.Utilities.migre, and Thor.Utilities.rotate.
+%   SET is a structure holding the model settings as outlined in Thor.setup.
+%
+%   NPOLY is a (SET.nelem) by size(eigenMask,2) array holding the number of
+%   polygonization events in each layer of the distribution described by 
+%   eigenMask.
+%
+%   NMIGRE is a (SET.nelem) by size(eigenMask,2) array holding the number of
+%   migration recrystallization events in each layer of the distribution 
+%   described by eigenMask.
+%
+%   StrainStep is an array, sized (SET.nelem) by 1, holding the strain the
+%   distribution underwent.
+%
+%   See also Thor.setup.
 
     NPOLY = zeros(SET.nelem,size(eigenMask,2));
     NMIGRE = zeros(SET.nelem,size(eigenMask,2));
@@ -42,14 +57,15 @@ function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE
         % calculate strain step
         medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
         StrainStep(ii,1) = SET.tstep(ii)*medot;
+                
+        % grow the crystals
+        [cdist, K] = Thor.Utilities.grow(cdist, SET, ii);
+        
         
         % calculate new dislocation density
-        [cdist, ~] = Thor.Utilities.disl(cdist, SET, ii);
+        [cdist, ~] = Thor.Utilities.disl(cdist, SET, ii, K);
         
-        % grow the crystals
-        cdist = Thor.Utilities.grow(cdist, SET, ii);
-        
-        % check for polyiginization
+        % check for polygonization
         [cdist, SET, NPOLY(ii,:)] = Thor.Utilities.poly(cdist, SET, ii, eigenMask);
         
         % check for migration recrystallization
@@ -58,13 +74,13 @@ function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE
         % check crystal orientation bounds
         cdist = Thor.Utilities.bound(cdist);
         
-        % rotate the crstals from last time steps calculations
+        % rotate the crystals from last time steps calculations
         cdist = Thor.Utilities.rotate(cdist, SET, ii ); %#ok<NASGU>
         
-        % save crystal distrobutions
+        % save crystal distributions
         eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
         
-        % save a copy of crystal distrobutions at specified time steps
+        % save a copy of crystal distributions at specified time steps
         if any(SAVE == STEP)
             eval(['save ./+Thor/CrysDists/Run' num2str(RUN) '/SavedSteps/Step' num2str(STEP,'%05.0f') '_' NAMES.files{ii} ' -struct cdist theta phi size dislDens']);
         end

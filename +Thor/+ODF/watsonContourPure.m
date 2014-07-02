@@ -1,6 +1,19 @@
 function [X,Y,Z] = watsonContourPure( k, PA )
-% PA = principle axis
-% k = concentration parameter
+% [X,Y,Z] = watsonContourPure( k, PA ) generates a contoured plot of a
+% continuous Watson distribution for the concentration parameter k and
+% principle axis PA.
+%   PA is the principle axis of the distribution -- a vector in Cartesian
+%   space.
+% 
+%   k is the scalar concentration parameter of the distribution.
+%
+% watsonCountourPure returns X, Y, and Z which are the grids used to
+% contour the plots where X and Y are the xy values of the Cartesian
+% projection onto the xy plane and Z is the distribution density at each X
+% Y point.  
+%
+%   see also Thor.ODF.watson, Thor.ODF.watsonGenerate, and
+%   Thor.ODF.watsonK.
 
 %% Make plotting Grid
     range = [-1.5,1.5];
@@ -11,7 +24,7 @@ function [X,Y,Z] = watsonContourPure( k, PA )
     PLT = X.^2 + Y.^2;
     mask = PLT < 2;
     
-    %% get theta and phi and unit vector for every point inside shmidt plot
+    %% get theta and phi and unit vector for every point inside Shmidt plot
 
     r = sqrt(X.^2 + Y.^2);
 
@@ -31,7 +44,7 @@ function [X,Y,Z] = watsonContourPure( k, PA )
     Z = X*0;
 
     
-    %% get wastson density at each point
+    %% get Watson density at each point
     
     THETA = acos(sum(v.*repmat(PA,np,1),2) );
     Z(mask) = 2*Thor.ODF.watson(k,THETA);
@@ -45,7 +58,7 @@ function [X,Y,Z] = watsonContourPure( k, PA )
 
       %% Plot
     
-    % contour invervals
+    % contour intervals
     se = 1/(6*pi);
     lvl = se*(2:2:10);
     
@@ -60,10 +73,10 @@ function [X,Y,Z] = watsonContourPure( k, PA )
     
     
 function map = greyInv(m)
-% greyInv(M) returns an Mx3 colormap that is the oposite of Matlabs built in GREY
-% colormap; colormap ranges from what at lowest to black at highest.
-% greyInv, by itself, is the same lenth as the current figures colormap. If
-% no figure exisits, MATLAB creates one.
+% greyInv(M) returns an Mx3 colormap that is the opposite of Matlabs built
+% in GREY colormap; colormap ranges from what at lowest to black at
+% highest. greyInv, by itself, is the same length as the current figures
+% colormap. If no figure exists, MATLAB creates one.
 
 if nargin < 1, m = size(get(gcf,'colormap'),1); end
 h = sort((0:m-1)'/max(m,1),1,'descend');

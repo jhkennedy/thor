@@ -34,7 +34,6 @@ try
     ModelTime = cell(1,runs);
     PolyEvents = cell(1,runs);
     MigreEvents= cell(1,runs);
-    Enhancement = cell(1,runs);
     
     parfor ii = 1:runs
        [NAMES(ii), SET(ii)] = Thor.setup(in(ii), ii); 
@@ -49,11 +48,10 @@ try
         ModelTime{jj} = zeros(SET(jj).nelem, size(SAVE,2) );
         PolyEvents{jj} = zeros(SET(jj).nelem, size(eigenMask,2), TimeSteps);
         MigreEvents{jj} = zeros(SET(jj).nelem, size(eigenMask,2), TimeSteps);
-        Enhancement{jj} = zeros(SET(jj).nelem,TimeSteps);
         i = 1;
         
         for kk = 1:TimeSteps
-            [SET(jj), PolyEvents{jj}(:,:,kk), MigreEvents{jj}(:,:,kk), Enhancement{jj}(:,kk)] = Thor.stepStrain(NAMES(jj), SET(jj), StrainStep, jj, kk, SAVE, eigenMask); % % s^{-1}
+            [SET(jj), PolyEvents{jj}(:,:,kk), MigreEvents{jj}(:,:,kk)] = Thor.stepStrain(NAMES(jj), SET(jj), StrainStep, jj, kk, SAVE, eigenMask); % % s^{-1}
             
             
             % save model time for steps specified in SAVE

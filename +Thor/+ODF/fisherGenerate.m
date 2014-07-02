@@ -1,16 +1,19 @@
 function [ F ] = fisherGenerate(N, K)
-% [F]=fisherGenerate(N,K) generates a random sampling of the fisher distribution of size
-% Nx1 elements and concentation parameter K and a vertical priciple axis; (0,0,1). 
+% [F]=fisherGenerate(N,K) generates a random sampling of the fisher
+% distribution of size Nx1 elements and concentration parameter K and a
+% vertical principal axis; (0,0,1).  
 %   
 %   N is the integer number of elements in the distribution.
 %
-%   K is the concentation parameter of the distribution. K must be a double between 0
-%   and inf. K > 0 creates a sigle maximum distribution and K = 0 creates a uniform
-%   distribution.  s
+%   K is the concentration parameter of the distribution. K must be a double
+%   between 0 and inf. K > 0 creates a single maximum distribution and K = 0
+%   creates a uniform distribution.
 %
-% fisherGenerate returns a Nx3 array containing the x,y,z components of each sample.
+% fisherGenerate returns a Nx3 array containing the x,y,z components of
+% each sample. 
 %
-%   see also Thor.ODF.fisher Thor.ODF.watson and Thor.ODF.watsonGenerate
+%   see also Thor.ODF.fisher, Thor.ODF.watson, Thor.ODF.watsonK, and
+%   Thor.ODF.watsonGenerate 
     
     % check what type of fabric
     if K > 0 % single maximum 
@@ -20,7 +23,7 @@ function [ F ] = fisherGenerate(N, K)
         % normalizing constant
         c = 2/K*(sinh(K));
 
-        % genrate random uniform disibution
+        % generate random uniform distibution
         y = rand(n,1);
 
         % sample quantile function

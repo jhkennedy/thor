@@ -1,11 +1,12 @@
 function [ edot ] = bedot( cdist )
-% [edot]=bedot(cdist) claculates the modeled bulk velocity gradient for the
-% crystal distrobution specified by cdist
+% [edot]=bedot(cdist) calculates the modeled bulk velocity gradient for the
+% crystal distribution specified by cdist
 %
-%   cdist is the structure holding the crystal distrobution outlined in
+%   cdist is the structure holding the crystal distribution outlined in
 %   Thor.setup. 
 %
-% bedot returns vel, a 3x3 array holding the modeled bulk velocity gradient.
+% bedot returns edot, a 3x3 array holding the modeled bulk velocity
+% gradient. 
 %
 %   See also Thor.setup
     

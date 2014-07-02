@@ -1,6 +1,6 @@
 function [ inv ] = inv2( A )
 % function [ inv ] = inv2( A ) calculates the second invariant of the
-% rank 2 tensor A in cartesian space (3x3).
+% rank 2 tensor A in Cartesian space (3x3).
 %   A should be a rant 2 tensor (3x3).
 %   
 %   inv will be the second invariant of tensor A.

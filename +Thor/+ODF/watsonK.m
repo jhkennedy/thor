@@ -1,15 +1,15 @@
 function [ K ] = watsonK( e )
-% [K]=watsonK( e ) estimates the concentation parameter for the
+% [K]=watsonK( e ) estimates the concentration parameter for the
 % Watson distribution from the appropriate eigenvalue, e, of the
 % orientation tensor.
 %   
 %   e is a 3x1 array of the eigenvalues of the orientation tensor, arranged
 %   such that e1 > e2 > e3;
 %
-% K is the concentation parameter for the Watson distribution to second
-% decimal place percision.
+% K is the concentration parameter for the Watson distribution to second
+% decimal place precision.
 
-    % make sure e is aranged properly
+    % make sure e is arranged properly
     e = sort(e,'descend');
     
     % get interpolation table
@@ -43,7 +43,7 @@ end
 
 function [T] = table()
 
-% table from page 386 of Direcion Statistics by Kanti V. Mardia. 2000.
+% table from page 386 of Direction Statistics by Kanti V. Mardia. 2000.
 % ISBN: 0-471-95333-4
     % e*, K
 T = [0.001,0500.000;...

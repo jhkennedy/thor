@@ -1,20 +1,20 @@
 function [ cdist] = vec( cdist, SET, elem)
 % [cdist]=vec(cdist, SET, elem) calculates the velocity gradient and single
 % crystal strain rate for every crystal in cdist. cdist is the crystal
-% disrobution for element elem. Vec uses the settings in SET and the
+% disribution for element elem. Vec uses the settings in SET and the
 % connectivity structure specified by CONN.   
 %   
-%   cdist is the structure holding the crystal distrobution outlined in
+%   cdist is the structure holding the crystal distribution outlined in
 %   Thor.setup.   
 %
 %   SET is the setting structure outlined in Thor.setup.
 %
 %   elem is the element number that cdist is a part of.
 %
-% vec returns cdist with new fields for the shmidt tensors on each slip system
-% (.S1, .S2, .S3 size 3x3xN) magnitude of the RSS (.MRSS size Nx1), velocity
-% gradient on the crystals (.vel size 3x3xN) and the strain rate on the crystals
-% (.ecdot size 3x3xN).    
+% vec returns cdist with new fields for the Shmidt tensors on each slip
+% system (.S1, .S2, .S3 size 3x3xN) magnitude of the RSS (.MRSS size Nx1),
+% velocity gradient on the crystals (.vel size 3x3xN) and the strain rate
+% on the crystals (.ecdot size 3x3xN).  
 %
 %   See also Thor.setup
 
@@ -23,11 +23,11 @@ function [ cdist] = vec( cdist, SET, elem)
     
     ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T(elem,1));% s^{-1} Pa^{-n}
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
-
+    
     % glen exponent
     n = SET.glenexp(elem,1); % -
     
-    % get the shmidt tensor and resolved shear stress, RSS, for each slip stystem
+    % get the Shmidt tensor and resolved shear stress, RSS, for each slip system
     [cdist, R1, R2, R3] = Thor.Utilities.shmidt(cdist, SET.numbcrys, SET.stress(:,:,elem));
     
     % get the softness parameter 

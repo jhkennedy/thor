@@ -2,53 +2,56 @@
  MATLAB PACKAGE INSTALLATION INSTRUCTIONS
 ==========================================
 
-MATLAB will automatically recognize this package once the +Thor directory added
-the matlab path. There are two standard ways of doing this:
+MATLAB will automatically recognize this package once the +DIR directories 
+are added the matlab path. There are two standard ways of doing this:
 
-    1) Coppy the +Thor directory into your user path. You can find this path by 
-       typing at the comand prompt
+    1) Copy the +DIR directories into your user path. You can find this 
+       path by typing at the command prompt:
 
             >> userpath
        
-    2) Adding the folder containing the +Thor directory to the matlab path. If 
-       +Thor is located at /usr/local/matlab/packages/+Thor then you would add 
-       this path to the matlab path by typing at the comand prompt
+    2) Adding the folder containing the +PKG directories to the matlab 
+       path. If +PKGs are located at /usr/local/matlab/packages/+PKG then 
+       you would add this path to the matlab path by typing at the command 
+       prompt:
             
             >> path(path, '/usr/local/matlab/packages/')
        
-       Any further packages coppied into this directory using the '+' syntax for
-       MATLAB packages will be automatically recognised by MATLAB. 
+       Any further packages copied into this directory using the '+' 
+       syntax for MATLAB packages will be automatically recognized by 
+       MATLAB. 
 
        =======================
           USING THE PACKAGE
        =======================
 
-        All functions in package Thor are called in matlab by
+        All functions in package PKG are called in matlab by:
 
-            >> Thor.FUNCTION
+            >> PKG.FUNCTION
 
-        Likewise all functions in subpackages of Thor are called by
+        Likewise all functions in subpackages of PKG are called by:
 
-            >> Thor.SUBPACKAGE.FUNCTION
+            >> PKG.SUBPACKAGE.FUNCTION
 
         and so on and so forth. 
 
-        This package is compliant with MATLABs standard help function. As such, 
-        you can see a list of funtions and subpackages in Thor by typing
+        This package is compliant with MATLABs standard help function. 
+        As such, you can see a description, list of functions, and list of 
+        subpackages in +PKG by typing:
 
-            >> help Thor
+            >> help PKG
 
-        Likewise you can do the same for a subpackage by typing
+        Likewise you can do the same for a subpackage by typing:
 
-            >> help Thor.SUBPACKAGE
+            >> help PKG.SUBPACKAGE
 
-        You can get help on a function by typing 
+        You can get help on a function by typing:
 
-            >> help Thor.FUNCTION
+            >> help PKG.FUNCTION
 
-        or for a function in a subpackage
+        or for a function in a subpackage:
 
-            >> help Thor.SUBPACKAGE.FUNCTION
+            >> help PKG.SUBPACKAGE.FUNCTION
 
         and so on and so forth. 
 
@@ -56,5 +59,5 @@ the matlab path. There are two standard ways of doing this:
  OCTAVE PACKAGE INSTALLATION INSTRUCTIONS
 ==========================================
 
-    Currently this package does not work in octave because octave doesn't use 
-    the '+' syntax for packages. A fix is in the works. 
+    Currently this package does not work in octave because octave doesn't 
+    use the '+' syntax for packages. A fix is in the works. 
