@@ -5,7 +5,11 @@ function [X,Y,Z] = watsonContourPure( k, PA )
 %   PA is the principle axis of the distribution -- a vector in Cartesian
 %   space.
 % 
-%   k is the scalar concentration parameter of the distribution.
+%   k is the scalar concentration parameter of the distribution. Positive
+%   values specify girdle type distributions, negative values specify
+%   single maximum type distributions, and K=0 specifies a uniform
+%   distribution. All these distributions are  specified around a primary
+%   axis. K must be a scalar value.
 %
 % watsonCountourPure returns X, Y, and Z which are the grids used to
 % contour the plots where X and Y are the xy values of the Cartesian

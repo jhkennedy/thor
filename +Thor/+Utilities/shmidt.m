@@ -1,20 +1,20 @@
-function [ cdist, R1, R2, R3 ] = shmidt( cdist, n, stress )
-% [cdist, R1, R2, R3]=SHMIDT( cdist, n, stress ) returns the crystal
+function [ cdist, R1, R2, R3 ] = shmidt( cdist, nc, stress )
+% [cdist, R1, R2, R3]=SHMIDT( cdist, nc, stress ) returns the crystal
 % distribution structure with the Shmidt tensors and magnitude of the RSS
 % for each of the three slip systems on each crystal in the distribution.  
 % 
 %   cdist the structure holding the crystal distribution outlined in
 %   Thor.setup.
 %
-%   n is the number of crystals in the distribution
+%   nc is the number of crystals in the distribution.
 %
-%   stress is a 3X3Xn matrix holding the stress 
+%   stress is a 3X3Xnc matrix holding the stress.
 %
 % SHMIDT returns the crystal distribution structure with the added fields
-% of S1, S2, S3 (size 3x3xn) and MRSS (size nx1) which give the Shmidt
+% of S1, S2, S3 (size 3x3xnc) and MRSS (size ncx1) which give the Shmidt
 % tensor for each of the three slip systems and the magnitude of the RSS.
 % SHMIDT also returns the RSS on each slip system; R1, R2 and R3 
-% (size nx1).
+% (size ncx1).
 %
 % see also Thor.setup.
 
@@ -34,12 +34,12 @@ function [ cdist, R1, R2, R3 ] = shmidt( cdist, n, stress )
     
     % Shmidt tensor (outer product -- B'*N for each crystal)
     j=1:3;
-    cdist.S1 = reshape(repmat(B1',3,1).* N(:,j(ones(3,1),:)).',[3,3,n]); % -
-    cdist.S2 = reshape(repmat(B2',3,1).* N(:,j(ones(3,1),:)).',[3,3,n]); % -
-    cdist.S3 = reshape(repmat(B3',3,1).* N(:,j(ones(3,1),:)).',[3,3,n]); % -
+    cdist.S1 = reshape(repmat(B1',3,1).* N(:,j(ones(3,1),:)).',[3,3,nc]); % -
+    cdist.S2 = reshape(repmat(B2',3,1).* N(:,j(ones(3,1),:)).',[3,3,nc]); % -
+    cdist.S3 = reshape(repmat(B3',3,1).* N(:,j(ones(3,1),:)).',[3,3,nc]); % -
     
     % expand the stress for RSS
-    stress = repmat(stress,[1,1,n]); 
+    stress = repmat(stress,[1,1,nc]); 
     
     % calculate the RSS on each slip system (Nx1 vector)
     R1 = reshape(sum(sum(cdist.S1.*stress)),1,[])'; % Pa

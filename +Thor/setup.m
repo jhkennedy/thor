@@ -64,9 +64,11 @@ function [ NAMES, SET] = setup( in, RUN )
 %       Cuffey and Patterson (4th Ed.). It has units of s^{-1} Pa^{-n},
 %       where n is the glen exponent. 
 %
-%       in.poly and in.migre are 1x1 logicals that turn on and off
-%       polygonization and migration recrystallization respectively (on
+%       in.poly is a 1x1 logical that turn on and off polygonization (on
 %       when true).
+%
+%       in.migre is a 1x1 logical that turn on and off migration
+%       recrystallization (on when true). 
 %
 %       'in' also has a number of optional parameters. If in.distype is set
 %       to create crystal distributions, THOR will need these optional
@@ -102,17 +104,17 @@ function [ NAMES, SET] = setup( in, RUN )
 %
 % setup returns variables NAMES, and SET. 
 %       
-%   NAMES.files holes a column vector of all the EL********.mat files names
-%   where the row number corresponds to the crystal number. Therefor, a
-%   crystal distribution can be accessed as such:  
+%   NAMES structure which has the field 'files'. NAMES.files holds a cell
+%   vector of all the EL********.mat files names where the index
+%   corresponds to the crystal number. Therefor, a crystal distribution can
+%   be accessed as such:
 %       cdist = load(['./+Thor/CrysDists/Run' num2str(RUN) '/' NAMES.files{ii}])
 %
 %   SET is an equivelent structure to 'in' outlined above. SET will be used
 %   to change the model settings over time while keeping the initial
 %   settings in 'in' intact throughout the model. 
 %
-%   see also Thor, Thor.Build, Thor.Build.connectivity, and
-%   Thor.Utilities.grow. 
+%   see also Thor, Thor.Build and Thor.Build.connectivity.
 
     %% make directory for run
     warning off MATLAB:MKDIR:DirectoryExists

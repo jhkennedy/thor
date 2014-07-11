@@ -1,5 +1,5 @@
 function [ W ] = watsonUnnorm( k, x )
-% [W]=waston(K,X) calculates the Unnormalized Watson Parameterized
+% [W]=waston(k,x) calculates the Unnormalized Watson Parameterized
 % Orientation Distribution function (PODF) for concentration K at angle X
 % away from the principle axis of the distribution.  
 %

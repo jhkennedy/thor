@@ -5,9 +5,9 @@ function [ F ] = fisherGenerate(N, K)
 %   
 %   N is the integer number of elements in the distribution.
 %
-%   K is the concentration parameter of the distribution. K must be a double
-%   between 0 and inf. K > 0 creates a single maximum distribution and K = 0
-%   creates a uniform distribution.
+%   K is the concentration parameter of the distribution. K must be a
+%   double between 0 and inf. K > 0 creates a single maximum distribution
+%   and K = 0 creates a uniform distribution.
 %
 % fisherGenerate returns a Nx3 array containing the x,y,z components of
 % each sample. 

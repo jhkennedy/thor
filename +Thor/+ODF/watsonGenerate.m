@@ -5,12 +5,13 @@ function [ W ] = watsonGenerate(N,K)
 %   
 %   N is the integer number of elements in the distribution.
 %
-%   K is the concentration parameter of the distribution. K must be a double
-%   between -inf and inf. K<0 creates a single maximum distribution, K < 0
-%   creates a equatorial girdle distribution, and K = 0 creates a uniform
-%   distribution.
+%   K is the concentration parameter of the distribution. Positive values
+%   specify girdle type distributions, negative values specify single
+%   maximum type distributions, and K=0 specifies a uniform distribution.
+%   All these distributions are  specified around a primary axis. K must be
+%   a scalar value. 
 %
-% watsonGenerate returns a Nx3 array containing the x,y,z components of
+% watsonGenerate returns W, a Nx3 array containing the x,y,z components of
 % each sample. 
 %
 % see also Thor.ODF.watson, Thor.ODF.watsonK, Thor.ODF.fisher, and

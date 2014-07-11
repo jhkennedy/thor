@@ -7,7 +7,11 @@ function [ K ] = watsonK( e )
 %   such that e1 > e2 > e3;
 %
 % K is the concentration parameter for the Watson distribution to second
-% decimal place precision.
+% decimal place precision. Positive values specify girdle type
+%   distributions, negative values specify single maximum type
+%   distributions, and K=0 specifies a uniform distribution. All these
+%   distributions are  specified around a primary axis. K will be a scalar
+%   value. 
 
     % make sure e is arranged properly
     e = sort(e,'descend');

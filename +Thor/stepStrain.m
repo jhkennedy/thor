@@ -1,14 +1,15 @@
 function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE, eigenMask )
 % [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SAVE, eigenMask) 
-% performs a time step long enough to reach a strain specified by StrainStep on all 
-% the crystal distributions in NAMES. The inputs are:
+% performs a time step long enough to reach a strain specified by
+% StrainStep on all the crystal distributions in NAMES. The inputs are:
 %
 %   NAMES holds all the files names for the crystal distributions. NAMES is
 %   outlined in Thor.setup.
 %
-%   SET is a structure holding the model settings as outlined in Thor.setup.
+%   SET is a structure holding the model settings as outlined in
+%   Thor.setup. 
 %
-%   StrainStep is a scalar holding the size of the strain step
+%   StrainStep is a scalar holding the size of the strain step.
 %
 %   RUN is a scalar holding the current run number.
 %
@@ -16,24 +17,27 @@ function [SET, NPOLY, NMIGRE] = stepStrain(NAMES, SET, StrainStep, RUN, STEP, SA
 %
 %   SAVE is a vector containing all the timesteps that should be saved.
 %
-%   eigenMask is a N by M logical array where each M column contains N logicals
-%   that are True if the nth crystal in the distribution belongs to the mth layer.
+%   eigenMask is a N by M logical array where each M column contains N
+%   logicals that are True if the nth crystal in the distribution belongs
+%   to the mth layer. 
 %
-% stepStrain loads in a crystal distribution for each element and calculates new
-% velocity gradients, crystal strain rates, dislocation densities, dislocation
-% energies, grain sizes, as well as checking for polygonization and migration
-% recrystallization. stepStrain then rotates the crystals, saves the stepped crystal
-% distributions to disk, and saves a copy of the distribution if the
-% current time step is listed in SAVE. stepTime returns [SET, NPOLY, NMIGRE, StrainStep] where:
+% stepStrain loads in a crystal distribution for each element and
+% calculates new velocity gradients, crystal strain rates, dislocation
+% densities, dislocation energies, grain sizes, as well as checking for
+% polygonization and migration recrystallization. stepStrain then rotates
+% the crystals, saves the stepped crystal distributions to disk, and saves
+% a copy of the distribution if the current time step is listed in SAVE.
+% stepTime returns [SET, NPOLY, NMIGRE, StrainStep] where: 
 %
-%   SET is a structure holding the model settings as outlined in Thor.setup.
+%   SET is a structure holding the model settings as outlined in
+%   Thor.setup. 
 %
 %   NPOLY is a (SET.nelem) by size(eigenMask,2) array holding the number of
 %   polygonization events in each layer of the distribution described by 
 %   eigenMask.
 %
-%   NMIGRE is a (SET.nelem) by size(eigenMask,2) array holding the number of
-%   migration recrystallization events in each layer of the distribution 
+%   NMIGRE is a (SET.nelem) by size(eigenMask,2) array holding the number
+%   of migration recrystallization events in each layer of the distribution
 %   described by eigenMask.
 %
 %   See also Thor.setup.

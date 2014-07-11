@@ -8,9 +8,10 @@ function [ cdist, rhoDotStrain ] = disl( cdist, SET, elem, K )
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
-%   elem is the element number of the crystal distribution, cdist.
+%   elem is the element number associated with the crystal distribution
+%   cdist. 
 %
-%   K is the crystal growth rate factor.
+%   K is the scalar crystal growth rate factor.
 %
 % DISL returns the crystal distribution cdist with new dislocation
 % densities and rhoDotStrain, the increase in dislocation density from

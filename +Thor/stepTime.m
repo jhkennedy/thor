@@ -1,5 +1,5 @@
-function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE, eigenMask )
-% [SET, NPOLY, NMIGRE, StrainStep] = step(NAMES, SET, RUN, STEP, SAVE, eigenMask) 
+function [SET, NPOLY, NMIGRE, StepStrain] = stepTime(NAMES, SET, RUN, STEP, SAVE, eigenMask )
+% [SET, NPOLY, NMIGRE, StepStrain] = step(NAMES, SET, RUN, STEP, SAVE, eigenMask) 
 % preforms a time step specified in SET on all the crystal distributions in NAMES.
 % The inputs are: 
 %
@@ -22,7 +22,7 @@ function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE
 % energies, grain sizes, as well as checking for polygonization and migration
 % recrystallization. stepTime then rotates the crystals, saves the stepped crystal
 % distributions to disk, and saves a copy if the current time step is listed in
-% SAVE. stepTime returns [SET, NPOLY, NMIGRE, StrainStep] where:
+% SAVE. stepTime returns [SET, NPOLY, NMIGRE, StepStrain] where:
 %
 %   SET is a structure holding the model settings as outlined in Thor.setup.
 %
@@ -34,14 +34,14 @@ function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE
 %   migration recrystallization events in each layer of the distribution 
 %   described by eigenMask.
 %
-%   StrainStep is an array, sized (SET.nelem) by 1, holding the strain the
+%   StepStrain is an array, sized (SET.nelem) by 1, holding the strain the
 %   distribution underwent.
 %
 %   See also Thor.setup.
 
     NPOLY = zeros(SET.nelem,size(eigenMask,2));
     NMIGRE = zeros(SET.nelem,size(eigenMask,2));
-    StrainStep = zeros(SET.nelem,1);
+    StepStrain = zeros(SET.nelem,1);
 
     for ii = 1:SET.nelem
 
@@ -56,7 +56,7 @@ function [SET, NPOLY, NMIGRE, StrainStep] = stepTime(NAMES, SET, RUN, STEP, SAVE
         
         % calculate strain step
         medot = sqrt(1/2*(edot(1,1)^2+edot(2,2)^2+edot(3,3)^2+2*(edot(1,2)^2+edot(2,3)^2+edot(3,2)^2)));
-        StrainStep(ii,1) = SET.tstep(ii)*medot;
+        StepStrain(ii,1) = SET.tstep(ii)*medot;
                 
         % grow the crystals
         [cdist, K] = Thor.Utilities.grow(cdist, SET, ii);

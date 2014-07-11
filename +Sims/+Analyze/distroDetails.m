@@ -7,19 +7,19 @@ function [EIG, DISLINFO, SIZEINFO] = distroDetails( cdist , eigenMask)
 %   cdist is the structure holding the crystal distrobution outlined in
 %   Thor.setup. 
 % 
-%   eigenMask is a NxM logical array where eigenMask(:,m) is the mth layer in
-%   of the crystal distrobution.
+%   eigenMask is a NxM logical array where eigenMask(:,m) is the mth layer
+%   in of the crystal distrobution.
 %
-% eigen returns EIG which is a 3xM array holding the orientation eigenvalues
-% for each layer, SIZEINFO which is a 3xM array holding the [min, max, mean]
-% grain size for each layer, and DISLINFO which is a 3xM array holding the
-% [min, max, mean] dislocation density for each layer.
+% eigen returns EIG which is a 3xM array holding the orientation
+% eigenvalues for each layer, SIZEINFO which is a 3xM array holding the
+% [min, max, mean] grain size for each layer, and DISLINFO which is a 3xM
+% array holding the  [min, max, mean] dislocation density for each layer.
 %
 %   eigen follows the method as outlined in 
 %       Gagliardini, Durand, and Wang. Journal of Glaciology, Vol. 50, No. 168,
 %       2004, Grain Area as a statistical weight for polycrystal constituents
 %
-% see also Thor.setup and Thor.Utilities.eigen
+% see also Thor.setup and Thor.Utilities.eigenLayers
 
     M = size(eigenMask,2);
     EIG = zeros(3,M);

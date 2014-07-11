@@ -32,7 +32,7 @@ switch choice
         display(' ')
         
         % Analyze the results
-        [EIG, DISLDENS, GRAINSIZE] = Analyze.savedResultsPar( Dir, in, runs, eigenMask, SAVE, NAMES);
+        [EIG, DISLDENS, GRAINSIZE] = Analyze.savedResultsPar( Dir, SET, eigenMask, SAVE, NAMES);
 
         % save the results
         save([Dir,'/',resultsName]);

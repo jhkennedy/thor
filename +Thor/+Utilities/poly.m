@@ -1,16 +1,18 @@
 function [ cdist, SET, npoly ] = poly( cdist, SET, elem, eigMask)
-% [cdist, SET, npoly] = poly(cdist, SET, elem, step) polygonizes crystals
-% favorable do so. 
+% [cdist, SET, npoly] = poly(cdist, SET, elem, eigMask) polygonizes
+% crystals favorable do so.
 % 
 %   cdist is the structure holding the crystal distribution outlined in
 %   Thor.setup.    
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
-%   elem is the element number of the crystal distribution, cdist.
+%   elem is the element number associated with the crystal distribution
+%   cdist.
 %
-%   eigenMask is a NxM logical array where eigenMask(:,m) is the mth layer
-%   in of the crystal distribution. 
+%   eigenMask is a N by M logical array where each M column contains N
+%   logicals that are True if the nth crystal in the distribution belongs
+%   to the mth layer. 
 %
 % poly returns: the crystal distribution cdist with polygonized crystals;
 % SET with updated times of last recrystallization and grain sizes at last

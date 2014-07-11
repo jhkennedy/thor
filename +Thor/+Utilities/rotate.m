@@ -8,7 +8,8 @@ function [ cdist ] = rotate( cdist, SET, elem )
 %   
 %   SET is a structure holding the model setting as outlined in Thor.setup.
 %
-%   elem is the element number of the crystal distribution, cdist.
+%   elem is the element number associated with the crystal distribution
+%   cdist. 
 %
 % rotate returns a crystal distribution, cdist, with rotated orientation
 % angles. 

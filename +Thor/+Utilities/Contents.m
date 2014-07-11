@@ -21,7 +21,7 @@
 %       the crystal distribution specified by cdist.
 %
 %   disl
-%       [cdist] = DISL(cdist, SET, elem) 
+%       [ cdist, rhoDotStrain ] = disl( cdist, SET, elem, K )
 %       This function calculates the new dislocation density for each
 %       crystal in the distribution specified by cdist.
 %
@@ -50,7 +50,7 @@
 %       cdist. 
 %
 %   shmidt
-%       [cdist, R1, R2, R3] = shmidt(cdist, n, stress)
+%       [cdist, R1, R2, R3] = shmidt(cdist, nc, stress)
 %       This function calculates the Shmidt tensor and magnitude of the
 %       Resolved Shear Stress (RSS) on the three slip systems for each
 %       crystal in the distribution specified by cdist.  

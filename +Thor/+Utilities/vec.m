@@ -7,7 +7,7 @@ function [ cdist] = vec( cdist, SET, elem)
 %   cdist is the structure holding the crystal distribution outlined in
 %   Thor.setup.   
 %
-%   SET is the setting structure outlined in Thor.setup.
+%   SET is a structure holding the model settings as outlined in Thor.setup.
 %
 %   elem is the element number that cdist is a part of.
 %

@@ -6,7 +6,7 @@
 %  =========
 %
 %   connectivity
-%       connectivity(width, type)
+%       [saveName] = connectivity(width, type)
 %       This function builds and saves connectivity structures.
 %
 %  =======

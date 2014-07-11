@@ -1,42 +1,96 @@
+===============================================
+ FEvoR: Fabric Evolution with Recrystallization
+===============================================
+Copyright (C) 2009-2014  Joseph H Kennedy
+
+FEvoR is free software: you can redistribute it and/or modify it under the 
+terms of the GNU General Public License as published by the Free Software 
+Foundation, either version 3 of the License, or (at your option) any later 
+version.
+
+FEvoR is distributed in the hope that it will be useful, but WITHOUT ANY 
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+details.
+
+You should have received a copy of the GNU General Public License along 
+with FEvoR.  If not, see <http://www.gnu.org/licenses/>.
+
+=============
+ About FEvoR
+=============
+
+FEvoR is a statistical fabric evolution model that includes 
+recrystallization processes such as:
+    Grain Growth
+    Polygonization
+    Migration Recrstallization
+
+FEvoR is based on the work by Dr. Thorsteinsson, see:
+    Thorsteinsson, T. (2001). 
+    An analytical approach to deformation of anisotropic ice-cryrstal 
+    aggregates. Journal of Glaciology, 47(158), 507–516.
+    
+    Thorsteinsson, T. (2002). 
+    Fabric development with nearest-neighbor interaction and dynamic 
+    recrystallization. Journal of Geophysical Research Solid Earth, 
+    107(B1,2014), 1–13. doi:10.1029/2001JB000244
+
+FEvoR was devoloped at the University of Alaska Fairbanks (UAF) by 
+Joseph H Kennedy. For a detailed description of this model, see: 
+    Kennedy, J. H., Pettit, E. C., & Di Prinzio, C. L. (2013). 
+    The evolution of crystal fabric in ice sheets and its link to climate 
+    history. Journal of Glaciology, 59(214), 357–373. 
+    doi:10.3189/2013JoG12J159
+
+
+
+=====================
+DOWNLOAD INSTRUCTIONS
+=====================
+
+FEvoR is hosted at https://launchpad.net/fevor. 
+
+A branch of FEvoR can be easily obtained using the command:
+    bzr branch lp:fevor
+
+Alternatively, the latest version of FEvoR can be downloaded at:
+    http://bazaar.launchpad.net/~jhkennedy/fevor/trunk/revision/
+
+
 ==========================================
  MATLAB PACKAGE INSTALLATION INSTRUCTIONS
 ==========================================
 
-MATLAB will automatically recognize this package once the +DIR directories 
-are added the matlab path. There are two standard ways of doing this:
-
-    1) Copy the +DIR directories into your user path. You can find this 
-       path by typing at the command prompt:
-
-            >> userpath
+MATLAB will automatically recognize FEvoR once the +PKG directories 
+are added the matlab path. To do this:
        
-    2) Adding the folder containing the +PKG directories to the matlab 
-       path. If +PKGs are located at /usr/local/matlab/packages/+PKG then 
-       you would add this path to the matlab path by typing at the command 
-       prompt:
-            
-            >> path(path, '/usr/local/matlab/packages/')
-       
-       Any further packages copied into this directory using the '+' 
-       syntax for MATLAB packages will be automatically recognized by 
-       MATLAB. 
+Add the folder containing this README, Contents.m, and the +PKG directories 
+to the matlab path. If these are located at /usr/local/matlab/FEvoR then 
+you would add this path to the matlab path by typing at the command prompt:
 
-       =======================
-          USING THE PACKAGE
-       =======================
+    >> path(path, '/usr/local/matlab/FEvoR/')
 
-        All functions in package PKG are called in matlab by:
+Matlab automatically recognizes directories found on the path using the '+' 
+syntax as packages.
+
+       =====================
+          USING A PACKAGE
+       =====================
+
+        All functions in package +PKG are called in matlab by:
 
             >> PKG.FUNCTION
 
-        Likewise all functions in subpackages of PKG are called by:
+        Likewise all functions in the subpackages of +PKG 
+        (+PKG/+SUBPACKAGE) are called by:
 
             >> PKG.SUBPACKAGE.FUNCTION
 
         and so on and so forth. 
 
-        This package is compliant with MATLABs standard help function. 
-        As such, you can see a description, list of functions, and list of 
+        FEvoR is compliant with MATLABs standard help function. As such, 
+        you can see a description, list of functions, and list of 
         subpackages in +PKG by typing:
 
             >> help PKG
@@ -59,5 +113,6 @@ are added the matlab path. There are two standard ways of doing this:
  OCTAVE PACKAGE INSTALLATION INSTRUCTIONS
 ==========================================
 
-    Currently this package does not work in octave because octave doesn't 
-    use the '+' syntax for packages. A fix is in the works. 
+    Currently FEvoR does not work in octave because octave doesn't 
+    use the '+' syntax for packages. There are no plans to make FEvoR 
+    octave compliant.

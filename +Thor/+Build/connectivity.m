@@ -1,5 +1,5 @@
-function connectivity(width, type)
-% connectivity(numbcrys, type) builds and saves connectivity
+function[saveName] = connectivity(width, type)
+% [saveName] = connectivity(numbcrys, type) builds and saves connectivity
 % structures. 
 %
 %   width is a 3x1 array specifying the length (L), width (W) and height
@@ -14,7 +14,10 @@ function connectivity(width, type)
 %           nearest neighbors.
 %
 % Connectivity saves a file in './+Thor/+Build/Settings/CONN/' with a file
-% name referring to type and numbcrys which contains CONN.
+% name referring to type and numbcrys which contains CONN. [saveName] is
+% then returned by the function where:
+%
+%   saveName is the name of the the saved file.
 %
 %   CONN is a NUMBCRYSx1 cell array holding the crystal number for each
 %   nearest neighbor of the crystal specified by the row number. 
@@ -55,9 +58,8 @@ function connectivity(width, type)
             
             CONN = CON2; %#ok<NASGU>
             
-            % save connectivity structure
-            eval(['save ./+Thor/+Build/Settings/CONN/',type, num2str(numbcrys),'.mat CONN']);
-            
+            % conectivity stucture name:
+            saveName = [type, num2str(numbcrys)];            
             
         case 'rec'
             
@@ -92,11 +94,15 @@ function connectivity(width, type)
             CONN = CON2; %#ok<NASGU>
             
             % save connectivity structure
-            eval(['save ./+Thor/+Build/Settings/CONN/',type, num2str(width(1)),'x',num2str(width(2)),'x',num2str(width(3)),'.mat CONN']);
+            saveName = [type, num2str(width(1)),'x',num2str(width(2)),'x',num2str(width(3))];
+            eval(['save ./+Thor/+Build/Settings/CONN/',saveName ,'.mat CONN']);
         
         otherwise
             error('%s is not a known connectivity type. To see valid types, type ''help Thor.Build.connectivity''.',type);
     end
+    
+    % save connectivity structure
+    eval(['save ./+Thor/+Build/Settings/CONN/',saveName,'.mat CONN']);
 
 end
           
