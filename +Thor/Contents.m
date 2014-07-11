@@ -1,4 +1,4 @@
-% Package Thor contains all the functions necessary to run the Thor model.
+% Package Thor contains all the functions necessary to run the FEvoR model.
 %
 %  =========
 %  Functions
