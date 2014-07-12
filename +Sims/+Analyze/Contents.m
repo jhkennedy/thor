@@ -4,12 +4,24 @@
 %  Functions
 %  =========
 %
-%   analyzeDistro
+%   contourMovie
+%       contourMovie(results) 
+%       This function creates a time laps .avi video of Shmidt (equal area)
+%       plots of a layer of all the saved crystal distrobutions in a model
+%       simulation.  
+%
+%   distroDetails
 %       [ EIG, DISLINFO, SIZEINFO ]=analyzeDistro( cdist, eigenMask ) 
 %       This function calculates the orientation eigenvalues, mean
 %       dislocation density, and mean grain size of a crystal
 %       distrobution. 
-%   
+%
+%   equalAreaContour
+%       [h, cax, cbax] = equalAreaContour(varargin)
+%       This function Equal Area Contour Plot (Schmidt Contour Plot) of
+%       data on the upper hemesphere of the unit circle. The data is
+%       projected onto a circle of radius sqrt(2) on the x-y plane.  
+%
 %   savedResultsPar
 %       [EIG, DISLDENS, GRAINSIZE] = 
 %           savedResultsPar( Dir, in, runs, eigenMask, SAVE, NAMES)

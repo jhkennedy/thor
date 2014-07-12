@@ -23,11 +23,14 @@
 %   FIXME: should rename this to FEvoR
 %
 %   FIXME: Below packages not commented nor documented well!!!
+%           Test is completely undocumented.
+%           Sims.Analyze is documented well, Sims.Param and Sims.Taylor are
+%           not.
 %
 %   Test
 %       A package of test scripts and functions.
 %
 %   Sims
-%       A container package to hold different model simulations and analysis
-%       tools.
+%       A container package to hold different model simulations and
+%       analysis tools. 
 %

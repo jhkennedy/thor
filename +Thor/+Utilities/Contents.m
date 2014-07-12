@@ -30,11 +30,6 @@
 %       This function calculates the new crystal sizes for each crystal in
 %       the distribution specified by cdist. 
 %
-%   inv2
-%       [inv] = inv2( A )
-%       This function calculates the second invariant of the rank 2 tensor
-%       A in Cartesian space (3x3). 
-%
 %   migre
 %       [cdist, SET, nMigRe] = migre(cdist, SET, elem, eigMask )
 %       This function migration recrystallizes crystals that are favorable

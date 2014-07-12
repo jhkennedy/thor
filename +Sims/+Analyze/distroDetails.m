@@ -1,5 +1,5 @@
 function [EIG, DISLINFO, SIZEINFO] = distroDetails( cdist , eigenMask)
-% [EIG, DISLINFO, SIZEINFO]=analyzeDistro( cdist, eigenMask) calulates the
+% [EIG, DISLINFO, SIZEINFO]=distroDetails( cdist, eigenMask) calulates the
 % orientation eigenvalues of the crystal distrobution layers defined in
 % eigenMask, the min/max/mean dislocation density for each lay, and the
 % min/max/mean grain size for each layer. 
@@ -15,9 +15,10 @@ function [EIG, DISLINFO, SIZEINFO] = distroDetails( cdist , eigenMask)
 % [min, max, mean] grain size for each layer, and DISLINFO which is a 3xM
 % array holding the  [min, max, mean] dislocation density for each layer.
 %
-%   eigen follows the method as outlined in 
-%       Gagliardini, Durand, and Wang. Journal of Glaciology, Vol. 50, No. 168,
-%       2004, Grain Area as a statistical weight for polycrystal constituents
+%   eigen follows the method as outlined in:
+%       Gagliardini, O., Durand, G., & Wang, Y. (2004). 
+%       Grain area as a statistical weight for polycrystal constituents.
+%       Journal of Glaciology, 50(168), 87–95. 
 %
 % see also Thor.setup and Thor.Utilities.eigenLayers
 
@@ -47,3 +48,34 @@ function [EIG, DISLINFO, SIZEINFO] = distroDetails( cdist , eigenMask)
         DISLINFO(:,ii) = [min(DISL); max(DISL); mean(DISL)];
     end
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FEvoR: Fabric Evolution with Recrystallization %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright (C) 2009-2014  Joseph H Kennedy
+%
+% This file is part of FEvoR.
+%
+% FEvoR is free software: you can redistribute it and/or modify it under the 
+% terms of the GNU General Public License as published by the Free Software 
+% Foundation, either version 3 of the License, or (at your option) any later 
+% version.
+%
+% FEvoR is distributed in the hope that it will be useful, but WITHOUT ANY 
+% WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+% FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
+% details.
+%
+% You should have received a copy of the GNU General Public License along 
+% with FEvoR.  If not, see <http://www.gnu.org/licenses/>.
+%
+% Additional permission under GNU GPL version 3 section 7
+%
+% If you modify FEvoR, or any covered work, to interface with
+% other modules (such as MATLAB code and MEX-files) available in a
+% MATLAB(R) or comparable environment containing parts covered
+% under other licensing terms, the licensors of FEvoR grant
+% you additional permission to convey the resulting work.
+
+
