@@ -18,7 +18,7 @@ try
     
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Param/Settings/2014_03_11_Vary_Second.mat
+    load ./+Sims/+Param/Settings/2014_02_05_Second.mat
     
     runs = length(in);
        
@@ -85,7 +85,7 @@ try
 
     %% save results
     
-    save ./+Param/secondResults.mat
+    save ./+Sims/+Param/secondResults.mat
     
     %% close the matlab pool
     matlabpool close;
@@ -95,7 +95,7 @@ try
     display(sprintf('\n Run ended %s \n', datestr(now)))
     
     % email me to tell me the run is done
-    !mail -s SECOND:DONE jhkennedy@alaska.edu < ./+Param/second.log
+    !mail -s SECOND:DONE jhkennedy@alaska.edu < ./+Sims/+Param/second.log
     
 catch ME
     matlabpool close;
@@ -107,9 +107,9 @@ catch ME
     display(ME.message);
     
     % email me to tell me run has crashed
-    !mail -s SECOND:CRASH jhkennedy@alaska.edu < ./+Param/second.log
+    !mail -s SECOND:CRASH jhkennedy@alaska.edu < ./+Sims/+Param/second.log
     
-    save ./+Param/secondCRASH.mat
+    save ./+Sims/+Param/secondCRASH.mat
         
     rethrow(ME);
     
@@ -117,35 +117,3 @@ end
 
 quit;
     
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FEvoR: Fabric Evolution with Recrystallization %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (C) 2009-2014  Joseph H Kennedy
-%
-% This file is part of FEvoR.
-%
-% FEvoR is free software: you can redistribute it and/or modify it under the 
-% terms of the GNU General Public License as published by the Free Software 
-% Foundation, either version 3 of the License, or (at your option) any later 
-% version.
-%
-% FEvoR is distributed in the hope that it will be useful, but WITHOUT ANY 
-% WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-% FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
-% details.
-%
-% You should have received a copy of the GNU General Public License along 
-% with FEvoR.  If not, see <http://www.gnu.org/licenses/>.
-%
-% Additional permission under GNU GPL version 3 section 7
-%
-% If you modify FEvoR, or any covered work, to interface with
-% other modules (such as MATLAB code and MEX-files) available in a
-% MATLAB(R) or comparable environment containing parts covered
-% under other licensing terms, the licensors of FEvoR grant
-% you additional permission to convey the resulting work.
-
-

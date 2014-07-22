@@ -7,3 +7,6 @@
 ./*/exploreResults.mat
 ./*/Settings/*.mat
 contour.avi
++Sims/+Param/secondResults.mat
++Sims/+Param/second.log
++Sims/+Param/secondCRASH.mat

@@ -18,9 +18,15 @@
 %
 %   equalAreaContour
 %       [h, cax, cbax] = equalAreaContour(varargin)
-%       This function Equal Area Contour Plot (Schmidt Contour Plot) of
+%       This function makes an Equal Area Contour Plot (Schmidt Contour
+%       Plot) of data on the upper hemesphere of the unit circle. The data
+%       is projected onto a circle of radius sqrt(2) on the x-y plane. 
+%
+%   equalAreaPoint
+%       [ varargout ] = equalAreaPoint( varargin )
+%       The function makes an Equal Area Point Plot (Schmidt Point Plot) of
 %       data on the upper hemesphere of the unit circle. The data is
-%       projected onto a circle of radius sqrt(2) on the x-y plane.  
+%       projected onto a circle of radius sqrt(2) on the x-y plane.
 %
 %   savedResultsPar
 %       [EIG, DISLDENS, GRAINSIZE] = 
