@@ -25,7 +25,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     S = SET.stress(:,:,elem); % Pa
     Estress = sqrt( sum(sum(S.*S))/2 ); % Pa
         % Thor2002 page 3-4 paragraph [29]
-
+    
     % new crystal dislocation density
     rhoo = 1e10; % m^{-2} 
     % new crystal size
@@ -37,7 +37,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     Egb = 3*Ggb./cdist.size;
 
     % calculate the dislocation energy
-    kappa = 0.1;
+    kappa = 0.35;
       % adjustable parameter -- Thor2002 eqn. 19 -- value set [38] 
       % Thor2002 sets this at 0.35, which aligns with paper he cites 
       %(>0.1; Mohamed2000 -- a paper based on cold rolling copper to .35 strain),
@@ -75,7 +75,7 @@ function [ cdist, SET, nMigRe ] = migre( cdist, SET, elem, eigMask )
     % check to see if it energetically favorable to recrystallize
     mask = Edis > Egb;
     
-    % number of polygonization events in each layer
+    % number of Migration Recrystallization events in each layer
     nMigRe = zeros(1,size(eigMask,2));
     for ii = 1:size(eigMask,2)
         nMigRe(1,ii) = sum(mask & eigMask(:,ii));

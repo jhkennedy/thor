@@ -24,7 +24,6 @@ function [ cdist, K ] = grow( cdist, SET, elem )
         Q = 0.7*60; % kJ mol^{-1}
     end % Patterson 2010 (4ed) pg 40.
     
-    
     % calculate the grain growth factor
     K  = Ko*exp(-Q/(R*(273.13+SET.T(elem)) ) ); % m^2 s^{-1}
     

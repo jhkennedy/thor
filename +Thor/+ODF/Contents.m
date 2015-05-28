@@ -6,7 +6,7 @@
 %  =========
 %
 %   fisher
-%       [ F ] = bedot(k, x)
+%       [ F ] = fisher(k, x)
 %       This function calculates calculates the Fisher Parameterized
 %       Orientation Distribution Function (PODF).
 %

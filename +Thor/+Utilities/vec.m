@@ -22,6 +22,7 @@ function [ cdist] = vec( cdist, SET, elem)
 %% Initialize variables
     
     ALPHA = interp1(SET.A(1,:), SET.A(2,:),SET.T(elem,1));% s^{-1} Pa^{-n}
+
     BETA = 630; % from Thors 2001 paper (pg 510, above eqn 16)
     
     % glen exponent
@@ -32,7 +33,7 @@ function [ cdist] = vec( cdist, SET, elem)
     
     % get the softness parameter 
     [cdist, esoft] = Thor.Utilities.soft(cdist, SET.CONN, SET.xcec(elem,1), SET.xcec(elem,2)); 
-
+    
     % calculate the rate of shearing on each slip system (size Nx1)
     G1 = ALPHA*BETA*esoft.*R1.*abs(esoft.*R1).^(n-1); % s^{-1}
     G2 = ALPHA*BETA*esoft.*R2.*abs(esoft.*R2).^(n-1); % s^{-1}

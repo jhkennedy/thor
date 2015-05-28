@@ -18,7 +18,7 @@ try
     
     % manually load in initial setting structure
     in = struct([]);
-    load ./+Sims/+Param/Settings/2014_02_05_Second.mat
+    load ./+Sims/+Param/Settings/2014_03_11_Vary_Second.mat
     
     runs = length(in);
        

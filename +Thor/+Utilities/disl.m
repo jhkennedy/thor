@@ -20,7 +20,7 @@ function [ cdist, rhoDotStrain ] = disl( cdist, SET, elem, K )
 %   See also Thor.setup, Thor.Utilities.grow
 
     % Physicsal constants
-    b = 3.69e-10; % m
+    b = 4.5e-10; % m
     alpha = 1; % constant greater than 1, Thor 2002 -- yet every uses 1 (Thor 2002, De La Chapelle 1998, Montagnant 2000)
     
     % calculate the Magnitude (second invariant) of the strain rate

@@ -21,7 +21,7 @@ function [ W ] = watsonGenerate(N,K)
     n = round(N);
     
     % check type of distribution
-    if K == inf; % perfect girdle
+    if K >500; % perfect girdle
         
         % generate theta and phi on equator
         TH = ones(n,1)*pi/2;
@@ -30,7 +30,7 @@ function [ W ] = watsonGenerate(N,K)
         % make Watson distribution
         W = [sin(TH).*cos(PH) sin(TH).*sin(PH) cos(TH)];
     
-    elseif K == -inf; % perfect bipolar (single maximum)
+    elseif K < -700; % perfect bipolar (single maximum)
         
         W = repmat([0,0,1],n,1);
         

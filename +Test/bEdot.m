@@ -7,12 +7,12 @@ addpath /home/joseph/Documents/MATLAB/
 % number of crystals
 N = 1000;
 % concentation parameter for watson distribution
-k = -800;
+k = 0;
 % generate watson distribution
 W = Thor.ODF.watsonGenerate(N,k);
-% make all in upper hemisphere
-W(W(:,3) <=0,:) = W(W(:,3) <=0,:)*-1;
-% get theta, phi
+% % make all in upper hemisphere
+% W(W(:,3) <=0,:) = W(W(:,3) <=0,:)*-1;
+% % get theta, phi
 HXY = sqrt(W(:,1).^2+W(:,2).^2);
 T = atan2(HXY,W(:,3));
 P = atan2(W(:,2),N(:,1));
@@ -27,11 +27,16 @@ stress = repmat(stress,[1,1,N]);
 
 %% calculate velocity gradients
 
+R = 0.008314472; % kJ K^{-1} mol^{-1}
+Q = 60;  % kJ mol^{-1}
+
 % glen exponent
 n = 3;
 % beta
-BETA = 630*10;
-ALPHA = 5.1e-26; % s^{-1} Pa^{-1}
+BETA = 630;
+% ALPHA = 5.1e-26; % s^{-1} Pa^{-1}
+temperature = -30; % celcius
+ALPHA = 3.5e-25*BETA*exp(-(Q/R)*(1.0/(273.15+temperature)-1.0/263.15)); % s^{-1} Pa^{-n}
 
 % burgers vectors
 B1 = (1/3)*[cos(T).*cos(P), cos(T).*sin(P), -sin(T)];
@@ -67,70 +72,13 @@ VEL = S1.*reshape(repmat(G1',[9,1]),3,3,[])...
       +S3.*reshape(repmat(G3',[9,1]),3,3,[]); % s^{-1}
 
   
- %% calcualte rotation rates for crystals
- 
-% calculate the rotation rate
-ROR = (1/2)*(VEL -permute(VEL,[2,1,3]));
+EDOT = VEL/2 + permute(VEL,[2,1,3])/2; % s^{-1}
 
-% calculate the strain rate
-SRN = (1/2)*(VEL +permute(VEL,[2,1,3]));
-
-% calculate the bulk strain rate
-BSRN = sum(SRN,3)/N;
-
-% calculate the bulk rotation rate
-BROR = sum(ROR,3)/N;
-
+BVEL  = (1/N)*sum(VEL,3);
+BEDOT = (1/N)*sum(EDOT,3);
+bedot = BVEL/2 + BVEL'/2;
+  
 %%
-
-% % get bulk strain boundry condition mask
-% MSK = (stress(:,:,1) ~= 0).*[0,1,1;-1,0,1;-1,-1,0];
-% 
-% % % bluk rotation rate boundry condition
-% %     % find out how much flow is not in correct bulk direction
-% %     a = sum(sum(abs(BSRN+diag(diag(BSRN)))/2));
-% %     tmp = diag(diag(BSRN));
-% %     b = sum(abs(BSRN(MSK ~= 0)+tmp(MSK ~= 0)))/2;
-% %     E2 = 2 - b/a;
-% %     E3 = 1.5 - b/(2*a);
-% %     E1 = 1;
-% BC = repmat(BSRN.*MSK,[1,1,N]);
-% BC2= repmat(BROR,[1,1,N]);
-% 
-% % cystal lattice rotation
-% ROT = BC - ROR;
-% ROT2 = BC2 - ROR;
-% 
-% %% rotate crystals
-% 
-% % time step
-% time = 3.15569e12; % s
-% 
-% 
-% 
-% for ii = 1:N
-%     % rotate crystals through whole step
-%     Wnew(ii,:) = expm(time*ROT(:,:,ii))*W(ii,:)'; %#ok<SAGROW>
-%     Wnew2(ii,:) = expm(time*ROT2(:,:,ii))*W(ii,:)'; %#ok<SAGROW>
-% end
-% 
-% %% visualize results
-% 
-% 
-% figure;
-% scatter3(W(:,1),W(:,2),W(:,3),'xk')
-% hold on
-% 
-% scatter3(Wnew(:,1),Wnew(:,2),Wnew(:,3),'.b')
-% hold on
-% 
-% scatter3(Wnew2(:,1),Wnew2(:,2),Wnew2(:,3),'.c')
-% hold on
-% 
-% axis([-1,1,-1,1,-1,1])
-% view([0,90])
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FEvoR: Fabric Evolution with Recrystallization %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

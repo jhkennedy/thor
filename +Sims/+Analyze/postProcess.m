@@ -1,6 +1,7 @@
 % This script selects a results file, and then runs the savedResultsPar
 % function on the slected results. 
 
+% FIXME: try/catch! for matlabpool
 
 % get the results file name a directory
 [resultsName, Dir] = uigetfile('*.mat','Select the results file you wish process:');

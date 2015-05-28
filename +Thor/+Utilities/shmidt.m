@@ -8,7 +8,7 @@ function [ cdist, R1, R2, R3 ] = shmidt( cdist, nc, stress )
 %
 %   nc is the number of crystals in the distribution.
 %
-%   stress is a 3X3Xnc matrix holding the stress.
+%   stress is a 3X3 matrix holding the stress.
 %
 % SHMIDT returns the crystal distribution structure with the added fields
 % of S1, S2, S3 (size 3x3xnc) and MRSS (size ncx1) which give the Shmidt
@@ -31,7 +31,7 @@ function [ cdist, R1, R2, R3 ] = shmidt( cdist, nc, stress )
     
     % C-axis orientation
     N = [st.*cp, st.*sp, ct]; % -
-    
+
     % Shmidt tensor (outer product -- B'*N for each crystal)
     j=1:3;
     cdist.S1 = reshape(repmat(B1',3,1).* N(:,j(ones(3,1),:)).',[3,3,nc]); % -
